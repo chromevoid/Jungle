@@ -1,3 +1,41 @@
+/**
+ * This is the implementation of the game logic of Jungle.
+ * The game's board is 2D array 9*7 (9 rows and 7 columns).
+ * One round has two players: represented by color Red vs. Blue
+ * 
+ * Each player has 8 kinds of chess pieces.
+ * Red: Relephant, Rlion, Rtiger, Rcheetah, Rwolf, Rdog, Rcat, Rmouse.
+ * Blue: Belephant, Blion, Btiger, Bcheetah, Bwolf, Bdog, Bcat, Bmouse.
+ * 
+ * The game boad(9*7) consists of:
+ * River: R
+ * Glass: G
+ * Trap: T
+ * Home: RH(red animals' home), BH(blue animals' home)
+ * 
+ * The initial state is 
+ *    
+ * 0 [[Rlion, G, T, RH, T, G, RTiger],
+ * 1 [G, Rdog, G, T, G, Rcat, G],
+ * 2 [Rmouse, G, Rcheetah, G, Rwolf, G, Relephant],
+ * 3 [G, R, R, G, R, R, G],
+ * 4 [G, R, R, G, R, R, G],
+ * 5 [G, R, R, G, R, R, G],
+ * 6 [Belephant, G, Bwolf, G, Bcheetah, G, Bmouse],
+ * 7 [G, Bcat, G, T, G, Bdog, G],
+ * 8 [Btiger, G, T, BH, T, G, Blion]]
+ * 
+ * Win Codintion(e.g. Read win, Blue fails), satisfy any one of the following
+ * 1. none of blue alive.
+ * 2. any piece of read animals is in the BH(blue animals' home).
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 type Board = string[][];
 interface BoardDelta {
   row: number;
@@ -17,18 +55,22 @@ import log = gamingPlatform.log;
 import dragAndDropService = gamingPlatform.dragAndDropService;
 
 module gameLogic {
-  export const ROWS = 3;
-  export const COLS = 3;
+  export const ROWS = 9;
+  export const COLS = 7;
+  // special cells in the game board
+  //export const Trap: BoardDelta[] = 
 
-  /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
+  /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix 9*7. */
   export function getInitialBoard(): Board {
-    let board: Board = [];
-    for (let i = 0; i < ROWS; i++) {
-      board[i] = [];
-      for (let j = 0; j < COLS; j++) {
-        board[i][j] = '';
-      }
-    }
+    let board: Board =  [['Rlion', 'G', 'T', 'RH', 'T', 'G', 'RTiger'],
+ ['G', 'Rdog', 'G', 'T', 'G', 'Rcat', 'G'],
+ ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+ ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+ ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+ ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+ ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
+ ['G', 'Bcat', 'G', 'T', 'G', 'Bdog', 'G'],
+ ['Btiger', 'G', 'T', 'BH', 'T', 'G', 'Blion']];
     return board;
   }
 
