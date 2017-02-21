@@ -146,6 +146,21 @@ module gameLogic {
       boardAfterMove[pre_row][pre_col] = 'G';
     }
 
+    // check whether the oppent's animals are all eaten
+    let pieceCount = 0;
+    let oppentColor = turnIndexBeforeMove === 0 ? 'R' : 'B';
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (boardAfterMove[i][j].substring(0, 1) === oppentColor) {
+          pieceCount++;
+        }
+      }
+    }
+    // if it is true, then win
+    if (pieceCount === 0) {
+      winner = boardAfterMove[row][col].substring(0, 1);
+    }
+    
     // whether the game ends or not
     if (winner !== '' || isTie(boardAfterMove)) {
       // Gameover
