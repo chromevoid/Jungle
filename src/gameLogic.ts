@@ -128,14 +128,9 @@ module gameLogic {
     // deal with the move
     // the [row, col] position is replaced with the piece moved in this round
     boardAfterMove[row][col] = board[pre_row][pre_col];
-    if (isOppentTrap(turnIndexBeforeMove, coordinate)) {
-      // rank becomes -1;
-    }
     if (isOppentHome(turnIndexBeforeMove, coordinate)) {
       // win!!!
       winner = boardAfterMove[row][col].substring(0, 1);
-      turnIndex = -1;
-      endMatchScores = winner === 'B' ? [1, 0] : winner === 'R' ? [0, 1] : [0, 0];
     }
     // the [pre_row, pre_col] position resumes it's original status
     if (isRiver(pre_coordinate)) {
@@ -143,22 +138,19 @@ module gameLogic {
     }
     else if (isBlueTrap(pre_coordinate)) {
       boardAfterMove[pre_row][pre_col] = 'BT';
-      if (isOppentTrap(turnIndexBeforeMove, pre_coordinate)) {
-        // resume it's rank
-      }
     }
     else if (isRedTrap(pre_coordinate)) {
       boardAfterMove[pre_row][pre_col] = 'RT';
-      if (isOppentTrap(turnIndexBeforeMove, pre_coordinate)) {
-        // resume it's rank
-      }
     }
     else {
       boardAfterMove[pre_row][pre_col] = 'G';
     }
 
+    // whether the game ends or not
     if (winner !== '' || isTie(boardAfterMove)) {
       // Gameover
+      turnIndex = -1;
+      endMatchScores = winner === 'B' ? [1, 0] : winner === 'R' ? [0, 1] : [0, 0];
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
       turnIndex = 1 - turnIndexBeforeMove;
