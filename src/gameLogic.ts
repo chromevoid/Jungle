@@ -8,26 +8,26 @@
  * Blue: Belephant, Blion, Btiger, Bcheetah, Bwolf, Bdog, Bcat, Bmouse.
  * 
  * The game boad(9*7) consists of:
- * River: R
- * Glass: G
- * Trap: RT(read animals' trap), BT(blue animals' trap)
+ * Water: W
+ * Grass: G
+ * Trap: RT(red animals' trap), BT(blue animals' trap)
  * Home: RH(red animals' home), BH(blue animals' home)
  * 
  * The initial state is 
  *    
  * 0 [[Rlion, G, RT, RH, RT, G, RTiger],
  * 1 [G, Rdog, G, RT, G, Rcat, G],
- * 2 [Rmouse, G, Rcheetah, G, Rwolf, G, Relephant],
- * 3 [G, R, R, G, R, R, G],
- * 4 [G, R, R, G, R, R, G],
- * 5 [G, R, R, G, R, R, G],
+ * 2 [Rmouse, G, Rcheetah, G, Rwolf, G Relephant],
+ * 3 [G, W, W, G, W, W, G],
+ * 4 [G, W, W, G, W, W, G],
+ * 5 [G, W, W, G, W, W, G],
  * 6 [Belephant, G, Bwolf, G, Bcheetah, G, Bmouse],
  * 7 [G, Bcat, G, BT, G, Bdog, G],
  * 8 [Btiger, G, BT, BH, BT, G, Blion]]
  * 
- * Win Codintion(e.g. Read win, Blue fails), satisfy any one of the following
+ * Win Codintion (e.g. Red win, Blue fails), satisfy any one of the following
  * 1. none of blue alive.
- * 2. any piece of read animals is in the BH(blue animals' home).
+ * 2. any piece of red animals is in the BH (blue animals' home).
  * 
  * 
  * 
@@ -216,7 +216,7 @@ module gameLogic {
   }
 
   /**
-  * get turn index, 0 is blue animals' turn and 1 is read animals'turn.
+  * get turn index, 0 is blue animals' turn and 1 is read animals' turn.
   */
   export function getTurn(turn: number): string {
     return (turn === 0 ? 'B' : 'R');
@@ -312,9 +312,9 @@ module gameLogic {
   }
 
 
-  //export var dx = [1, -1, 0, 0];
-  //export var dy = [0, 0, 1, -1];
-  //only one move to land except water or could eat the animal
+  // export var dx = [1, -1, 0, 0];
+  // export var dy = [0, 0, 1, -1];
+  // only one move to land except water or could eat the animal
   function landMove(board: Board, turn: number, posBeforeMove: BoardDelta, animalRank: number): BoardDelta[] {
     var fourMove: BoardDelta[] = [];
     var up: BoardDelta = { row: posBeforeMove.row + 1, col: posBeforeMove.col };
