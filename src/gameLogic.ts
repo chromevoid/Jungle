@@ -70,16 +70,17 @@ module gameLogic {
 
   /** Returns the initial Jungle board, which is a ROWSxCOLS matrix 9*7. */
   export function getInitialBoard(): Board {
-    let board: Board =  [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'RTiger'],
- ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
- ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
- ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
- ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
- ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
- ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
- ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
- ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']];
-    return board;
+    let board: Board =  [
+      ['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'RTiger'],
+      ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+      ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+      ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+      ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+      ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+      ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
+      ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+      ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']];
+      return board;
   }
 
   export function getInitialState(): IState {
@@ -87,64 +88,11 @@ module gameLogic {
   }
 
   /**
-   * Returns true if the game ended in a tie because there are no empty cells.
-   * E.g., isTie returns true for the following board:
-   *     [['X', 'O', 'X'],
-   *      ['X', 'O', 'O'],
-   *      ['O', 'X', 'X']]
+   * Returns true if the game ended in a tie. To do.
    */
   function isTie(board: Board): boolean {
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        if (board[i][j] === '') {
-          // If there is an empty cell then we do not have a tie.
-          return false;
-        }
-      }
-    }
-    // No empty cells, so we have a tie!
-    return true;
+     return false;
   }
-
-  /**
-   * Return the winner (either 'X' or 'O') or '' if there is no winner.
-   * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-   * E.g., getWinner returns 'X' for the following board:
-   *     [['X', 'O', ''],
-   *      ['X', 'O', ''],
-   *      ['X', '', '']]
-   */
-  function getWinner(board: Board): string {
-    let boardString = '';
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        let cell = board[i][j];
-        boardString += cell === '' ? ' ' : cell;
-      }
-    }
-    let win_patterns = [
-      'XXX......',
-      '...XXX...',
-      '......XXX',
-      'X..X..X..',
-      '.X..X..X.',
-      '..X..X..X',
-      'X...X...X',
-      '..X.X.X..'
-    ];
-    for (let win_pattern of win_patterns) {
-      let x_regexp = new RegExp(win_pattern);
-      let o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-      if (x_regexp.test(boardString)) {
-        return 'X';
-      }
-      if (o_regexp.test(boardString)) {
-        return 'O';
-      }
-    }
-    return '';
-  }
-
 
   /**
    * Returns the move that should be performed when player
@@ -153,51 +101,64 @@ module gameLogic {
   export function createMove(
       stateBeforeMove: IState, row: number, col: number, 
       pre_row: number, pre_col: number, turnIndexBeforeMove: number): IMove {
+
+    // if there is no game status, then create a new game
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
-    // if the move is illegal
+
+    // if the move is illegal, then throw an error
     let pair: [number, number] = canMove(row, col, pre_row, pre_col);
     if (pair === [-1, -1]) {
       throw new Error("Invalid move!");
     }
-    // if the move is legal
+    
+    // if the move is legal, define variables
     // get the board before the move and copy it as the boardAfterMove
     let board: Board = stateBeforeMove.board;
     let boardAfterMove = angular.copy(board);
+    // define the coordinate before and after move
     let coordinate: BoardDelta = {row: row, col: col};
     let pre_coordinate: BoardDelta = {row: pre_row, col: pre_col};
+    // define the winner string, end scores, and turnindex;
+    let winner: string = '';
+    let endMatchScores: number[];
+    let turnIndex: number;
+
+    // deal with the move
     // the [row, col] position is replaced with the piece moved in this round
     boardAfterMove[row][col] = board[pre_row][pre_col];
     if (isOppentTrap(turnIndexBeforeMove, coordinate)) {
       // rank becomes -1;
     }
     if (isOppentHome(turnIndexBeforeMove, coordinate)) {
-      // win
+      // win!!!
+      winner = boardAfterMove[row][col].substring(0, 1);
+      turnIndex = -1;
+      endMatchScores = winner === 'B' ? [1, 0] : winner === 'R' ? [0, 1] : [0, 0];
     }
     // the [pre_row, pre_col] position resumes it's original status
-    if (isBlueTrap(pre_coordinate)) {
+    if (isRiver(pre_coordinate)) {
+      boardAfterMove[pre_row][pre_col] = 'R';
+    }
+    else if (isBlueTrap(pre_coordinate)) {
       boardAfterMove[pre_row][pre_col] = 'BT';
       if (isOppentTrap(turnIndexBeforeMove, pre_coordinate)) {
         // resume it's rank
       }
     }
-    if (isRedTrap(pre_coordinate)) {
+    else if (isRedTrap(pre_coordinate)) {
       boardAfterMove[pre_row][pre_col] = 'RT';
       if (isOppentTrap(turnIndexBeforeMove, pre_coordinate)) {
         // resume it's rank
       }
     }
+    else {
+      boardAfterMove[pre_row][pre_col] = 'G';
+    }
 
-    // not done - 20170221 1:10am
-
-    let winner = getWinner(boardAfterMove);
-    let endMatchScores: number[];
-    let turnIndex: number;
     if (winner !== '' || isTie(boardAfterMove)) {
-      // Game over.
-      turnIndex = -1;
-      endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
+      // Gameover
     } else {
       // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
       turnIndex = 1 - turnIndexBeforeMove;
