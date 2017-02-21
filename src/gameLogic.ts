@@ -31,10 +31,6 @@
  * 
  * 
  * 
- * 
- * 
- * 
- * 
  */
 type Board = string[][];
 interface BoardDelta {
@@ -210,12 +206,12 @@ module gameLogic {
  * get the rank of animals
  */
   function getRank(animal: string): number{
-    switch(animal){
+    switch(animal.substring(1)){
       case'mouse' : return 0;
       case'cat' : return 1;
       case'dog' : return 2;
       case'wolf': return 3;
-      case'cheeta': return 4;
+      case'cheetah': return 4;
       case'tiger': return 5;
       case'lion' : return 6;
       case'elephant': return 7;
@@ -232,14 +228,14 @@ module gameLogic {
 
    function isOwnTrap(turn: number, coordinate: BoardDelta): boolean {
     if (turn === 0) {
-      for (let pos in BlueTrap) {
+      for (let pos of BlueTrap) {
         if (angular.equals(pos, coordinate)) {
           return true;
         }
       }
       return false;
     } else if (turn === 1) {
-      for (let pos in RedTrap) {
+      for (let pos of RedTrap) {
         if (angular.equals(pos, coordinate)) {
           return true;
         }
@@ -248,8 +244,9 @@ module gameLogic {
     } 
   }
 
+
   function isRiver(coordinate: BoardDelta): boolean{
-    for(let pos in River){
+    for(let pos of River){
       if(angular.equals(pos, coordinate)) {
         return true;
       }
@@ -274,14 +271,14 @@ module gameLogic {
   function isOppentTrap(turn: number, coordinate: BoardDelta): boolean{
     //blue animals' turn
      if(turn === 0){
-       for(let pos in RedTrap){
+       for(let pos of RedTrap){
          if(angular.equals(coordinate, pos)){
            return true;
          }
        }
      }
       if(turn === 1){
-       for(let pos in BlueTrap){
+       for(let pos of BlueTrap){
          if(angular.equals(coordinate, pos)){
            return true;
          }
@@ -289,6 +286,63 @@ module gameLogic {
      }
      return false;  
     }
+
+    function isTrap(coordinate: BoardDelta): boolean{
+      for(let pos of BlueTrap){
+        if(angular.equals(pos, coordinate)){
+          return true;
+        }
+      }
+      for(let pos of RedTrap){
+        if(angular.equals(pos, coordinate)){
+          return true;
+        }
+      }
+      return false;  
+    }
+
+    function isHome(coordinate: BoardDelta): boolean{
+      if(angular.equals(coordinate, Rhome) || angular.equals(coordinate, Bhome)){
+        return true;
+      }
+    }
+
+
+    //export var dx = [1, -1, 0, 0];
+    //export var dy = [0, 0, 1, -1];
+    //only one move to land except water or could eat the animal
+    function landMove(board: Board, turn: number, posBeforeMove: BoardDelta, animalRank: number): BoardDelta[]{
+      var fourMove: BoardDelta[] = [];
+      var up: BoardDelta = {row: posBeforeMove.row + 1, col: posBeforeMove.col};
+      var down: BoardDelta = {row: posBeforeMove.row - 1, col: posBeforeMove.col};
+      var left: BoardDelta = {row: posBeforeMove.row, col: posBeforeMove.col - 1};
+      var right: BoardDelta = {row: posBeforeMove.row, col: posBeforeMove.col + 1};
+      fourMove.push(up);
+      fourMove.push(down);
+      fourMove.push(left);
+      fourMove.push(right);
+      
+      var nextValidMove: BoardDelta[] = [];
+      for(let cell of fourMove){
+        if(!isRiver(cell) && !isOutOfBound(cell) && (board[cell.row][cell.col] === 'G' || isHome(cell) || isTrap(cell)
+            || canEat(board, turn, animalRank))){
+          nextValidMove.push(cell);
+        }
+      }   
+    }
+
+
+    function canEat(board: Board, turn: number, currentAnimalRank: number, target: BoardDelta){
+      
+    }
+
+
+
+
+
+
+
+
 
 
 
@@ -312,4 +366,4 @@ module gameLogic {
 
 
 
-}
+
