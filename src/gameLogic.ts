@@ -68,7 +68,7 @@ module gameLogic {
   export const Bhome: BoardDelta = { row: 8, col: 3 };
 
 
-  /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix 9*7. */
+  /** Returns the initial Jungle board, which is a ROWSxCOLS matrix 9*7. */
   export function getInitialBoard(): Board {
     let board: Board =  [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'RTiger'],
  ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
@@ -151,19 +151,46 @@ module gameLogic {
    * with index turnIndexBeforeMove makes a move in cell row X col.
    */
   export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
+      stateBeforeMove: IState, row: number, col: number, 
+      pre_row: number, pre_col: number, turnIndexBeforeMove: number): IMove {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
+    // if the move is illegal
+    let pair: [number, number] = canMove(row, col, pre_row, pre_col);
+    if (pair === [-1, -1]) {
+      throw new Error("Invalid move!");
+    }
+    // if the move is legal
+    // get the board before the move and copy it as the boardAfterMove
     let board: Board = stateBeforeMove.board;
-    if (board[row][col] !== '') {
-      throw new Error("One can only make a move in an empty position!");
-    }
-    if (getWinner(board) !== '' || isTie(board)) {
-      throw new Error("Can only make a move if the game is not over!");
-    }
     let boardAfterMove = angular.copy(board);
-    boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+    let coordinate: BoardDelta = {row: row, col: col};
+    let pre_coordinate: BoardDelta = {row: pre_row, col: pre_col};
+    // the [row, col] position is replaced with the piece moved in this round
+    boardAfterMove[row][col] = board[pre_row][pre_col];
+    if (isOppentTrap(turnIndexBeforeMove, coordinate)) {
+      // rank becomes -1;
+    }
+    if (isOppentHome(turnIndexBeforeMove, coordinate)) {
+      // win
+    }
+    // the [pre_row, pre_col] position resumes it's original status
+    if (isBlueTrap(pre_coordinate)) {
+      boardAfterMove[pre_row][pre_col] = 'BT';
+      if (isOppentTrap(turnIndexBeforeMove, pre_coordinate)) {
+        // resume it's rank
+      }
+    }
+    if (isRedTrap(pre_coordinate)) {
+      boardAfterMove[pre_row][pre_col] = 'RT';
+      if (isOppentTrap(turnIndexBeforeMove, pre_coordinate)) {
+        // resume it's rank
+      }
+    }
+
+    // not done - 20170221 1:10am
+
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
@@ -187,13 +214,13 @@ module gameLogic {
   }
 
   export function forSimpleTestHtml() {
-    var move = gameLogic.createMove(null, 0, 0, 0);
+    var move = gameLogic.createMove(null, 0, 0, 0, 0, 0);
     log.log("move=", move);
   }
 
-/**
- * judge of next move is out of the gameboard
- */
+  /**
+  * judge of next move is out of the gameboard
+  */
   function isOutOfBound(boardDelta : BoardDelta): boolean{
     if(boardDelta.row < 0 || boardDelta.row >= ROWS || boardDelta.col < 0 || boardDelta.col >= COLS){
       return true;
@@ -202,9 +229,9 @@ module gameLogic {
   }
 
 
-/**
- * get the rank of animals
- */
+  /**
+  * get the rank of animals
+  */
   function getRank(animal: string): number{
     switch(animal.substring(1)){
       case'mouse' : return 0;
@@ -218,9 +245,9 @@ module gameLogic {
     }
   }
 
-/**
- * get turn index, 0 is blue animals' turn and 1 is read animals'turn.
- */
+  /**
+  * get turn index, 0 is blue animals' turn and 1 is read animals'turn.
+  */
   export function getTurn(turn: number): string{
     return (turn === 0 ? 'B' : 'R');
   }
@@ -287,18 +314,26 @@ module gameLogic {
      return false;  
     }
 
-    function isTrap(coordinate: BoardDelta): boolean{
+    function isBlueTrap(coordinate: BoardDelta): boolean{
       for(let pos of BlueTrap){
         if(angular.equals(pos, coordinate)){
           return true;
         }
       }
+      return false;  
+    }
+
+    function isRedTrap(coordinate: BoardDelta): boolean{
       for(let pos of RedTrap){
         if(angular.equals(pos, coordinate)){
           return true;
         }
       }
       return false;  
+    }
+
+    function isTrap(coordinate: BoardDelta): boolean{
+      return isBlueTrap(coordinate) || isRedTrap(coordinate);  
     }
 
     function isHome(coordinate: BoardDelta): boolean{
@@ -324,16 +359,25 @@ module gameLogic {
       
       var nextValidMove: BoardDelta[] = [];
       for(let cell of fourMove){
-        if(!isRiver(cell) && !isOutOfBound(cell) && (board[cell.row][cell.col] === 'G' || isHome(cell) || isTrap(cell)
-            || canEat(board, turn, animalRank))){
-          nextValidMove.push(cell);
-        }
-      }   
+        // if(!isRiver(cell) && !isOutOfBound(cell) && (board[cell.row][cell.col] === 'G' || isHome(cell) || isTrap(cell)
+        //     || canEat(board, turn, animalRank))){
+        //   nextValidMove.push(cell);
+        // }
+      }  
+
+      // just to eliminate the error message
+      let returnboard: BoardDelta[];
+      return returnboard; 
     }
 
 
     function canEat(board: Board, turn: number, currentAnimalRank: number, target: BoardDelta){
       
+    }
+
+    // not implemented
+    function canMove(row: number, col: number, pre_row: number, pre_col: number): [number, number] {
+      return [-1, -1];
     }
 
 
