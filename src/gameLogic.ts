@@ -218,15 +218,6 @@ module gameLogic {
     log.log("move=", move);
   }
 
-  /**
-  * judge of next move is out of the gameboard
-  */
-  function isOutOfBound(boardDelta : BoardDelta): boolean{
-    if(boardDelta.row < 0 || boardDelta.row >= ROWS || boardDelta.col < 0 || boardDelta.col >= COLS){
-      return true;
-    }
-    return false;
-  }
 
 
   /**
@@ -244,14 +235,6 @@ module gameLogic {
       case'elephant': return 7;
     }
   }
-
-  /**
-  * get turn index, 0 is blue animals' turn and 1 is read animals'turn.
-  */
-  export function getTurn(turn: number): string{
-    return (turn === 0 ? 'B' : 'R');
-  }
-
 
    function isOwnTrap(turn: number, coordinate: BoardDelta): boolean {
     if (turn === 0) {
@@ -271,15 +254,6 @@ module gameLogic {
     } 
   }
 
-
-  function isRiver(coordinate: BoardDelta): boolean{
-    for(let pos of River){
-      if(angular.equals(pos, coordinate)) {
-        return true;
-      }
-    }
-    return false;
-  }
 
 
   function isOppentHome(turn: number, coordinate: BoardDelta): boolean{
@@ -371,14 +345,118 @@ module gameLogic {
     }
 
 
-    function canEat(board: Board, turn: number, currentAnimalRank: number, target: BoardDelta){
+    /* given the coordinate of surrounding coordinate to decide if can move, return the coordinate after move */
+    function canMove(board: Board, row: number, col: number, pre_row: number, pre_col: number, turnIndex: number): BoardDelta {
+      let destination: BoardDelta = {row: -1, col: -1};
+      //if the destination is out of bound
+      if(isOutOfBound(row,col)) return destination;
+     //if the destination is river cell
+      if(isRiver(row, col)){
+        //if the animal is mouse, could move one step.
+        if(board[pre_row][pre_col].substring(1) === 'mouse'){
+          destination.row = row;
+          destination.col = col;
+          return destination;
+        }
+        //if the animal is tiger or lion. They could jump through the river, calculate the newRow and newCol
+        if(board[pre_row][pre_col].substring(1) === 'tiger' || board[pre_row][pre_col].substring(1) === 'lion'){
+        //if there is mouse in the river, can't move
+          if(board[row][col].substring(1) === 'mouse'){
+            return destination;
+          }
+
+
+          let newRow = -1, newCol = -1;
+          //move horizontally
+          if(Math.abs(col - pre_col) != 0){
+            newRow = row;
+            //positive moves right, negative moves left
+            newCol = col + 2 * (col - pre_col); 
+          }
+          //move vertivally
+          if(Math.abs(row - pre_row) != 0){
+            //positive move up, negative moves down.
+            newRow = row - (pre_row - row);
+            newCol = col;
+          }
+          
+          //if the land after river is 'G', can move
+          if(board[newRow][newCol] === 'G'){
+            destination.row = newRow;
+            destination.col = newCol;
+            return destination;
+          }
+          
+       
+          
+
+
+          
+
+
+
+
+          
+          //if the land after river is an animal of same color, can't move
+          //if the land after river is an animal of different color with higher rank, can't move
+          //if the land after river is an animal of different color with lower or same rank, can eat
+        }
+
+      }
+
+
+
+
+      
+
+
+
+
+
+      return destination;
+
+
       
     }
 
-    // not implemented
-    function canMove(row: number, col: number, pre_row: number, pre_col: number): [number, number] {
-      return [-1, -1];
+  /* coordinate out of bound. */
+  function isOutOfBound(row: number, col: number): boolean{
+    if(row < 0 || row >= ROWS || col < 0 || col >= COLS){
+      return true;
     }
+    return false;
+  }
+
+    function isRiver(row: number, col: number): boolean{
+    for(let pos of River){
+      if(pos.row === row && pos.col === col) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  
+  /* get turn index, 0 is blue animals' turn and 1 is read animals'turn. */
+  export function getTurn(turn: number): string{
+    return (turn === 0 ? 'B' : 'R');
+  }
+  
+  
+  function canEat(board: Board, turnIndex: number, pre_row: number, pre_col: number, pos_row: number, pos_col: number): BoardDelta{
+    let destination: BoardDelta;
+    let curAnimal = getTurn(turnIndex);
+    
+
+
+
+
+    return destination;
+
+}
+
+
 
 
 
