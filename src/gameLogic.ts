@@ -10,20 +10,20 @@
  * The game boad(9*7) consists of:
  * River: R
  * Glass: G
- * Trap: T
+ * Trap: RT(read animals' trap), BT(blue animals' trap)
  * Home: RH(red animals' home), BH(blue animals' home)
  * 
  * The initial state is 
  *    
- * 0 [[Rlion, G, T, RH, T, G, RTiger],
- * 1 [G, Rdog, G, T, G, Rcat, G],
+ * 0 [[Rlion, G, RT, RH, RT, G, RTiger],
+ * 1 [G, Rdog, G, RT, G, Rcat, G],
  * 2 [Rmouse, G, Rcheetah, G, Rwolf, G, Relephant],
  * 3 [G, R, R, G, R, R, G],
  * 4 [G, R, R, G, R, R, G],
  * 5 [G, R, R, G, R, R, G],
  * 6 [Belephant, G, Bwolf, G, Bcheetah, G, Bmouse],
- * 7 [G, Bcat, G, T, G, Bdog, G],
- * 8 [Btiger, G, T, BH, T, G, Blion]]
+ * 7 [G, Bcat, G, BT, G, Bdog, G],
+ * 8 [Btiger, G, BT, BH, BT, G, Blion]]
  * 
  * Win Codintion(e.g. Read win, Blue fails), satisfy any one of the following
  * 1. none of blue alive.
@@ -57,20 +57,32 @@ import dragAndDropService = gamingPlatform.dragAndDropService;
 module gameLogic {
   export const ROWS = 9;
   export const COLS = 7;
+ 
   // special cells in the game board
-  //export const Trap: BoardDelta[] = 
+  export const BlueTrap: BoardDelta[] =
+    [{ row: 8, col: 2 }, { row: 7, col: 3 }, { row: 8, col: 4 }];
+  export const RedTrap: BoardDelta[] =
+    [{ row: 0, col: 2 }, { row: 1, col: 3 }, { row: 0, col: 4 }];
+  
+  export const River: BoardDelta[] = [{ row: 3, col: 1 }, { row: 3, col: 2 },
+    { row: 3, col: 4 }, { row: 3, col: 5 }, { row: 4, col: 1 }, { row: 4, col: 2 },
+    { row: 4, col: 4 }, { row: 4, col: 5 }, { row: 5, col: 1 }, { row: 5, col: 2 },
+    { row: 5, col: 4 }, { row: 5, col: 5 }];
+  export const Rhome: BoardDelta = { row: 0, col: 3 };
+  export const Bhome: BoardDelta = { row: 8, col: 3 };
+
 
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix 9*7. */
   export function getInitialBoard(): Board {
-    let board: Board =  [['Rlion', 'G', 'T', 'RH', 'T', 'G', 'RTiger'],
- ['G', 'Rdog', 'G', 'T', 'G', 'Rcat', 'G'],
+    let board: Board =  [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'RTiger'],
+ ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
  ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
  ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
  ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
  ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
  ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
- ['G', 'Bcat', 'G', 'T', 'G', 'Bdog', 'G'],
- ['Btiger', 'G', 'T', 'BH', 'T', 'G', 'Blion']];
+ ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+ ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']];
     return board;
   }
 
@@ -137,6 +149,7 @@ module gameLogic {
     return '';
   }
 
+
   /**
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col.
@@ -181,4 +194,122 @@ module gameLogic {
     var move = gameLogic.createMove(null, 0, 0, 0);
     log.log("move=", move);
   }
+
+/**
+ * judge of next move is out of the gameboard
+ */
+  function isOutOfBound(boardDelta : BoardDelta): boolean{
+    if(boardDelta.row < 0 || boardDelta.row >= ROWS || boardDelta.col < 0 || boardDelta.col >= COLS){
+      return true;
+    }
+    return false;
+  }
+
+
+/**
+ * get the rank of animals
+ */
+  function getRank(animal: string): number{
+    switch(animal){
+      case'mouse' : return 0;
+      case'cat' : return 1;
+      case'dog' : return 2;
+      case'wolf': return 3;
+      case'cheeta': return 4;
+      case'tiger': return 5;
+      case'lion' : return 6;
+      case'elephant': return 7;
+    }
+  }
+
+/**
+ * get turn index, 0 is blue animals' turn and 1 is read animals'turn.
+ */
+  export function getTurn(turn: number): string{
+    return (turn === 0 ? 'B' : 'R');
+  }
+
+
+   function isOwnTrap(turn: number, coordinate: BoardDelta): boolean {
+    if (turn === 0) {
+      for (let pos in BlueTrap) {
+        if (angular.equals(pos, coordinate)) {
+          return true;
+        }
+      }
+      return false;
+    } else if (turn === 1) {
+      for (let pos in RedTrap) {
+        if (angular.equals(pos, coordinate)) {
+          return true;
+        }
+      }
+      return false;
+    } 
+  }
+
+  function isRiver(coordinate: BoardDelta): boolean{
+    for(let pos in River){
+      if(angular.equals(pos, coordinate)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  function isOppentHome(turn: number, coordinate: BoardDelta): boolean{
+    //blue animals' turn
+    if(turn === 0 && angular.equals(coordinate, Rhome)){
+      return true;
+    }
+    //read animals' turn
+    if(turn === 1 && angular.equals(coordinate, Bhome)){
+      return true;
+    }
+    return false;
+  }
+
+
+  function isOppentTrap(turn: number, coordinate: BoardDelta): boolean{
+    //blue animals' turn
+     if(turn === 0){
+       for(let pos in RedTrap){
+         if(angular.equals(coordinate, pos)){
+           return true;
+         }
+       }
+     }
+      if(turn === 1){
+       for(let pos in BlueTrap){
+         if(angular.equals(coordinate, pos)){
+           return true;
+         }
+       }
+     }
+     return false;  
+    }
+
+
+
+
+
+
+
+
+  }
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
 }
