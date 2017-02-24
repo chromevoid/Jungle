@@ -219,7 +219,7 @@ module gameLogic {
       return isBlueTrap(coordinate) || isRedTrap(coordinate);  
     }
 
-    function isHome(coordinate: BoardDelta): boolean{
+  function isHome(coordinate: BoardDelta): boolean{
       if(angular.equals(coordinate, Rhome) || angular.equals(coordinate, Bhome)){
         return true;
       }
@@ -266,7 +266,7 @@ module gameLogic {
       if(isOutOfBound({row: row, col: col})) return destination;
   
       //if the destination is river cell
-      var possibleMove: BoardDelta = {row: row, col: col};
+      let possibleMove: BoardDelta = {row: row, col: col};
       if(isRiver(possibleMove)){
         //if the animal is mouse, could move one step.
         if(board[pre_row][pre_col].substring(1) === 'mouse'){
@@ -290,7 +290,7 @@ module gameLogic {
           //move vertivally
           if(Math.abs(row - pre_row) != 0){
             //positive move up, negative moves down.
-            newRow = row - (pre_row - row);
+            newRow = row - 3 * (pre_row - row);
             newCol = col;
           }
           
@@ -306,42 +306,71 @@ module gameLogic {
         }       
       }
 
-      let possibleDestination: BoardDelta = {row: row, col: col};
+     // let possibleDestination: BoardDelta = {row: row, col: col};
       
-      //if it is a trap and no animal in it.
-      if(board[row][col].substring(1) === 'T'){
-        destination.row = row;
-        destination.col = col;
-        return destination;
-      }
 
-      //if it's opponent's trap and have animal in it.
-      if(isOppentTrap(turnIndex, possibleDestination) && board[row][col].substring(1) !== 'T'){
-        return canEat(board, turnIndex, pre_row, pre_col, row, col);   
+      if(isTrap({row, col})){
+        //if it's opponent trap
+        if(isOppentTrap(turnIndex, {row, col})){
+          //if it is a trap and no animal in it.
+          if(board[row][col].substring(1) === 'T'){
+            destination.row = row;
+            destination.col = col;
+            return destination;
+          }
+          else{
+            destination = canEat(board, turnIndex, pre_row, pre_col, row, col);
+            return destination;
+          }
+        }
+          //
+        if(isOwnTrap(turnIndex, {row,col})){
+          //if it is a trap and no animal in it.
+          if(board[row][col].substring(1) === 'T'){
+            destination.row = row;
+            destination.col = col;
+            return destination;
+          }
+          //has animal in the trap
+          else{
+           let curColor = getTurn(turnIndex);
+           //if the animal of the same color
+           if(board[row][col].substring(0,1) === curColor){
+            return destination;
+           }
+           else{
+             //if any opponent's animal in it, can eat
+             destination.row = row;
+             destination.col = col;
+             return destination;
+           }
+          }
+     
+         }
       }
-      //if it's own trap and have animal in it.
-      if(isOwnTrap(turnIndex, possibleDestination) && board[row][col].substring(1) !== 'T'){       
-      // 1. if it is an animal of same color, can't move
-      let curColor = getTurn(turnIndex);
-      if(board[row][col].substring(0,1) === curColor){
-       return destination;
+      if(isHome({row,col})){
+        let curColor = getTurn(turnIndex);
+       //if it's own home
+        if(board[row][col].substring(0) === curColor){
+          return destination;
+        }
+        // if it's opponent's home
+        else{
+          destination.row = row;
+          destination.col = col;
+          return destination;
+        }
       }
-      // 2. if it is an animal of different color in trap, can move and eat.
-      if(board[row][col].substring(0,1) !== curColor){
+      //land with animal on it
+      if(board[row][col] !== 'G'){
+        return canEat(board, turnIndex, pre_row, pre_col, row, col);
+      }
+      //land with no animal on it
+      else{
         destination.row = row;
         destination.col = col;
         return destination;
-       }
       }
-
-      //if it is a land and no animal in it.
-      if(board[row][col] === 'G'){
-        destination.row = row;
-        destination.col = col;
-        return destination;
-      }
-      //if it is a land and have animal in it
-      return canEat(board, turnIndex, pre_row, pre_col, row, col);   
 }
 
   /**
