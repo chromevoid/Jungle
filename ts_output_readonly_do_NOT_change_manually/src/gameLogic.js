@@ -6,17 +6,30 @@ var log = gamingPlatform.log;
 var dragAndDropService = gamingPlatform.dragAndDropService;
 var gameLogic;
 (function (gameLogic) {
-    gameLogic.ROWS = 3;
-    gameLogic.COLS = 3;
-    /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
+    gameLogic.ROWS = 9;
+    gameLogic.COLS = 7;
+    // special cells in the game board
+    gameLogic.BlueTrap = [{ row: 8, col: 2 }, { row: 7, col: 3 }, { row: 8, col: 4 }];
+    gameLogic.RedTrap = [{ row: 0, col: 2 }, { row: 1, col: 3 }, { row: 0, col: 4 }];
+    gameLogic.River = [{ row: 3, col: 1 }, { row: 3, col: 2 },
+        { row: 3, col: 4 }, { row: 3, col: 5 }, { row: 4, col: 1 }, { row: 4, col: 2 },
+        { row: 4, col: 4 }, { row: 4, col: 5 }, { row: 5, col: 1 }, { row: 5, col: 2 },
+        { row: 5, col: 4 }, { row: 5, col: 5 }];
+    gameLogic.Rhome = { row: 0, col: 3 };
+    gameLogic.Bhome = { row: 8, col: 3 };
+    /** Returns the initial Jungle board, which is a ROWSxCOLS matrix 9*7. */
     function getInitialBoard() {
-        var board = [];
-        for (var i = 0; i < gameLogic.ROWS; i++) {
-            board[i] = [];
-            for (var j = 0; j < gameLogic.COLS; j++) {
-                board[i][j] = '';
-            }
-        }
+        var board = [
+            ['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'RTiger'],
+            ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+            ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+            ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+            ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+            ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+            ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']
+        ];
         return board;
     }
     gameLogic.getInitialBoard = getInitialBoard;
@@ -25,87 +38,75 @@ var gameLogic;
     }
     gameLogic.getInitialState = getInitialState;
     /**
-     * Returns true if the game ended in a tie because there are no empty cells.
-     * E.g., isTie returns true for the following board:
-     *     [['X', 'O', 'X'],
-     *      ['X', 'O', 'O'],
-     *      ['O', 'X', 'X']]
+     * Returns true if the game ended in a tie. To do.
      */
     function isTie(board) {
-        for (var i = 0; i < gameLogic.ROWS; i++) {
-            for (var j = 0; j < gameLogic.COLS; j++) {
-                if (board[i][j] === '') {
-                    // If there is an empty cell then we do not have a tie.
-                    return false;
-                }
-            }
-        }
-        // No empty cells, so we have a tie!
-        return true;
+        return false;
     }
     /**
-     * Return the winner (either 'X' or 'O') or '' if there is no winner.
-     * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-     * E.g., getWinner returns 'X' for the following board:
-     *     [['X', 'O', ''],
-     *      ['X', 'O', ''],
-     *      ['X', '', '']]
-     */
-    function getWinner(board) {
-        var boardString = '';
-        for (var i = 0; i < gameLogic.ROWS; i++) {
-            for (var j = 0; j < gameLogic.COLS; j++) {
-                var cell = board[i][j];
-                boardString += cell === '' ? ' ' : cell;
-            }
-        }
-        var win_patterns = [
-            'XXX......',
-            '...XXX...',
-            '......XXX',
-            'X..X..X..',
-            '.X..X..X.',
-            '..X..X..X',
-            'X...X...X',
-            '..X.X.X..'
-        ];
-        for (var _i = 0, win_patterns_1 = win_patterns; _i < win_patterns_1.length; _i++) {
-            var win_pattern = win_patterns_1[_i];
-            var x_regexp = new RegExp(win_pattern);
-            var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-            if (x_regexp.test(boardString)) {
-                return 'X';
-            }
-            if (o_regexp.test(boardString)) {
-                return 'O';
-            }
-        }
-        return '';
-    }
-    /**
-     * Returns the move that should be performed when player
-     * with index turnIndexBeforeMove makes a move in cell row X col.
-     */
-    function createMove(stateBeforeMove, row, col, turnIndexBeforeMove) {
+       * Returns the move that should be performed when player
+       * with index turnIndexBeforeMove makes a move in cell row X col.
+       */
+    function createMove(stateBeforeMove, row, col, pre_row, pre_col, turnIndexBeforeMove) {
+        // if there is no game status, then create a new game
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
         }
+        // get the board before the move and copy it as the boardAfterMove
         var board = stateBeforeMove.board;
-        if (board[row][col] !== '') {
-            throw new Error("One can only make a move in an empty position!");
-        }
-        if (getWinner(board) !== '' || isTie(board)) {
-            throw new Error("Can only make a move if the game is not over!");
-        }
         var boardAfterMove = angular.copy(board);
-        boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-        var winner = getWinner(boardAfterMove);
+        // define the coordinate before and after move
+        var coordinate = { row: row, col: col };
+        var pre_coordinate = { row: pre_row, col: pre_col };
+        // define the winner string, end scores, and turnindex;
+        var winner = '';
         var endMatchScores;
         var turnIndex;
+        // if the move is illegal, then throw an error
+        var pair = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
+        if (pair === { row: -1, col: -1 }) {
+            throw new Error("Invalid move!");
+        }
+        // if the move is legal, define variables
+        // deal with the move
+        // the [row, col] position is replaced with the piece moved in this round
+        boardAfterMove[row][col] = board[pre_row][pre_col];
+        if (isOppentHome(turnIndexBeforeMove, coordinate)) {
+            // win!!!
+            winner = boardAfterMove[row][col].substring(0, 1);
+        }
+        // the [pre_row, pre_col] position resumes it's original status
+        if (isRiver(pre_coordinate)) {
+            boardAfterMove[pre_row][pre_col] = 'R';
+        }
+        else if (isBlueTrap(pre_coordinate)) {
+            boardAfterMove[pre_row][pre_col] = 'BT';
+        }
+        else if (isRedTrap(pre_coordinate)) {
+            boardAfterMove[pre_row][pre_col] = 'RT';
+        }
+        else {
+            boardAfterMove[pre_row][pre_col] = 'G';
+        }
+        // check whether the oppent's animals are all eaten
+        var pieceCount = 0;
+        var oppentColor = turnIndexBeforeMove === 0 ? 'R' : 'B';
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                if (boardAfterMove[i][j].substring(0, 1) === oppentColor) {
+                    pieceCount++;
+                }
+            }
+        }
+        // if it is true, then win
+        if (pieceCount === 0) {
+            winner = boardAfterMove[row][col].substring(0, 1);
+        }
+        // whether the game ends or not
         if (winner !== '' || isTie(boardAfterMove)) {
-            // Game over.
+            // Gameover
             turnIndex = -1;
-            endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
+            endMatchScores = winner === 'B' ? [1, 0] : winner === 'R' ? [0, 1] : [0, 0];
         }
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
@@ -118,14 +119,283 @@ var gameLogic;
     }
     gameLogic.createMove = createMove;
     function createInitialMove() {
-        return { endMatchScores: null, turnIndex: 0,
-            state: getInitialState() };
+        return {
+            endMatchScores: null, turnIndex: 0,
+            state: getInitialState()
+        };
     }
     gameLogic.createInitialMove = createInitialMove;
     function forSimpleTestHtml() {
-        var move = gameLogic.createMove(null, 0, 0, 0);
+        var move = gameLogic.createMove(null, 0, 0, 0, 0, 0);
         log.log("move=", move);
     }
     gameLogic.forSimpleTestHtml = forSimpleTestHtml;
+    /**
+    * judge of next move is out of the gameboard
+    */
+    function isOutOfBound(boardDelta) {
+        if (boardDelta.row < 0 || boardDelta.row >= gameLogic.ROWS || boardDelta.col < 0 || boardDelta.col >= gameLogic.COLS) {
+            return true;
+        }
+        return false;
+    }
+    /**
+    * get the rank of animals
+    */
+    function getRank(animal) {
+        switch (animal.substring(1)) {
+            case 'mouse': return 0;
+            case 'cat': return 1;
+            case 'dog': return 2;
+            case 'wolf': return 3;
+            case 'cheetah': return 4;
+            case 'tiger': return 5;
+            case 'lion': return 6;
+            case 'elephant': return 7;
+        }
+    }
+    function isTrap(coordinate) {
+        return isBlueTrap(coordinate) || isRedTrap(coordinate);
+    }
+    function isHome(coordinate) {
+        if (angular.equals(coordinate, gameLogic.Rhome) || angular.equals(coordinate, gameLogic.Bhome)) {
+            return true;
+        }
+    }
+    //export var dx = [1, -1, 0, 0];
+    //export var dy = [0, 0, 1, -1];
+    //only one move to land except water or could eat the animal
+    function landMove(board, turn, posBeforeMove, animalRank) {
+        var fourMove = [];
+        var up = { row: posBeforeMove.row + 1, col: posBeforeMove.col };
+        var down = { row: posBeforeMove.row - 1, col: posBeforeMove.col };
+        var left = { row: posBeforeMove.row, col: posBeforeMove.col - 1 };
+        var right = { row: posBeforeMove.row, col: posBeforeMove.col + 1 };
+        fourMove.push(up);
+        fourMove.push(down);
+        fourMove.push(left);
+        fourMove.push(right);
+        var nextValidMove = [];
+        for (var _i = 0, fourMove_1 = fourMove; _i < fourMove_1.length; _i++) {
+            var cell = fourMove_1[_i];
+        }
+        // just to eliminate the error message
+        var returnboard;
+        return returnboard;
+    }
+    /* given the coordinate of surrounding coordinate to decide if can move, return the coordinate after move */
+    function canMove(board, row, col, pre_row, pre_col, turnIndex) {
+        var destination = { row: -1, col: -1 };
+        //if the destination is out of bound
+        if (isOutOfBound({ row: row, col: col }))
+            return destination;
+        //if the destination is river cell
+        var possibleMove = { row: row, col: col };
+        if (isRiver(possibleMove)) {
+            //if the animal is mouse, could move one step.
+            if (board[pre_row][pre_col].substring(1) === 'mouse') {
+                destination.row = row;
+                destination.col = col;
+                return destination;
+            }
+            //if the animal is tiger or lion. They could jump through the river, calculate the newRow and newCol
+            if (board[pre_row][pre_col].substring(1) === 'tiger' || board[pre_row][pre_col].substring(1) === 'lion') {
+                //if there is mouse in the river, can't move
+                if (board[row][col].substring(1) === 'mouse') {
+                    return destination;
+                }
+                var newRow = -1, newCol = -1;
+                //move horizontally
+                if (Math.abs(col - pre_col) != 0) {
+                    newRow = row;
+                    //positive moves right, negative moves left
+                    newCol = col + 2 * (col - pre_col);
+                }
+                //move vertivally
+                if (Math.abs(row - pre_row) != 0) {
+                    //positive move up, negative moves down.
+                    newRow = row - 3 * (pre_row - row);
+                    newCol = col;
+                }
+                //if the land after river is 'G', can move
+                if (board[newRow][newCol] === 'G') {
+                    destination.row = newRow;
+                    destination.col = newCol;
+                    return destination;
+                }
+                //fly over the river to see if can eat animals
+                destination = canEat(board, turnIndex, pre_col, pre_col, newRow, newCol);
+                return destination;
+            }
+        }
+        // let possibleDestination: BoardDelta = {row: row, col: col};
+        if (isTrap({ row: row, col: col })) {
+            //if it's opponent trap
+            if (isOppentTrap(turnIndex, { row: row, col: col })) {
+                //if it is a trap and no animal in it.
+                if (board[row][col].substring(1) === 'T') {
+                    destination.row = row;
+                    destination.col = col;
+                    return destination;
+                }
+                else {
+                    destination = canEat(board, turnIndex, pre_row, pre_col, row, col);
+                    return destination;
+                }
+            }
+            //
+            if (isOwnTrap(turnIndex, { row: row, col: col })) {
+                //if it is a trap and no animal in it.
+                if (board[row][col].substring(1) === 'T') {
+                    destination.row = row;
+                    destination.col = col;
+                    return destination;
+                }
+                else {
+                    var curColor = getTurn(turnIndex);
+                    //if the animal of the same color
+                    if (board[row][col].substring(0, 1) === curColor) {
+                        return destination;
+                    }
+                    else {
+                        //if any opponent's animal in it, can eat
+                        destination.row = row;
+                        destination.col = col;
+                        return destination;
+                    }
+                }
+            }
+        }
+        if (isHome({ row: row, col: col })) {
+            var curColor = getTurn(turnIndex);
+            //if it's own home
+            if (board[row][col].substring(0) === curColor) {
+                return destination;
+            }
+            else {
+                destination.row = row;
+                destination.col = col;
+                return destination;
+            }
+        }
+        //land with animal on it
+        if (board[row][col] !== 'G') {
+            return canEat(board, turnIndex, pre_row, pre_col, row, col);
+        }
+        else {
+            destination.row = row;
+            destination.col = col;
+            return destination;
+        }
+    }
+    /**
+    * get turn index, 0 is blue animals' turn and 1 is read animals' turn.
+    */
+    function getTurn(turn) {
+        return (turn === 0 ? 'B' : 'R');
+    }
+    gameLogic.getTurn = getTurn;
+    /* can eat opponent' lower or same rank animals. */
+    function canEat(board, turnIndex, pre_row, pre_col, pos_row, pos_col) {
+        var destination = { row: -1, col: -1 };
+        var curColor = getTurn(turnIndex);
+        var curAnimal = board[pre_row][pre_col];
+        // 1. if it is an animal of same color, can't move
+        if (board[pos_row][pos_col].substring(0, 1) === curColor) {
+            return destination;
+        }
+        // 2. if it is an animal of different color 
+        if (board[pos_row][pos_col].substring(0, 1) !== curColor) {
+            var facedAnimal = board[pos_row][pos_col];
+            //if it has lower or same rank, or curAnimal is mouse while oppenen's animal is elephant, can eat
+            if (getRank(curAnimal.substring(1)) >= getRank(facedAnimal.substring(1)) ||
+                (curAnimal.substring(1) === 'mouse' && board[pos_row][pos_col].substring(1) === 'elephant')) {
+                destination.row = pos_row;
+                destination.col = pos_col;
+                return destination;
+            }
+            else {
+                return destination;
+            }
+        }
+    }
+    function isOwnTrap(turn, coordinate) {
+        if (turn === 0) {
+            for (var _i = 0, BlueTrap_1 = gameLogic.BlueTrap; _i < BlueTrap_1.length; _i++) {
+                var pos = BlueTrap_1[_i];
+                if (angular.equals(pos, coordinate)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else if (turn === 1) {
+            for (var _a = 0, RedTrap_1 = gameLogic.RedTrap; _a < RedTrap_1.length; _a++) {
+                var pos = RedTrap_1[_a];
+                if (angular.equals(pos, coordinate)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    function isRiver(coordinate) {
+        for (var _i = 0, River_1 = gameLogic.River; _i < River_1.length; _i++) {
+            var pos = River_1[_i];
+            if (angular.equals(pos, coordinate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function isOppentHome(turn, coordinate) {
+        //blue animals' turn
+        if (turn === 0 && angular.equals(coordinate, gameLogic.Rhome)) {
+            return true;
+        }
+        //read animals' turn
+        if (turn === 1 && angular.equals(coordinate, gameLogic.Bhome)) {
+            return true;
+        }
+        return false;
+    }
+    function isOppentTrap(turn, coordinate) {
+        //blue animals' turn
+        if (turn === 0) {
+            for (var _i = 0, RedTrap_2 = gameLogic.RedTrap; _i < RedTrap_2.length; _i++) {
+                var pos = RedTrap_2[_i];
+                if (angular.equals(coordinate, pos)) {
+                    return true;
+                }
+            }
+        }
+        if (turn === 1) {
+            for (var _a = 0, BlueTrap_2 = gameLogic.BlueTrap; _a < BlueTrap_2.length; _a++) {
+                var pos = BlueTrap_2[_a];
+                if (angular.equals(coordinate, pos)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    function isBlueTrap(coordinate) {
+        for (var _i = 0, BlueTrap_3 = gameLogic.BlueTrap; _i < BlueTrap_3.length; _i++) {
+            var pos = BlueTrap_3[_i];
+            if (angular.equals(pos, coordinate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function isRedTrap(coordinate) {
+        for (var _i = 0, RedTrap_3 = gameLogic.RedTrap; _i < RedTrap_3.length; _i++) {
+            var pos = RedTrap_3[_i];
+            if (angular.equals(pos, coordinate)) {
+                return true;
+            }
+        }
+        return false;
+    }
 })(gameLogic || (gameLogic = {}));
 //# sourceMappingURL=gameLogic.js.map
