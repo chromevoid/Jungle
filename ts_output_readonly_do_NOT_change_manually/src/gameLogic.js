@@ -11,7 +11,7 @@ var gameLogic;
     // special cells in the game board
     gameLogic.BlueTrap = [{ row: 8, col: 2 }, { row: 7, col: 3 }, { row: 8, col: 4 }];
     gameLogic.RedTrap = [{ row: 0, col: 2 }, { row: 1, col: 3 }, { row: 0, col: 4 }];
-    gameLogic.River = [{ row: 3, col: 1 }, { row: 3, col: 2 },
+    gameLogic.Water = [{ row: 3, col: 1 }, { row: 3, col: 2 },
         { row: 3, col: 4 }, { row: 3, col: 5 }, { row: 4, col: 1 }, { row: 4, col: 2 },
         { row: 4, col: 4 }, { row: 4, col: 5 }, { row: 5, col: 1 }, { row: 5, col: 2 },
         { row: 5, col: 4 }, { row: 5, col: 5 }];
@@ -23,9 +23,9 @@ var gameLogic;
             ['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'RTiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
-            ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
-            ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
-            ['G', 'R', 'R', 'G', 'R', 'R', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
             ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
             ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
             ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']
@@ -44,9 +44,9 @@ var gameLogic;
         return false;
     }
     /**
-       * Returns the move that should be performed when player
-       * with index turnIndexBeforeMove makes a move in cell row X col.
-       */
+     * Returns the move that should be performed when player
+     * with index turnIndexBeforeMove makes a move in cell row X col.
+     */
     function createMove(stateBeforeMove, row, col, pre_row, pre_col, turnIndexBeforeMove) {
         // if there is no game status, then create a new game
         if (!stateBeforeMove) {
@@ -76,8 +76,8 @@ var gameLogic;
             winner = boardAfterMove[row][col].substring(0, 1);
         }
         // the [pre_row, pre_col] position resumes it's original status
-        if (isRiver(pre_coordinate)) {
-            boardAfterMove[pre_row][pre_col] = 'R';
+        if (isWater(pre_coordinate)) {
+            boardAfterMove[pre_row][pre_col] = 'W';
         }
         else if (isBlueTrap(pre_coordinate)) {
             boardAfterMove[pre_row][pre_col] = 'BT';
@@ -191,7 +191,7 @@ var gameLogic;
             return destination;
         //if the destination is river cell
         var possibleMove = { row: row, col: col };
-        if (isRiver(possibleMove)) {
+        if (isWater(possibleMove)) {
             //if the animal is mouse, could move one step.
             if (board[pre_row][pre_col].substring(1) === 'mouse') {
                 destination.row = row;
@@ -339,9 +339,9 @@ var gameLogic;
             return false;
         }
     }
-    function isRiver(coordinate) {
-        for (var _i = 0, River_1 = gameLogic.River; _i < River_1.length; _i++) {
-            var pos = River_1[_i];
+    function isWater(coordinate) {
+        for (var _i = 0, Water_1 = gameLogic.Water; _i < Water_1.length; _i++) {
+            var pos = Water_1[_i];
             if (angular.equals(pos, coordinate)) {
                 return true;
             }

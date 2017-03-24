@@ -17,6 +17,11 @@ module game {
   export let didMakeMove: boolean = false; // You can only make one move per updateUI
   export let animationEndedTimeout: ng.IPromise<any> = null;
   export let state: IState = null;
+  // for cellClickedOne and cellClickedTwo
+  export let pre_row: number = null;
+  export let pre_col: number = null;
+  export let firstClicked: boolean = false; // if the currnt click is the second one
+                                           // then call createMove, and set this value to false again
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
@@ -192,19 +197,40 @@ module game {
       currentUpdateUI.yourPlayerIndex === currentUpdateUI.turnIndex; // it's my turn
   }
 
-  export function cellClicked(row: number, col: number): void {
+  export function cellClickedOne(row: number, col: number): void {
     log.info("Clicked on cell:", row, col);
     if (!isHumanTurn()) return;
-    let nextMove: IMove = null;
-    try {
-      nextMove = gameLogic.createMove(
-          state, row, col, currentUpdateUI.turnIndex);
-    } catch (e) {
-      log.info(["Cell is already full in position:", row, col]);
-      return;
+    if (!firstClicked) {
+      pre_row = row;
+      pre_col = col;
+      firstClicked = true;
     }
-    // Move is legal, make it!
-    makeMove(nextMove);
+    else {
+      log.info("Has already chosen a piece, now should make move");
+    }
+  }
+
+  export function cellClickedTwo(row: number, col: number): void {
+    log.info("Clicked on cell:", row, col);
+    if (!isHumanTurn()) return;
+    if (firstClicked) {
+      let nextMove: IMove = null;
+      try {
+        nextMove = gameLogic.createMove(
+            state, row, col, pre_row, pre_col, currentUpdateUI.turnIndex);
+      } catch (e) {
+        log.info(["Cell is already full in position:", row, col]);
+        return;
+      }
+      // Move is legal, make it!
+      makeMove(nextMove);
+      firstClicked = false;
+      pre_row = null;
+      pre_col = null;
+    }
+    else {
+      log.info("Has not chosen a piece, now should choose a picec first")
+    }
   }
 
   export function shouldShowImage(row: number, col: number): boolean {

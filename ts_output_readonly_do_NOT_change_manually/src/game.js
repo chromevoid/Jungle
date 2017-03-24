@@ -11,6 +11,11 @@ var game;
     game.didMakeMove = false; // You can only make one move per updateUI
     game.animationEndedTimeout = null;
     game.state = null;
+    // for cellClickedOne and cellClickedTwo
+    game.pre_row = null;
+    game.pre_col = null;
+    game.firstClicked = false; // if the currnt click is the second one
+    // then call createMove, and set this value to false again
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -174,22 +179,44 @@ var game;
             game.currentUpdateUI.turnIndex >= 0 &&
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
-    function cellClicked(row, col) {
+    function cellClickedOne(row, col) {
         log.info("Clicked on cell:", row, col);
         if (!isHumanTurn())
             return;
-        var nextMove = null;
-        try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
+        if (!game.firstClicked) {
+            game.pre_row = row;
+            game.pre_col = col;
+            game.firstClicked = true;
         }
-        catch (e) {
-            log.info(["Cell is already full in position:", row, col]);
-            return;
+        else {
+            log.info("Has already chosen a piece, now should make move");
         }
-        // Move is legal, make it!
-        makeMove(nextMove);
     }
-    game.cellClicked = cellClicked;
+    game.cellClickedOne = cellClickedOne;
+    function cellClickedTwo(row, col) {
+        log.info("Clicked on cell:", row, col);
+        if (!isHumanTurn())
+            return;
+        if (game.firstClicked) {
+            var nextMove = null;
+            try {
+                nextMove = gameLogic.createMove(game.state, row, col, game.pre_row, game.pre_col, game.currentUpdateUI.turnIndex);
+            }
+            catch (e) {
+                log.info(["Cell is already full in position:", row, col]);
+                return;
+            }
+            // Move is legal, make it!
+            makeMove(nextMove);
+            game.firstClicked = false;
+            game.pre_row = null;
+            game.pre_col = null;
+        }
+        else {
+            log.info("Has not chosen a piece, now should choose a picec first");
+        }
+    }
+    game.cellClickedTwo = cellClickedTwo;
     function shouldShowImage(row, col) {
         return game.state.board[row][col] !== "" || isProposal(row, col);
     }
