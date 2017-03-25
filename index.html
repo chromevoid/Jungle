@@ -37,19 +37,7 @@
           ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col)">
         <!-- to do => doing -->
-        <div ng-if="game.isRelephant(row, col)" 
-             width="100%" height="100%">
-             Relephant
-        </div>
-        <div ng-if="game.isRlion(row, col)" 
-             width="100%" height="100%">
-             <img src="img/Blion.png" alt="Rlion" width="93%" height="93%">
-        </div>
-        <div ng-if="game.isRdog(row, col)" 
-             width="100%" height="100%">
-             Rdog
-        </div>
-        
+        <img ng-if="game.checkAnimal(row, col)" ng-src="{{ game.checkAnimal(row, col) }}"" alt="{{ game.checkAnimal(row, col) }}" width="100%" height="100%">        
       </div>
     </div>
   </div>

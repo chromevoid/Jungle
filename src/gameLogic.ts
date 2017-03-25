@@ -71,7 +71,7 @@ module gameLogic {
   /** Returns the initial Jungle board, which is a ROWSxCOLS matrix 9*7. */
   export function getInitialBoard(): Board {
     let board: Board = [
-      ['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'RTiger'],
+      ['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
       ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
       ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
       ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
@@ -481,16 +481,30 @@ module gameLogic {
   }
 
 
-  export function isRlion(stateBeforeMove: IState, row: number, col: number) : boolean {
+  export function checkAnimal(stateBeforeMove: IState, row: number, col: number) : string {
      if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
-    }
+     }
     let board: Board = stateBeforeMove.board;
-    if(board[row][col] === 'Rlion'){
-      return true;
-    }
-    else{
-      return false;
+    let cell: string = board[row][col];
+    switch (cell) {
+      case "Relephant": return 'img/Relephant.png';
+      case "Rlion": return 'img/Rlion.png';
+      case "Rtiger": return 'img/Rtiger.png';
+      case "Rcheetah": return 'img/Rcheetah.png';
+      case "Rwolf": return 'img/Rwolf.png';
+      case "Rdog": return 'img/Rdog.png';
+      case "Rcat": return 'img/Rcat.png';
+      case "Rmouse": return 'img/Rmouse.png';
+      case "Belephant": return 'img/Belephant.png';
+      case "Blion": return 'img/Blion.png';
+      case "Btiger": return 'img/Btiger.png';
+      case "Bcheetah": return 'img/Bcheetah.png';
+      case "Bwolf": return 'img/Bwolf.png';
+      case "Bdog": return 'img/Bdog.png';
+      case "Bcat": return 'img/Bcat.png';
+      case "Bmouse": return 'img/Bmouse.png';
+      default: return null;
     }
   }
   

@@ -296,10 +296,10 @@ var game;
         }
     }
     game.isRHome = isRHome;
-    function isRlion(row, col) {
-        return gameLogic.isRlion(game.state, row, col);
+    function checkAnimal(row, col) {
+        return gameLogic.checkAnimal(game.state, row, col);
     }
-    game.isRlion = isRlion;
+    game.checkAnimal = checkAnimal;
 })(game || (game = {}));
 angular.module('myApp', ['gameServices'])
     .run(['$rootScope', '$timeout',

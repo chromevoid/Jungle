@@ -314,8 +314,8 @@ module game {
     }
   }
 
-  export function isRlion(row: number, col: number) : boolean {
-    return gameLogic.isRlion(state, row, col);
+  export function checkAnimal(row: number, col: number) : string {
+    return gameLogic.checkAnimal(state, row, col);
   }
 
 }
