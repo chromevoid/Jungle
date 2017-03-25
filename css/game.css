@@ -31,18 +31,16 @@ body {
   background-color: rgb(250,250,250);
 }
 
-.t {
-  border-top: 2pt solid black;
-}
-.r {
-  border-right: 2pt solid black;
-}
-.b {
-  border-bottom: 2pt solid black;
+.cell_border {
+  border: 2pt solid black;
 }
 
-.l {
-  border-left: 2pt solid black;
+.grass {
+  background-color: lightyellow;
+}
+
+.water {
+  background-color: lightblue;
 }
 
 .pieceHeight {

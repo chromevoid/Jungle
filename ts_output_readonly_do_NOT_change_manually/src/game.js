@@ -246,6 +246,56 @@ var game;
             game.state.delta.row === row && game.state.delta.col === col;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
+    //add functions isPiece
+    function isGrass(row, col) {
+        return !isWater(row, col);
+    }
+    game.isGrass = isGrass;
+    function isWater(row, col) {
+        if ((row >= 3 && row <= 5 && col >= 1 && col <= 2) || (row >= 3 && row <= 5 && col >= 4 && col <= 5)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    game.isWater = isWater;
+    function isBTrap(row, col) {
+        if ((row === 8 && col === 2) || (row === 7 && col === 3) || (row === 8 && col === 4)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    game.isBTrap = isBTrap;
+    function isRTrap(row, col) {
+        if ((row === 0 && col === 2) || (row === 1 && col === 3) || (row === 0 && col === 4)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    game.isRTrap = isRTrap;
+    function isBHome(row, col) {
+        if (row === 8 && col === 3) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    game.isBHome = isBHome;
+    function isRHome(row, col) {
+        if (row === 0 && col === 3) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    game.isRHome = isRHome;
 })(game || (game = {}));
 angular.module('myApp', ['gameServices'])
     .run(['$rootScope', '$timeout',
