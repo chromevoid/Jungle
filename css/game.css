@@ -77,7 +77,7 @@ a:active {
 }
 
 .btrap {
-  background-color: cornflowerblue;
+  background-color: #7a93bf;
   background-image: url(../img/Trap.png);
   background-size: contain;
 }
@@ -89,7 +89,7 @@ a:active {
 }
 
 .bhome {
-  background-color: cornflowerblue;
+  background-color: #7a93bf;
   background-image: url(../img/Home.png);
   background-size: contain;
 }
