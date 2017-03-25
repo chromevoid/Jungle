@@ -37,7 +37,9 @@
           ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col)">
         <!-- to do => doing -->
-        <img ng-if="game.checkAnimal(row, col)" ng-src="{{ game.checkAnimal(row, col) }}"" alt="{{ game.checkAnimal(row, col) }}" width="100%" height="100%">        
+        <img ng-if="game.checkAnimal(row, col)" ng-src="{{ game.checkAnimal(row, col) }}" alt="{{ game.checkAnimal(row, col) }}"
+             class="not_last" 
+             ng-class="{last: row == 8 || col == 6}"> 
       </div>
     </div>
   </div>
