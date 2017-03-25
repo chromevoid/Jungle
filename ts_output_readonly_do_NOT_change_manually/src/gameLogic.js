@@ -64,7 +64,16 @@ var gameLogic;
         var turnIndex;
         // if the move is illegal, then throw an error
         var pair = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
-        if (pair.row === -1 && pair.col === -1) {
+        var fourPairs = possibleMove(board, pre_row, pre_col, turnIndexBeforeMove);
+        var findPossibleMove = false;
+        while (fourPairs !== []) {
+            var pair_1 = fourPairs.pop();
+            if (pair_1.row === row && pair_1.col === col) {
+                findPossibleMove = true;
+                break;
+            }
+        }
+        if (!findPossibleMove) {
             throw new Error("Invalid move!");
         }
         // if the move is legal, define variables
@@ -162,26 +171,26 @@ var gameLogic;
             return true;
         }
     }
-    function possibleMove(board, turn, pre_row, pre_col, turnIndex) {
+    function possibleMove(board, pre_row, pre_col, turnIndex) {
         var fourMove = [];
-        var up = { row: pre_row + 1, col: pre_col };
-        var down = { row: pre_row - 1, col: pre_col };
+        var up = { row: pre_row - 1, col: pre_col };
+        var down = { row: pre_row + 1, col: pre_col };
         var left = { row: pre_row, col: pre_col - 1 };
         var right = { row: pre_row, col: pre_col + 1 };
         var pos_up = canMove(board, up.row, up.col, pre_row, pre_col, turnIndex);
-        var pos_down = canMove(board, up.row, up.col, pre_row, pre_col, turnIndex);
+        var pos_down = canMove(board, down.row, down.col, pre_row, pre_col, turnIndex);
         var pos_left = canMove(board, left.row, left.col, pre_row, pre_col, turnIndex);
         var pos_right = canMove(board, right.row, right.col, pre_row, pre_col, turnIndex);
-        if (pos_up !== { row: -1, col: -1 }) {
+        if (pos_up.row !== -1 && pos_up.col !== -1) {
             fourMove.push(pos_up);
         }
-        if (pos_down !== { row: -1, col: -1 }) {
+        if (pos_down.row !== -1 && pos_down.col !== -1) {
             fourMove.push(pos_down);
         }
-        if (pos_left !== { row: -1, col: -1 }) {
+        if (pos_left.row !== -1 && pos_left.col !== -1) {
             fourMove.push(pos_left);
         }
-        if (pos_right !== { row: -1, col: -1 }) {
+        if (pos_right.row !== -1 && pos_right.col !== -1) {
             fourMove.push(pos_right);
         }
         return fourMove;
@@ -206,7 +215,7 @@ var gameLogic;
                 destination.col = col;
                 return destination;
             }
-            //if the animal is tiger or lion. They could jump through the river, calculate the newRow and newCol
+            //if the animal is tiger or lion. They could jump through the river, calculate the newRow and newCol=
             if (board[pre_row][pre_col].substring(1) === 'tiger' || board[pre_row][pre_col].substring(1) === 'lion') {
                 //if there is mouse in the river, can't move
                 if (board[row][col].substring(1) === 'mouse') {
