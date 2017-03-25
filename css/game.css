@@ -76,6 +76,30 @@ a:active {
   background-image: url(../img/texture.png);
 }
 
+.btrap {
+  background-color: cornflowerblue;
+  background-image: url(../img/Trap.png);
+  background-size: contain;
+}
+
+.rtrap {
+  background-color: #e49172;
+  background-image: url(../img/Trap.png);
+  background-size: contain;
+}
+
+.bhome {
+  background-color: cornflowerblue;
+  background-image: url(../img/Home.png);
+  background-size: contain;
+}
+
+.rhome {
+  background-color: #e49172;
+  background-image: url(../img/Home.png);
+  background-size: contain;
+}
+
 .pieceHeight {
   height: 100px;
 }
