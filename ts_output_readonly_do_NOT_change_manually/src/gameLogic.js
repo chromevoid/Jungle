@@ -152,7 +152,7 @@ var gameLogic;
     * get the rank of animals
     */
     function getRank(animal) {
-        switch (animal.substring(1)) {
+        switch (animal) {
             case 'mouse': return 0;
             case 'cat': return 1;
             case 'dog': return 2;
@@ -345,9 +345,9 @@ var gameLogic;
         // 2. if it is an animal of different color 
         if (board[pos_row][pos_col].substring(0, 1) !== curColor) {
             var facedAnimal = board[pos_row][pos_col];
-            //if it has lower or same rank, or curAnimal is mouse while oppenen's animal is elephant, can eat
-            if ((getRank(curAnimal.substring(1)) >= getRank(facedAnimal.substring(1))) ||
-                (curAnimal.substring(1) === 'mouse' && board[pos_row][pos_col].substring(1) === 'elephant')) {
+            //if it has lower or same rank, or curAnimal is mouse while oppenent's animal is elephant, can eat
+            if (((getRank(curAnimal.substring(1)) >= getRank(facedAnimal.substring(1))) && (curAnimal.substring(1) !== 'mouse' && facedAnimal.substring(1) !== 'elephant')) ||
+                (curAnimal.substring(1) === 'mouse' && facedAnimal.substring(1) === 'elephant')) {
                 destination.row = pos_row;
                 destination.col = pos_col;
                 return destination;
