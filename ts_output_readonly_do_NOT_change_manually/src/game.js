@@ -17,6 +17,9 @@ var game;
     game.firstClicked = false; // if the currnt click is the second one
     // then call createMove, and set this value to false again
     game.cellClickedOneDone = false;
+    // for changeSelectCSS
+    game.click_row = null;
+    game.click_col = null;
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -190,9 +193,11 @@ var game;
             game.pre_col = col;
             game.firstClicked = true;
             game.cellClickedOneDone = true;
+            game.click_row = row;
+            game.click_col = col;
         }
         else {
-            log.info("Has already chosen a piece, now should make move");
+            log.info("cellCilckedOne info: Has already chosen a piece, now should make move");
         }
     }
     game.cellClickedOne = cellClickedOne;
@@ -202,7 +207,7 @@ var game;
             return;
         // log.info(firstClicked);
         if (game.cellClickedOneDone) {
-            log.info("cellClickedOne is done in this round");
+            log.info("cellClickedTwo info: cellClickedOne is done in this round, can't execute the Two function");
             game.cellClickedOneDone = false;
             return;
         }
@@ -212,7 +217,11 @@ var game;
                 nextMove = gameLogic.createMove(game.state, row, col, game.pre_row, game.pre_col, game.currentUpdateUI.turnIndex);
             }
             catch (e) {
-                log.info(["Cell is already full in position:", row, col]);
+                log.info(["Invalid move:", row, col]);
+                game.cellClickedOneDone = false; // the move is invalid, the player should choose another piece to move
+                game.firstClicked = false; // the move is invalid, the player should choose another piece to move
+                game.pre_row = null; // the move is invalid, the player should choose another piece to move
+                game.pre_col = null; // the move is invalid, the player should choose another piece to move
                 return;
             }
             // Move is legal, make it!
@@ -226,6 +235,15 @@ var game;
         }
     }
     game.cellClickedTwo = cellClickedTwo;
+    function changeSelectCSS(row, col) {
+        if (game.firstClicked && game.click_row === row && game.click_col === col) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    game.changeSelectCSS = changeSelectCSS;
     function shouldShowImage(row, col) {
         return game.state.board[row][col] !== "" || isProposal(row, col);
     }
