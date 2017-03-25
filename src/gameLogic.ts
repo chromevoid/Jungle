@@ -120,7 +120,7 @@ module gameLogic {
 
     // if the move is illegal, then throw an error
     let pair: BoardDelta = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
-    if (pair === {row: -1, col: -1}) {
+    if (pair.row === -1 && pair.col === -1) {
       throw new Error("Invalid move!");
     }
 
@@ -147,7 +147,7 @@ module gameLogic {
       boardAfterMove[pre_row][pre_col] = 'G';
     }
 
-    // check whether the oppent's animals are all eaten
+    // check whether the opponent's animals are all eaten, 0 is B, 1 is R
     let pieceCount = 0;
     let oppentColor = turnIndexBeforeMove === 0 ? 'R' : 'B';
     for (let i = 0; i < ROWS; i++) {
@@ -255,6 +255,14 @@ module gameLogic {
     /* given the coordinate of surrounding coordinate to decide if can move, return the coordinate after move */
    function canMove(board: Board, row: number, col: number, pre_row: number, pre_col: number, turnIndex: number): BoardDelta {
       let destination: BoardDelta = {row: -1, col: -1};
+
+
+       //if currentChosen piece is not the turnIndex's color. 
+      let currentColor = getTurn(turnIndex);
+      if(board[pre_row][pre_col].substring(0,1) !== currentColor){
+        return destination;
+      }
+
       //if the destination is out of bound
       if(isOutOfBound({row: row, col: col})) return destination;
   
