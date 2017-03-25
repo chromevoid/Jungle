@@ -226,10 +226,9 @@ module gameLogic {
     }
 
 
-    //export var dx = [1, -1, 0, 0];
-    //export var dy = [0, 0, 1, -1];
+ 
     //only one move to land except water or could eat the animal
-    function landMove(board: Board, turn: number, posBeforeMove: BoardDelta, animalRank: number): BoardDelta[]{
+    function possibleMove(board: Board, turn: number, pre_row: number, pre_col: number): BoardDelta[]{
       var fourMove: BoardDelta[] = [];
       var up: BoardDelta = {row: posBeforeMove.row + 1, col: posBeforeMove.col};
       var down: BoardDelta = {row: posBeforeMove.row - 1, col: posBeforeMove.col};
@@ -240,6 +239,17 @@ module gameLogic {
       fourMove.push(left);
       fourMove.push(right);
       
+      //* lion and tiger could jump across the river.
+      if(board[pre_row][pre_col].substring(1) === 'elephant' ||  board[pre_row][pre_col].substring(1) === 'cheetah' 
+        || board[pre_row][pre_col].substring(1) === ’wolf‘ || board[pre_row][pre_col].substring(1) === dog, Rcat, Rmouse'
+
+
+
+
+
+
+
+
       var nextValidMove: BoardDelta[] = [];
       for(let cell of fourMove){
         // if(!isRiver(cell) && !isOutOfBound(cell) && (board[cell.row][cell.col] === 'G' || isHome(cell) || isTrap(cell)
@@ -480,4 +490,20 @@ module gameLogic {
     }
     return false;
   }
+
+
+  export function isRlion(stateBeforeMove: IState, row: number, col: number) : boolean {
+     if (!stateBeforeMove) {
+      stateBeforeMove = getInitialState();
+    }
+    let board: Board = stateBeforeMove.board;
+    if(board[row][col] === 'Rlion'){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+ 
+  
 }
