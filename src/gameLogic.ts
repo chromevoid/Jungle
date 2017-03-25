@@ -227,21 +227,21 @@ module gameLogic {
 
 
  
-    //only one move to land except water or could eat the animal
-    function possibleMove(board: Board, turn: number, pre_row: number, pre_col: number): BoardDelta[]{
-      var fourMove: BoardDelta[] = [];
-      var up: BoardDelta = {row: posBeforeMove.row + 1, col: posBeforeMove.col};
-      var down: BoardDelta = {row: posBeforeMove.row - 1, col: posBeforeMove.col};
-      var left: BoardDelta = {row: posBeforeMove.row, col: posBeforeMove.col - 1};
-      var right: BoardDelta = {row: posBeforeMove.row, col: posBeforeMove.col + 1};
-      fourMove.push(up);
-      fourMove.push(down);
-      fourMove.push(left);
-      fourMove.push(right);
+    // //only one move to land except water or could eat the animal
+    // function possibleMove(board: Board, turn: number, pre_row: number, pre_col: number): BoardDelta[]{
+    //   var fourMove: BoardDelta[] = [];
+    //   var up: BoardDelta = {row: posBeforeMove.row + 1, col: posBeforeMove.col};
+    //   var down: BoardDelta = {row: posBeforeMove.row - 1, col: posBeforeMove.col};
+    //   var left: BoardDelta = {row: posBeforeMove.row, col: posBeforeMove.col - 1};
+    //   var right: BoardDelta = {row: posBeforeMove.row, col: posBeforeMove.col + 1};
+    //   fourMove.push(up);
+    //   fourMove.push(down);
+    //   fourMove.push(left);
+    //   fourMove.push(right);
       
-      //* lion and tiger could jump across the river.
-      if(board[pre_row][pre_col].substring(1) === 'elephant' ||  board[pre_row][pre_col].substring(1) === 'cheetah' 
-        || board[pre_row][pre_col].substring(1) === ’wolf‘ || board[pre_row][pre_col].substring(1) === dog, Rcat, Rmouse'
+    //   //* lion and tiger could jump across the river.
+    //   if(board[pre_row][pre_col].substring(1) === 'elephant' ||  board[pre_row][pre_col].substring(1) === 'cheetah' 
+    //     || board[pre_row][pre_col].substring(1) === ’wolf‘ || board[pre_row][pre_col].substring(1) === dog, Rcat, Rmouse'
 
 
 
@@ -250,18 +250,18 @@ module gameLogic {
 
 
 
-      var nextValidMove: BoardDelta[] = [];
-      for(let cell of fourMove){
-        // if(!isRiver(cell) && !isOutOfBound(cell) && (board[cell.row][cell.col] === 'G' || isHome(cell) || isTrap(cell)
-        //     || canEat(board, turn, animalRank))){
-        //   nextValidMove.push(cell);
-        // }
-      }  
+    //   var nextValidMove: BoardDelta[] = [];
+    //   for(let cell of fourMove){
+    //     // if(!isRiver(cell) && !isOutOfBound(cell) && (board[cell.row][cell.col] === 'G' || isHome(cell) || isTrap(cell)
+    //     //     || canEat(board, turn, animalRank))){
+    //     //   nextValidMove.push(cell);
+    //     // }
+    //   }  
 
-      // just to eliminate the error message
-      let returnboard: BoardDelta[];
-      return returnboard; 
-    }
+    //   // just to eliminate the error message
+    //   let returnboard: BoardDelta[];
+    //   return returnboard; 
+    // }
 
     /* given the coordinate of surrounding coordinate to decide if can move, return the coordinate after move */
    function canMove(board: Board, row: number, col: number, pre_row: number, pre_col: number, turnIndex: number): BoardDelta {
@@ -505,5 +505,4 @@ module gameLogic {
     }
   }
  
-  
 }

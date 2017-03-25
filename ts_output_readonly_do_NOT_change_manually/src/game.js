@@ -296,6 +296,10 @@ var game;
         }
     }
     game.isRHome = isRHome;
+    function isRlion(row, col) {
+        return gameLogic.isRlion(game.state, row, col);
+    }
+    game.isRlion = isRlion;
 })(game || (game = {}));
 angular.module('myApp', ['gameServices'])
     .run(['$rootScope', '$timeout',

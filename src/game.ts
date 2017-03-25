@@ -314,16 +314,11 @@ module game {
     }
   }
 
-  export function isRLion(row: number, col: number) : boolean {
+  export function isRlion(row: number, col: number) : boolean {
     return gameLogic.isRlion(state, row, col);
   }
 
-
-
 }
-
-
-
 
 angular.module('myApp', ['gameServices'])
   .run(['$rootScope', '$timeout',

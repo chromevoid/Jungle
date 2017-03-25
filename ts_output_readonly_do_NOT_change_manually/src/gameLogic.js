@@ -162,27 +162,31 @@ var gameLogic;
             return true;
         }
     }
-    //export var dx = [1, -1, 0, 0];
-    //export var dy = [0, 0, 1, -1];
-    //only one move to land except water or could eat the animal
-    function landMove(board, turn, posBeforeMove, animalRank) {
-        var fourMove = [];
-        var up = { row: posBeforeMove.row + 1, col: posBeforeMove.col };
-        var down = { row: posBeforeMove.row - 1, col: posBeforeMove.col };
-        var left = { row: posBeforeMove.row, col: posBeforeMove.col - 1 };
-        var right = { row: posBeforeMove.row, col: posBeforeMove.col + 1 };
-        fourMove.push(up);
-        fourMove.push(down);
-        fourMove.push(left);
-        fourMove.push(right);
-        var nextValidMove = [];
-        for (var _i = 0, fourMove_1 = fourMove; _i < fourMove_1.length; _i++) {
-            var cell = fourMove_1[_i];
-        }
-        // just to eliminate the error message
-        var returnboard;
-        return returnboard;
-    }
+    // //only one move to land except water or could eat the animal
+    // function possibleMove(board: Board, turn: number, pre_row: number, pre_col: number): BoardDelta[]{
+    //   var fourMove: BoardDelta[] = [];
+    //   var up: BoardDelta = {row: posBeforeMove.row + 1, col: posBeforeMove.col};
+    //   var down: BoardDelta = {row: posBeforeMove.row - 1, col: posBeforeMove.col};
+    //   var left: BoardDelta = {row: posBeforeMove.row, col: posBeforeMove.col - 1};
+    //   var right: BoardDelta = {row: posBeforeMove.row, col: posBeforeMove.col + 1};
+    //   fourMove.push(up);
+    //   fourMove.push(down);
+    //   fourMove.push(left);
+    //   fourMove.push(right);
+    //   //* lion and tiger could jump across the river.
+    //   if(board[pre_row][pre_col].substring(1) === 'elephant' ||  board[pre_row][pre_col].substring(1) === 'cheetah' 
+    //     || board[pre_row][pre_col].substring(1) === ’wolf‘ || board[pre_row][pre_col].substring(1) === dog, Rcat, Rmouse'
+    //   var nextValidMove: BoardDelta[] = [];
+    //   for(let cell of fourMove){
+    //     // if(!isRiver(cell) && !isOutOfBound(cell) && (board[cell.row][cell.col] === 'G' || isHome(cell) || isTrap(cell)
+    //     //     || canEat(board, turn, animalRank))){
+    //     //   nextValidMove.push(cell);
+    //     // }
+    //   }  
+    //   // just to eliminate the error message
+    //   let returnboard: BoardDelta[];
+    //   return returnboard; 
+    // }
     /* given the coordinate of surrounding coordinate to decide if can move, return the coordinate after move */
     function canMove(board, row, col, pre_row, pre_col, turnIndex) {
         var destination = { row: -1, col: -1 };
@@ -397,5 +401,18 @@ var gameLogic;
         }
         return false;
     }
+    function isRlion(stateBeforeMove, row, col) {
+        if (!stateBeforeMove) {
+            stateBeforeMove = getInitialState();
+        }
+        var board = stateBeforeMove.board;
+        if (board[row][col] === 'Rlion') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    gameLogic.isRlion = isRlion;
 })(gameLogic || (gameLogic = {}));
 //# sourceMappingURL=gameLogic.js.map
