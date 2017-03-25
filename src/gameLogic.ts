@@ -396,7 +396,7 @@ module gameLogic {
      if(board[pos_row][pos_col].substring(0,1) !== curColor){
        let facedAnimal = board[pos_row][pos_col];
        //if it has lower or same rank, or curAnimal is mouse while oppenen's animal is elephant, can eat
-       if(getRank(curAnimal.substring(1)) >= getRank(facedAnimal.substring(1))||
+       if((getRank(curAnimal.substring(1)) >= getRank(facedAnimal.substring(1)))||
             (curAnimal.substring(1) === 'mouse' && board[pos_row][pos_col].substring(1) === 'elephant')){
          destination.row = pos_row;
          destination.col = pos_col;
