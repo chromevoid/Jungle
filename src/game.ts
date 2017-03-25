@@ -23,6 +23,9 @@ module game {
   export let firstClicked: boolean = false; // if the currnt click is the second one
                                            // then call createMove, and set this value to false again
   export let cellClickedOneDone = false;
+  // for changeSelectCSS
+  export let click_row: number = null;
+  export let click_col: number = null;
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
@@ -198,7 +201,7 @@ module game {
       currentUpdateUI.yourPlayerIndex === currentUpdateUI.turnIndex; // it's my turn
   }
 
-  export function cellClickedOne(row: number, col: number): void {
+    export function cellClickedOne(row: number, col: number): void {
     log.info("Clicked on cell (one):", row, col);
     if (!isHumanTurn()) return;
     // log.info(firstClicked);
@@ -207,9 +210,11 @@ module game {
       pre_col = col;
       firstClicked = true;
       cellClickedOneDone = true;
+      click_row = row;
+      click_col = col;
     }
     else {
-      log.info("Has already chosen a piece, now should make move");
+      log.info("cellCilckedOne info: Has already chosen a piece, now should make move");
     }
   }
 
@@ -218,7 +223,7 @@ module game {
     if (!isHumanTurn()) return;
     // log.info(firstClicked);
     if (cellClickedOneDone) {
-      log.info("cellClickedOne is done in this round");
+      log.info("cellClickedTwo info: cellClickedOne is done in this round, can't execute the Two function");
       cellClickedOneDone = false;
       return;
     }
@@ -228,7 +233,11 @@ module game {
         nextMove = gameLogic.createMove(
             state, row, col, pre_row, pre_col, currentUpdateUI.turnIndex);
       } catch (e) {
-        log.info(["Cell is already full in position:", row, col]);
+        log.info(["Invalid move:", row, col]);
+        cellClickedOneDone = false; // the move is invalid, the player should choose another piece to move
+        firstClicked = false; // the move is invalid, the player should choose another piece to move
+        pre_row = null; // the move is invalid, the player should choose another piece to move
+        pre_col = null; // the move is invalid, the player should choose another piece to move
         return;
       }
       // Move is legal, make it!
@@ -239,6 +248,15 @@ module game {
     }
     else {
       log.info("Has not chosen a piece, now should choose a picec first");
+    }
+  }
+
+  export function changeSelectCSS(row: number, col: number): boolean {
+    if (firstClicked && click_row === row && click_col === col) {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 
