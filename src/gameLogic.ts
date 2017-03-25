@@ -276,7 +276,12 @@ module gameLogic {
   
       //if the destination is river cell
       let possibleMove: BoardDelta = {row: row, col: col};
+      
       if(isWater(possibleMove)){
+        //any other animals except mouse, tiger and lion meet the water, can't move. 
+        if(board[pre_row][pre_col].substring(1) !== 'mouse' && board[pre_row][pre_col].substring(1) !== 'tiger' && board[pre_row][pre_col].substring(1) !== 'lion'){
+          return destination;
+        }
         //if the animal is mouse, could move one step.
         if(board[pre_row][pre_col].substring(1) === 'mouse'){
           destination.row = row;
@@ -421,8 +426,15 @@ module gameLogic {
   /* can eat opponent' lower or same rank animals. */
   function canEat(board: Board, turnIndex: number, pre_row: number, pre_col: number, pos_row: number, pos_col: number): BoardDelta{
     let destination: BoardDelta = {row: -1, col: -1};
+    let currentPosition: BoardDelta = {row: pre_row, col: pre_col};
+
     let curColor = getTurn(turnIndex);
     let curAnimal = board[pre_row][pre_col];
+    
+    // if two animals are on the different kinds of place, they can't eat the other.  (add the rule)
+    if(isWater(destination) !== isWater(currentPosition)){
+      return destination;
+    }
     
      // 1. if it is an animal of same color, can't move
      if(board[pos_row][pos_col].substring(0,1) === curColor){

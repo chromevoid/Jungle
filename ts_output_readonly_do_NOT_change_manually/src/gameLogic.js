@@ -209,6 +209,10 @@ var gameLogic;
         //if the destination is river cell
         var possibleMove = { row: row, col: col };
         if (isWater(possibleMove)) {
+            //any other animals except mouse, tiger and lion meet the water, can't move. 
+            if (board[pre_row][pre_col].substring(1) !== 'mouse' && board[pre_row][pre_col].substring(1) !== 'tiger' && board[pre_row][pre_col].substring(1) !== 'lion') {
+                return destination;
+            }
             //if the animal is mouse, could move one step.
             if (board[pre_row][pre_col].substring(1) === 'mouse') {
                 destination.row = row;
@@ -336,8 +340,13 @@ var gameLogic;
     /* can eat opponent' lower or same rank animals. */
     function canEat(board, turnIndex, pre_row, pre_col, pos_row, pos_col) {
         var destination = { row: -1, col: -1 };
+        var currentPosition = { row: pre_row, col: pre_col };
         var curColor = getTurn(turnIndex);
         var curAnimal = board[pre_row][pre_col];
+        // if two animals are on the different kinds of place, they can't eat the other.  (add the rule)
+        if (isWater(destination) !== isWater(currentPosition)) {
+            return destination;
+        }
         // 1. if it is an animal of same color, can't move
         if (board[pos_row][pos_col].substring(0, 1) === curColor) {
             return destination;
