@@ -22,6 +22,7 @@ module game {
   export let pre_col: number = null;
   export let firstClicked: boolean = false; // if the currnt click is the second one
                                            // then call createMove, and set this value to false again
+  export let cellClickedOneDone = false;
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
@@ -198,12 +199,14 @@ module game {
   }
 
   export function cellClickedOne(row: number, col: number): void {
-    log.info("Clicked on cell:", row, col);
+    log.info("Clicked on cell (one):", row, col);
     if (!isHumanTurn()) return;
+    // log.info(firstClicked);
     if (!firstClicked) {
       pre_row = row;
       pre_col = col;
       firstClicked = true;
+      cellClickedOneDone = true;
     }
     else {
       log.info("Has already chosen a piece, now should make move");
@@ -211,8 +214,14 @@ module game {
   }
 
   export function cellClickedTwo(row: number, col: number): void {
-    log.info("Clicked on cell:", row, col);
+    log.info("Clicked on cell (two):", row, col);
     if (!isHumanTurn()) return;
+    // log.info(firstClicked);
+    if (cellClickedOneDone) {
+      log.info("cellClickedOne is done in this round");
+      cellClickedOneDone = false;
+      return;
+    }
     if (firstClicked) {
       let nextMove: IMove = null;
       try {
@@ -229,7 +238,7 @@ module game {
       pre_col = null;
     }
     else {
-      log.info("Has not chosen a piece, now should choose a picec first")
+      log.info("Has not chosen a piece, now should choose a picec first");
     }
   }
 

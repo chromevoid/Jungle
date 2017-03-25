@@ -16,6 +16,7 @@ var game;
     game.pre_col = null;
     game.firstClicked = false; // if the currnt click is the second one
     // then call createMove, and set this value to false again
+    game.cellClickedOneDone = false;
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -180,13 +181,15 @@ var game;
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
     function cellClickedOne(row, col) {
-        log.info("Clicked on cell:", row, col);
+        log.info("Clicked on cell (one):", row, col);
         if (!isHumanTurn())
             return;
+        // log.info(firstClicked);
         if (!game.firstClicked) {
             game.pre_row = row;
             game.pre_col = col;
             game.firstClicked = true;
+            game.cellClickedOneDone = true;
         }
         else {
             log.info("Has already chosen a piece, now should make move");
@@ -194,9 +197,15 @@ var game;
     }
     game.cellClickedOne = cellClickedOne;
     function cellClickedTwo(row, col) {
-        log.info("Clicked on cell:", row, col);
+        log.info("Clicked on cell (two):", row, col);
         if (!isHumanTurn())
             return;
+        // log.info(firstClicked);
+        if (game.cellClickedOneDone) {
+            log.info("cellClickedOne is done in this round");
+            game.cellClickedOneDone = false;
+            return;
+        }
         if (game.firstClicked) {
             var nextMove = null;
             try {
