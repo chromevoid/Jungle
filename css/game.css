@@ -27,33 +27,36 @@ textarea, input {
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
+
 body {
-  background-color: #b9dfde;
-  background-image: url(../img/texture.png)
+  /*background-color: #b9dfde;*/
+  background-color: #FCFAF2;
+  background-image: url(../img/texture.png);
 }
 
-.cell_border {
-  border: 4pt solid #FCFAF2;
+img {
+  position: absolute;  
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto; 
+  /*border-radius: 12px;*/
+}
+
+img:hover {
+  width:100%;
+  height:100%;
 }
 
 .grass {
   background-color: yellowgreen;
-  background-image: url(../img/texture.png)
+  background-image: url(../img/texture.png);
 }
 
 .water {
   background-color: #81C7D4;
-  background-image: url(../img/texture.png)
-}
-
-.not_last {
-  width: 93%;
-  height: 93%
-}
-
-.last {
-  width: 100%;
-  height: 100%;
+  background-image: url(../img/texture.png);
 }
 
 .pieceHeight {
