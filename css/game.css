@@ -49,6 +49,23 @@ img:hover {
   height:100%;
 }
 
+a {
+  text-decoration: none;
+  color: lightblue;
+}
+
+a:visited {
+    color: midnightblue;
+}
+
+a:hover {
+    color: midnightblue;
+}
+
+a:active {
+    color: midnightblue;
+} 
+
 .grass {
   background-color: yellowgreen;
   background-image: url(../img/texture.png);

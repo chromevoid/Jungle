@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>TicTacToe</title>
+  <title>Jungle by Chrome and Mona</title>
   <meta name="description" content="TicTacToe game">
   <link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;,"><!-- Suppress browser request for favicon.ico -->
 
@@ -35,12 +35,12 @@
           ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
           ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col)">
-        <!-- to do => doing -->
         <img ng-if="game.checkAnimal(row, col)" ng-src="{{ game.checkAnimal(row, col) }}" alt="{{ game.checkAnimal(row, col) }}" width="90%" height="90%"> 
       </div>
     </div>
   </div>
 </div>
+<div style="text-align: center; color: gray">Claim: Icon made by <a href="http://www.flaticon.com/authors/pixel-perfect">Pixel perfect</a> and <a href="http://www.flaticon.com/authors/freepik">Freepik</a> from <a href="http://www.flaticon.com/">Flaticon</a> with minor modifications. </div>
 
 </body>
 </html>
