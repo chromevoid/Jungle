@@ -262,7 +262,63 @@ module game {
     return state.delta &&
         state.delta.row === row && state.delta.col === col;
   }
+
+
+    //add functions isPiece
+  export function isGrass(row: number, col: number) : boolean {
+    return !isWater(row, col);
+  }
+
+  export function isWater(row: number, col: number) : boolean {
+    if ((row >= 3 && row <= 5 && col >=1 && col <= 2) || (row >=3 && row <=5 && col >= 4 && col <=5)) {
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  export function isBTrap(row: number, col: number) : boolean {
+    if((row === 8 && col === 2) || (row === 7 && col === 3) || (row === 8 && col === 4)) {
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+   export function isRTrap(row: number, col: number) : boolean {
+    if ((row === 0 && col === 2) || (row === 1 && col === 3) || (row === 0 && col === 4)) {
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  export function isBHome(row: number, col: number) : boolean {
+    if(row === 8 && col === 3 ){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  export function isRHome(row: number, col: number) : boolean {
+    if(row === 0 && col ===3 ){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+
 }
+
+
+
 
 angular.module('myApp', ['gameServices'])
   .run(['$rootScope', '$timeout',
