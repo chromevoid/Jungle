@@ -244,6 +244,17 @@ var game;
         }
     }
     game.changeSelectCSS = changeSelectCSS;
+    function isPossibleMove(row, col) {
+        if (game.firstClicked) {
+            if (gameLogic.isPossibleMove(game.state, game.click_row, game.click_col, row, col, game.currentUpdateUI.turnIndex)) {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    game.isPossibleMove = isPossibleMove;
     function shouldShowImage(row, col) {
         return game.state.board[row][col] !== "" || isProposal(row, col);
     }

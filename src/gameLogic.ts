@@ -119,7 +119,7 @@ module gameLogic {
     let turnIndex: number;
 
     // if the move is illegal, then throw an error
-    let pair: BoardDelta = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
+    // let pair: BoardDelta = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
     let fourPairs: BoardDelta[] = possibleMove(board, pre_row, pre_col, turnIndexBeforeMove);
     let findPossibleMove: boolean = false;
     while (fourPairs !== []) {
@@ -259,6 +259,18 @@ module gameLogic {
           fourMove.push(pos_right);
         }
         return fourMove;
+  }
+
+  export function isPossibleMove(stateBeforeMove: IState, pre_row: number, pre_col: number, row:number, col:number, turnIndex: number): boolean{  
+       let board: Board = stateBeforeMove.board;
+       let fourPairs: BoardDelta[] = possibleMove(board, pre_row, pre_col, turnIndex);
+       while (fourPairs !== []) {
+         let pair: BoardDelta = fourPairs.pop();
+         if (pair.row === row && pair.col === col) {
+           return true;
+         }
+       }
+       return false;
   }
 
     /* given the coordinate of surrounding coordinate to decide if can move, return the coordinate after move */

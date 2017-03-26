@@ -63,12 +63,12 @@ var gameLogic;
         var endMatchScores;
         var turnIndex;
         // if the move is illegal, then throw an error
-        var pair = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
+        // let pair: BoardDelta = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
         var fourPairs = possibleMove(board, pre_row, pre_col, turnIndexBeforeMove);
         var findPossibleMove = false;
         while (fourPairs !== []) {
-            var pair_1 = fourPairs.pop();
-            if (pair_1.row === row && pair_1.col === col) {
+            var pair = fourPairs.pop();
+            if (pair.row === row && pair.col === col) {
                 findPossibleMove = true;
                 break;
             }
@@ -195,6 +195,18 @@ var gameLogic;
         }
         return fourMove;
     }
+    function isPossibleMove(stateBeforeMove, pre_row, pre_col, row, col, turnIndex) {
+        var board = stateBeforeMove.board;
+        var fourPairs = possibleMove(board, pre_row, pre_col, turnIndex);
+        while (fourPairs !== []) {
+            var pair = fourPairs.pop();
+            if (pair.row === row && pair.col === col) {
+                return true;
+            }
+        }
+        return false;
+    }
+    gameLogic.isPossibleMove = isPossibleMove;
     /* given the coordinate of surrounding coordinate to decide if can move, return the coordinate after move */
     function canMove(board, row, col, pre_row, pre_col, turnIndex) {
         var destination = { row: -1, col: -1 };

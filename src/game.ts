@@ -260,6 +260,17 @@ module game {
     }
   }
 
+  export function isPossibleMove(row: number, col: number): boolean {
+    if (firstClicked) {
+      if (gameLogic.isPossibleMove(state, click_row, click_col, row, col, currentUpdateUI.turnIndex)) {
+        return true;
+      }
+    }
+    else {
+      return false;
+    }
+  }
+
   export function shouldShowImage(row: number, col: number): boolean {
     return state.board[row][col] !== "" || isProposal(row, col);
   }

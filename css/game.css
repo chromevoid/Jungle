@@ -102,11 +102,16 @@ a:active {
   background-size: contain;
 }
 
-.selected > img {
+.selected {
   width: 100%;
   height: 100%;
   animation-name: select;
   animation-duration: 0.2s;
+}
+
+.possible {
+  border: 4px solid #326f4e;
+  animation: slowlyAppear 0.2s linear;
 }
 
 @keyframes select {
