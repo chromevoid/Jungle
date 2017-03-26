@@ -261,12 +261,17 @@ module gameLogic {
         return fourMove;
   }
 
-  export function isPossibleMove(stateBeforeMove: IState, pre_row: number, pre_col: number, row:number, col:number, turnIndex: number): boolean{  
+  export function isPossibleMove(stateBeforeMove: IState, pre_row: number, pre_col: number, row:number, col:number, turnIndex: number): boolean {  
        let board: Board = stateBeforeMove.board;
        let fourPairs: BoardDelta[] = possibleMove(board, pre_row, pre_col, turnIndex);
-       while (fourPairs !== []) {
-         let pair: BoardDelta = fourPairs.pop();
-         if (pair.row === row && pair.col === col) {
+      //  while (fourPairs !== []) {
+      //    let pair: BoardDelta = fourPairs.pop();
+      //     if (pair.row === row && pair.col === col) {
+      //       return true;
+      //     }
+      //  }
+       for(let pair of fourPairs){
+         if(pair.row === row && pair.col === col){
            return true;
          }
        }
@@ -279,6 +284,7 @@ module gameLogic {
 
       //if currentChosen piece is not the turnIndex's color. 
       let currentColor = getTurn(turnIndex);
+
       if(board[pre_row][pre_col].substring(0,1) !== currentColor){
         return destination;
       }

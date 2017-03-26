@@ -198,8 +198,14 @@ var gameLogic;
     function isPossibleMove(stateBeforeMove, pre_row, pre_col, row, col, turnIndex) {
         var board = stateBeforeMove.board;
         var fourPairs = possibleMove(board, pre_row, pre_col, turnIndex);
-        while (fourPairs !== []) {
-            var pair = fourPairs.pop();
+        //  while (fourPairs !== []) {
+        //    let pair: BoardDelta = fourPairs.pop();
+        //     if (pair.row === row && pair.col === col) {
+        //       return true;
+        //     }
+        //  }
+        for (var _i = 0, fourPairs_1 = fourPairs; _i < fourPairs_1.length; _i++) {
+            var pair = fourPairs_1[_i];
             if (pair.row === row && pair.col === col) {
                 return true;
             }
