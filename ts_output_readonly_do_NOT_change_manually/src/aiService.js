@@ -11,12 +11,21 @@ var aiService;
      * Returns all the possible moves for the given state and turnIndexBeforeMove.
      * Returns an empty array if the game is over.
      */
+    //change the ai service to choose one possible move from one of the possible moves. 
     function getPossibleMoves(state, turnIndexBeforeMove) {
         var possibleMoves = [];
         for (var i = 0; i < gameLogic.ROWS; i++) {
             for (var j = 0; j < gameLogic.COLS; j++) {
                 try {
-                    possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
+                    var pair = { row: i, col: j };
+                    var currentColor = turnIndexBeforeMove == 0 ? 'B' : 'R';
+                    if (state.board[i][j].substring(0, 1) == currentColor) {
+                        var possibleNext = gameLogic.possibleMove(state.board, i, j, turnIndexBeforeMove);
+                        for (var _i = 0, possibleNext_1 = possibleNext; _i < possibleNext_1.length; _i++) {
+                            var eachMove = possibleNext_1[_i];
+                            possibleMoves.push(gameLogic.createMove(state, eachMove.row, eachMove.col, i, j, turnIndexBeforeMove));
+                        }
+                    }
                 }
                 catch (e) {
                 }

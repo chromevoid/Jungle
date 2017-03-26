@@ -10,12 +10,20 @@ module aiService {
    * Returns all the possible moves for the given state and turnIndexBeforeMove.
    * Returns an empty array if the game is over.
    */
+  //change the ai service to choose one possible move from one of the possible moves. 
   export function getPossibleMoves(state: IState, turnIndexBeforeMove: number): IMove[] {
     let possibleMoves: IMove[] = [];
     for (let i = 0; i < gameLogic.ROWS; i++) {
       for (let j = 0; j < gameLogic.COLS; j++) {
         try {
-          possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
+          let pair : BoardDelta = {row: i, col: j};
+          let currentColor = turnIndexBeforeMove== 0 ? 'B' : 'R';
+          if(state.board[i][j].substring(0,1) == currentColor){
+            let possibleNext : BoardDelta[] = gameLogic.possibleMove(state.board, i, j, turnIndexBeforeMove);
+            for(let eachMove of possibleNext){
+                possibleMoves.push(gameLogic.createMove(state, eachMove.row, eachMove.col, i, j, turnIndexBeforeMove));
+            }
+          }
         } catch (e) {
           // The cell in that position was full.
         }
