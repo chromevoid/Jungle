@@ -690,14 +690,33 @@ describe("In Jungle", function() {
   });
 
 
+  //33. test win condition: if current move makes the next player: opponent can't move, current player wins.
+   it("33. move Belephant from[5,3] to [4,3], the only red animal- Rdog)", function() {
+    expectMove(B_TURN, 
+     [['G', 'G', 'RT', 'RH', 'RT', 'G', 'G'],
+      ['G', 'G', 'G', 'RT', 'G', 'G', 'G'],
+      ['G', 'G', 'G', 'Bwolf', 'G', 'G', 'G'],
+      ['G', 'W', 'W', 'Rdog', 'W', 'W', 'G'],
+      ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+      ['G', 'W', 'W', 'Belephant', 'W', 'W', 'G'],
+      ['G', 'G', 'G', 'G', 'Bcheetah', 'G', 'Bmouse'],
+      ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+      ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], {row: 5,col: 3}, {row: 4, col: 3},
+
+     [['G', 'G', 'RT', 'RH', 'RT', 'G', 'G'],
+      ['G', 'G', 'G', 'RT', 'G', 'G', 'G'],
+      ['G', 'G', 'G', 'Bwolf', 'G', 'G', 'G'],
+      ['G', 'W', 'W', 'Rdog', 'W', 'W', 'G'],
+      ['G', 'W', 'W', 'Belephant', 'W', 'W', 'G'],
+      ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+      ['G', 'G', 'G', 'G', 'Bcheetah', 'G', 'Bmouse'],
+      ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+      ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], NO_ONE_TURN, B_WIN_SCORES);
+  });
+
 //to-do: tie condition test. 
 
    
-
-
-
-
-
 
 
 
