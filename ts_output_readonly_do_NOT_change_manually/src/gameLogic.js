@@ -109,7 +109,7 @@ var gameLogic;
         var oppentColor = turnIndexBeforeMove === 0 ? 'R' : 'B';
         for (var i = 0; i < gameLogic.ROWS; i++) {
             for (var j = 0; j < gameLogic.COLS; j++) {
-                if (boardAfterMove[i][j].substring(0, 1) === oppentColor) {
+                if (boardAfterMove[i][j].substring(0, 1) === oppentColor && boardAfterMove[i][j].substring(1) !== 'H' && boardAfterMove[i][j].substring(1) !== 'T') {
                     pieceCount++;
                 }
             }

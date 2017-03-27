@@ -499,6 +499,68 @@ describe("In Jungle", function () {
             ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
             ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 3, col: 0 }, { row: 2, col: 0 });
     });
+    /* test win condition.*/
+    //30. test win condition: when red animal is in blue animal's home.
+    it("30. move Rlion from[8,2] to [8,3] to enter BH, win)", function () {
+        expectMove(R_TURN, [['G', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
+            ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+            ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'Rlion', 'BH', 'BT', 'G', 'Blion']], { row: 8, col: 2 }, { row: 8, col: 3 }, [['G', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
+            ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+            ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'Rlion', 'BT', 'G', 'Blion']], NO_ONE_TURN, R_WIN_SCORES);
+    });
+    //31. test win condition: when only red piece on the board, blue animals win.
+    it("31. move Relephant from[6,1] to [6,2] to eat Bwolf, red animals win)", function () {
+        expectMove(R_TURN, [['G', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
+            ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+            ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'Relephant', 'Bwolf', 'G', 'G', 'G', 'G'],
+            ['G', 'G', 'G', 'BT', 'G', 'G', 'G'],
+            ['G', 'G', 'BT', 'BH', 'BT', 'G', 'G']], { row: 6, col: 1 }, { row: 6, col: 2 }, [['G', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
+            ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+            ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'G', 'Relephant', 'G', 'G', 'G', 'G'],
+            ['G', 'G', 'G', 'BT', 'G', 'G', 'G'],
+            ['G', 'G', 'BT', 'BH', 'BT', 'G', 'G']], NO_ONE_TURN, R_WIN_SCORES);
+    });
+    //32. test win condition: same as test31 but the different color.
+    it("32. move Belephant from[6,0] to [6,1] to eat Rdog, blue animals win)", function () {
+        expectMove(B_TURN, [['G', 'G', 'RT', 'RH', 'RT', 'G', 'G'],
+            ['G', 'G', 'G', 'RT', 'G', 'G', 'G'],
+            ['G', 'G', 'G', 'G', 'G', 'G', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['Belephant', 'Rdog', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 6, col: 0 }, { row: 6, col: 1 }, [['G', 'G', 'RT', 'RH', 'RT', 'G', 'G'],
+            ['G', 'G', 'G', 'RT', 'G', 'G', 'G'],
+            ['G', 'G', 'G', 'G', 'G', 'G', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'Belephant', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], NO_ONE_TURN, B_WIN_SCORES);
+    });
+    //to-do: tie condition test. 
 });
 //   it("placing O in 0x1 after X placed X in 0x0", function() {
 //     expectMove(O_TURN,
