@@ -65,7 +65,6 @@ var gameLogic;
         // if the move is illegal, then throw an error
         // let pair: BoardDelta = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
         var fourPairs = possibleMove(board, pre_row, pre_col, turnIndexBeforeMove);
-        var foundPossibleMove = false;
         // while (fourPairs !== []) {
         //   let pair: BoardDelta = fourPairs.pop();
         //   if (pair.row === row && pair.col === col) {
@@ -73,6 +72,7 @@ var gameLogic;
         //     break;
         //   }
         // }
+        var foundPossibleMove = false;
         for (var _i = 0, fourPairs_1 = fourPairs; _i < fourPairs_1.length; _i++) {
             var pair = fourPairs_1[_i];
             if (pair.row === row && pair.col === col) {
@@ -83,6 +83,16 @@ var gameLogic;
         if (!foundPossibleMove) {
             throw new Error("Invalid move!");
         }
+        // while (fourPairs !== []) {
+        //   let pair: BoardDelta = fourPairs.pop();
+        //   if (pair.row === row && pair.col === col) {
+        //     findPossibleMove = true;
+        //     break;
+        //   }
+        // }
+        // if (!findPossibleMove) {
+        //   throw new Error("Invalid move!");
+        // }
         // if the move is legal, define variables
         // deal with the move
         // the [row, col] position is replaced with the piece moved in this round

@@ -76,7 +76,7 @@ describe("In Jungle", function() {
   //2. test blue animal move on the land
   it("2. move Bmouse from[6,6] to [5,6] (move upward)", function() {
     expectMove(B_TURN, 
-     [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
+    [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
       ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
       ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
       ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
@@ -84,7 +84,7 @@ describe("In Jungle", function() {
       ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
       ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
       ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
-      ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], {row: 6, col:6},{row: 5, col: 6}, 
+      ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], {row: 6,col: 6}, {row: 5, col: 6},
      [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
       ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
       ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],

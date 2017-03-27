@@ -262,8 +262,16 @@ module game {
 
   export function isPossibleMove(row: number, col: number): boolean {
     if (firstClicked) {
-      if (gameLogic.isPossibleMove(state, click_row, click_col, row, col, currentUpdateUI.turnIndex)) {
-        return true;
+      let row_dif: number = Math.abs(click_row - row);
+      let col_dif: number = Math.abs(click_col - col);
+      if ((row_dif === 4 && col_dif === 0) || (row_dif === 0 && col_dif === 4) ||
+          (row_dif === 3 && col_dif === 0) || (row_dif === 0 && col_dif === 3) ||
+          (row_dif === 1 && col_dif === 0) || (row_dif === 0 && col_dif === 1))
+      {
+        log.info(row, col);
+        if (gameLogic.isPossibleMove(state, click_row, click_col, row, col, currentUpdateUI.turnIndex)) {
+          return true;
+        }
       }
     }
     else {
@@ -341,6 +349,15 @@ module game {
     else{
       return false;
     }
+  }
+
+  export function isOpponent(row: number, col: number) : boolean {
+    let curColor = gameLogic.getTurn(currentUpdateUI.turnIndex);
+    let curAnimal = state.board[row][col];
+    if (curAnimal.substring(0,1) === curColor) {
+      return false;
+    }
+    return true;
   }
 
   export function checkAnimal(row: number, col: number) : string {
