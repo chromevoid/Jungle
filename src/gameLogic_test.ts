@@ -691,7 +691,7 @@ describe("In Jungle", function() {
 
 
   //33. test win condition: if current move makes the next player: opponent can't move, current player wins.
-   it("33. move Belephant from[5,3] to [4,3], the only red animal- Rdog)", function() {
+   it("33. move Belephant from[5,3] to [4,3], the only red animal- Rdog left)", function() {
     expectMove(B_TURN, 
      [['G', 'G', 'RT', 'RH', 'RT', 'G', 'G'],
       ['G', 'G', 'G', 'RT', 'G', 'G', 'G'],
@@ -714,135 +714,47 @@ describe("In Jungle", function() {
       ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], NO_ONE_TURN, B_WIN_SCORES);
   });
 
+  //34. test move animal out of the bound, invalid move.
+  it("34. try to move Rtiger from [0,6] to [0,7], invalid move", function() {
+    expectException(R_TURN, 
+    [['G', 'G', 'Rlion', 'RH', 'RT', 'G', 'Rtiger'],
+      ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+      ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+      ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+      ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+      ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+      ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
+      ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+      ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], {row: 0,col: 6}, {row: 0, col: 7});
+  });
+
+
+  //35. test can't move after the game is over. (Bcheetah is in RH)
+  it("35. when game is over, try to move Rtiger from [0,6] to [0,5], invalid move", function() {
+    expectException(NO_ONE_TURN, 
+    [['G', 'G', 'Rlion', 'Bcheetah', 'RT', 'G', 'Rtiger'],
+      ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+      ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+      ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+      ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+      ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+      ['Belephant', 'G', 'Bwolf', 'G', 'G', 'G', 'Bmouse'],
+      ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+      ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], {row: 0,col: 6}, {row: 0, col: 5});
+  });
+
+  
+
+
+
+
+
+  
+
 //to-do: tie condition test. 
 
    
 
 
 
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 });
-
-
-
-//   it("placing O in 0x1 after X placed X in 0x0", function() {
-//     expectMove(O_TURN,
-//       [['X', '', ''],
-//        ['', '', ''],
-//        ['', '', '']], 0, 1,
-//       [['X', 'O', ''],
-//        ['', '', ''],
-//        ['', '', '']], X_TURN, NO_ONE_WINS);
-//   });
-
-//   it("placing an O in a non-empty position is illegal", function() {
-//     expectException(O_TURN,
-//       [['X', '', ''],
-//        ['', '', ''],
-//        ['', '', '']], 0, 0);
-//   });
-
-//   it("cannot move after the game is over", function() {
-//     expectException(O_TURN,
-//       [['X', 'O', ''],
-//        ['X', 'O', ''],
-//        ['X', '', '']], 2, 1);
-//   });
-
-//   it("placing O in 2x1", function() {
-//     expectMove(O_TURN,
-//       [['O', 'X', ''],
-//        ['X', 'O', ''],
-//        ['X', '', '']], 2, 1,
-//       [['O', 'X', ''],
-//        ['X', 'O', ''],
-//        ['X', 'O', '']], X_TURN, NO_ONE_WINS);
-//   });
-
-//   it("X wins by placing X in 2x0", function() {
-//     expectMove(X_TURN,
-//       [['X', 'O', ''],
-//        ['X', 'O', ''],
-//        ['', '', '']], 2, 0,
-//       [['X', 'O', ''],
-//        ['X', 'O', ''],
-//        ['X', '', '']], NO_ONE_TURN, X_WIN_SCORES);
-//   });
-
-//   it("O wins by placing O in 1x1", function() {
-//     expectMove(O_TURN,
-//       [['X', 'X', 'O'],
-//        ['X', '', ''],
-//        ['O', '', '']], 1, 1,
-//       [['X', 'X', 'O'],
-//        ['X', 'O', ''],
-//        ['O', '', '']], NO_ONE_TURN, O_WIN_SCORES);
-//   });
-
-//   it("the game ties when there are no more empty cells", function() {
-//     expectMove(X_TURN,
-//       [['X', 'O', 'X'],
-//        ['X', 'O', 'O'],
-//        ['O', 'X', '']], 2, 2,
-//       [['X', 'O', 'X'],
-//        ['X', 'O', 'O'],
-//        ['O', 'X', 'X']], NO_ONE_TURN, TIE_SCORES);
-//   });
-
-//   it("placing X outside the board (in 0x3) is illegal", function() {
-//     expectException(X_TURN,
-//       [['', '', ''],
-//        ['', '', ''],
-//        ['', '', '']], 0, 3);
-//   });
- 
