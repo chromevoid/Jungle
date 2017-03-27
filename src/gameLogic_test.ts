@@ -432,13 +432,10 @@ describe("In Jungle", function() {
       ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
       ['G', 'W', 'W', 'G', 'W', 'Bmouse', 'Rmouse'],
       ['G', 'W', 'W', 'G', 'W', 'w', 'G'],
-      ['G', 'Gr', 'Bwolf', 'G', 'Bcheetah', 'Belephant', 'G'],
+      ['G', 'G', 'Bwolf', 'G', 'Bcheetah', 'Belephant', 'G'],
       ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
       ['G', 'G', 'BT', 'BH', 'BT', 'G', 'G']], R_TURN, NO_ONE_WINS);
   });
-
-
-
 
 
 

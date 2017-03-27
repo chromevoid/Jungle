@@ -15,7 +15,7 @@
  * 
  * The initial state is 
  *    
- * 0 [[Rlion, G, RT, RH, RT, G, RTiger],
+ * 0 [[Rlion, G, RT, RH, RT, G, Rtiger],
  * 1 [G, Rdog, G, RT, G, Rcat, G],
  * 2 [Rmouse, G, Rcheetah, G, Rwolf, G Relephant],
  * 3 [G, W, W, G, W, W, G],
@@ -121,15 +121,22 @@ module gameLogic {
     // if the move is illegal, then throw an error
     // let pair: BoardDelta = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
     let fourPairs: BoardDelta[] = possibleMove(board, pre_row, pre_col, turnIndexBeforeMove);
-    let findPossibleMove: boolean = false;
-    while (fourPairs !== []) {
-      let pair: BoardDelta = fourPairs.pop();
-      if (pair.row === row && pair.col === col) {
-        findPossibleMove = true;
+    let foundPossibleMove: boolean = false;
+    // while (fourPairs !== []) {
+    //   let pair: BoardDelta = fourPairs.pop();
+    //   if (pair.row === row && pair.col === col) {
+    //     foundPossibleMove = true;
+    //     break;
+    //   }
+    // }
+    for(let pair of fourPairs){
+      if(pair.row === row && pair.col === col){
+        foundPossibleMove = true;
         break;
       }
     }
-    if (!findPossibleMove) {
+
+    if (!foundPossibleMove) {
       throw new Error("Invalid move!");
     }
 
@@ -296,10 +303,10 @@ module gameLogic {
       let possibleMove: BoardDelta = {row: row, col: col};
       
       if(isWater(possibleMove)){
-        //any other animals except mouse, tiger and lion meet the water, can't move. 
-        if(board[pre_row][pre_col].substring(1) !== 'mouse' && board[pre_row][pre_col].substring(1) !== 'tiger' && board[pre_row][pre_col].substring(1) !== 'lion'){
-          return destination;
-        }
+        // //any other animals except mouse, tiger and lion meet the water, can't move. 
+        // if(board[pre_row][pre_col].substring(1) !== 'mouse' && board[pre_row][pre_col].substring(1) !== 'tiger' && board[pre_row][pre_col].substring(1) !== 'lion'){
+        //   return destination;
+        // }
         //if the animal is mouse, could move one step.
         if(board[pre_row][pre_col].substring(1) === 'mouse'){
           destination.row = row;
@@ -307,7 +314,7 @@ module gameLogic {
           return destination;
         }
         //if the animal is tiger or lion. They could jump through the river, calculate the newRow and newCol=
-        if(board[pre_row][pre_col].substring(1) === 'tiger' || board[pre_row][pre_col].substring(1) === 'lion'){
+        else if(board[pre_row][pre_col].substring(1) === 'tiger' || board[pre_row][pre_col].substring(1) === 'lion'){
          
           //if there is mouse in the river, can't move (any mouse in the horizental line or vertical line)
           // if move up and there is a mouse in between 
@@ -359,9 +366,12 @@ module gameLogic {
             return destination;
           }
           //fly over the river to see if can eat animals
-          destination = canEat(board, turnIndex, pre_col, pre_col, newRow, newCol);
+          destination = canEat(board, turnIndex, pre_row, pre_col, newRow, newCol);
           return destination;
-        }       
+        } 
+        else{
+          return destination;
+        }      
       }
 
      // let possibleDestination: BoardDelta = {row: row, col: col};
@@ -449,8 +459,8 @@ module gameLogic {
     let curColor = getTurn(turnIndex);
     let curAnimal = board[pre_row][pre_col];
     
-    // if two animals are on the different kinds of place, they can't eat the other.  (add the rule)
-    if(isWater(destination) !== isWater(currentPosition)){
+    // if two animals are on the different kinds of place, they can't eat the other.  ( but when current animal is mouse, can eat with regular rule)
+    if(isWater(destination) !== isWater(currentPosition) && board[pre_row][pre_col].substring(1) !== 'mouse'){
       return destination;
     }
     
@@ -463,13 +473,12 @@ module gameLogic {
      if(board[pos_row][pos_col].substring(0,1) !== curColor){
        let facedAnimal = board[pos_row][pos_col];
        //if it has lower or same rank, or curAnimal is mouse while oppenent's animal is elephant, can eat
-       if((( getRank(curAnimal.substring(1)) >= getRank(facedAnimal.substring(1)) ) && (curAnimal.substring(1) !== 'mouse' && facedAnimal.substring(1) !== 'elephant'))  ||
+       if( (( getRank(curAnimal.substring(1)) >= getRank(facedAnimal.substring(1)) ) && (!(curAnimal.substring(1) === 'elephant' && facedAnimal.substring(1) === 'mouse') ))  ||
             (curAnimal.substring(1) === 'mouse' && facedAnimal.substring(1) === 'elephant') ){
          destination.row = pos_row;
          destination.col = pos_col;
          return destination;
        }
-
        //if it has higher rank, can't move.
        else{
          return destination;
