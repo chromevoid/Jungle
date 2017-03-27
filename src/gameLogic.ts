@@ -166,7 +166,7 @@ module gameLogic {
     let oppentColor = turnIndexBeforeMove === 0 ? 'R' : 'B';
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
-        if (boardAfterMove[i][j].substring(0, 1) === oppentColor) {
+        if (boardAfterMove[i][j].substring(0, 1) === oppentColor && boardAfterMove[i][j].substring(1) !== 'H' && boardAfterMove[i][j].substring(1) !== 'T') {
           pieceCount++;
         }
       }
