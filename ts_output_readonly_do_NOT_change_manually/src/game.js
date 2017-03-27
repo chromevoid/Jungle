@@ -246,8 +246,15 @@ var game;
     game.changeSelectCSS = changeSelectCSS;
     function isPossibleMove(row, col) {
         if (game.firstClicked) {
-            if (gameLogic.isPossibleMove(game.state, game.click_row, game.click_col, row, col, game.currentUpdateUI.turnIndex)) {
-                return true;
+            var row_dif = Math.abs(game.click_row - row);
+            var col_dif = Math.abs(game.click_col - col);
+            if ((row_dif === 4 && col_dif === 0) || (row_dif === 0 && col_dif === 4) ||
+                (row_dif === 3 && col_dif === 0) || (row_dif === 0 && col_dif === 3) ||
+                (row_dif === 1 && col_dif === 0) || (row_dif === 0 && col_dif === 1)) {
+                log.info(row, col);
+                if (gameLogic.isPossibleMove(game.state, game.click_row, game.click_col, row, col, game.currentUpdateUI.turnIndex)) {
+                    return true;
+                }
             }
         }
         else {
