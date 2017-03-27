@@ -28,7 +28,7 @@
  * Win Codintion (e.g. Red win, Blue fails), satisfy any one of the following
  * 1. none of blue alive.
  * 2. any piece of red animals is in the BH (blue animals' home).
- * 
+ * 3. after red player makes a move, then the opponent blue can't make a move(trapped), current player wins!
  * 
  * 
  */
@@ -53,6 +53,9 @@ import dragAndDropService = gamingPlatform.dragAndDropService;
 module gameLogic {
   export const ROWS = 9;
   export const COLS = 7;
+  
+  //declare global variable to record round
+  var round = 0;
 
   // special cells in the game board
   export const BlueTrap: BoardDelta[] =
@@ -87,11 +90,13 @@ module gameLogic {
     return { board: getInitialBoard(), delta: null };
   }
 
-  /**
-   * Returns true if the game ended in a tie. To do.
-   */
-  function isTie(board: Board): boolean {
-    return false;
+  
+  //Returns true if the game ended in a tie. 
+  function isTie(turnIndexBeforeMove: number): boolean {
+    if(turnIndexBeforeMove === 0){
+      round ++;
+    }
+    return round >= 30;  //to-do: this to be considered
   }
 
   /**
@@ -117,17 +122,15 @@ module gameLogic {
     let winner: string = '';
     let endMatchScores: number[];
     let turnIndex: number;
+    
+    //if game has already ended, can't move.
+    if(turnIndexBeforeMove === -1){
+      throw new Error("Game has ended, can't move!");
+    }
 
     // if the move is illegal, then throw an error
     // let pair: BoardDelta = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
     let fourPairs: BoardDelta[] = possibleMove(board, pre_row, pre_col, turnIndexBeforeMove);
-    // while (fourPairs !== []) {
-    //   let pair: BoardDelta = fourPairs.pop();
-    //   if (pair.row === row && pair.col === col) {
-    //     foundPossibleMove = true;
-    //     break;
-    //   }
-    // }
     let foundPossibleMove: boolean = false;
     for(let pair of fourPairs){
       if(pair.row === row && pair.col === col){
@@ -183,7 +186,7 @@ module gameLogic {
     }
 
     // whether the game ends or not
-    if (winner !== '' || isTie(board)) {
+    if (winner !== '' || isTie(nextTurnIndex)) {
       // Gameover
       turnIndex = -1;
       endMatchScores = winner === 'B' ? [1, 0] : winner === 'R' ? [0, 1] : [0, 0];
@@ -226,7 +229,6 @@ module gameLogic {
     }
     return foundMoveChoice;
   }
-
 
   //judge of next move is out of the gameboard
   function isOutOfBound(boardDelta: BoardDelta): boolean {
