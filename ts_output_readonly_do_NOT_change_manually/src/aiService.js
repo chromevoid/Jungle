@@ -4,7 +4,7 @@ var aiService;
     function findComputerMove(move) {
         return createComputerMove(move, 
         // at most 1 second for the AI to choose a move (but might be much quicker)
-        { millisecondsLimit: 1000 });
+        { millisecondsLimit: 2000 });
     }
     aiService.findComputerMove = findComputerMove;
     /**
@@ -19,7 +19,7 @@ var aiService;
                 try {
                     var pair = { row: i, col: j };
                     var currentColor = turnIndexBeforeMove == 0 ? 'B' : 'R';
-                    if (state.board[i][j].substring(0, 1) == currentColor) {
+                    if (state.board[i][j].substring(0, 1) == currentColor && state.board[i][j].substring(1) !== 'H' && state.board[i][j].substring(1) !== 'T') {
                         var possibleNext = gameLogic.possibleMove(state.board, i, j, turnIndexBeforeMove);
                         for (var _i = 0, possibleNext_1 = possibleNext; _i < possibleNext_1.length; _i++) {
                             var eachMove = possibleNext_1[_i];

@@ -44,6 +44,9 @@ var gameLogic;
         if (turnIndexBeforeMove === 0) {
             round++;
         }
+        if (round >= 30) {
+            console.log("Game round has exceeded 3 rounds, so tired ,then tie!");
+        }
         return round >= 30; //to-do: this to be considered
     }
     /**
@@ -117,15 +120,16 @@ var gameLogic;
         if (pieceCount === 0) {
             winner = boardAfterMove[row][col].substring(0, 1);
         }
-        //is current move makes opponent can't make any move, then the winner is current player.
+        //if current move makes opponent can't make any move, then the winner is current player.
         var nextTurnIndex = 1 - turnIndexBeforeMove;
         var opponentHasMoveChoice = HasMoveChoice(nextTurnIndex, boardAfterMove);
         if (!opponentHasMoveChoice) {
             winner = boardAfterMove[row][col].substring(0, 1);
         }
-        // whether the game ends or not
-        if (winner !== '' || isTie(nextTurnIndex)) {
+        // whether the game ends or not  //|| isTie(nextTurnIndex
+        if (winner !== '') {
             // Gameover
+            console.log("here turnIndex is set to -1"); //used for debug
             turnIndex = -1;
             endMatchScores = winner === 'B' ? [1, 0] : winner === 'R' ? [0, 1] : [0, 0];
         }
@@ -220,6 +224,7 @@ var gameLogic;
         }
         return fourMove;
     }
+    gameLogic.possibleMove = possibleMove;
     function isPossibleMove(stateBeforeMove, pre_row, pre_col, row, col, turnIndex) {
         var board = stateBeforeMove.board;
         var fourPairs = possibleMove(board, pre_row, pre_col, turnIndex);
