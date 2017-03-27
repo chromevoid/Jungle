@@ -122,9 +122,8 @@ module gameLogic {
     // let pair: BoardDelta = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
     let fourPairs: BoardDelta[] = possibleMove(board, pre_row, pre_col, turnIndexBeforeMove);
     let findPossibleMove: boolean = false;
-    while (fourPairs !== []) {
-      let pair: BoardDelta = fourPairs.pop();
-      if (pair.row === row && pair.col === col) {
+    for(let pair of fourPairs){
+      if(pair.row === row && pair.col === col){
         findPossibleMove = true;
         break;
       }
@@ -132,6 +131,16 @@ module gameLogic {
     if (!findPossibleMove) {
       throw new Error("Invalid move!");
     }
+    // while (fourPairs !== []) {
+    //   let pair: BoardDelta = fourPairs.pop();
+    //   if (pair.row === row && pair.col === col) {
+    //     findPossibleMove = true;
+    //     break;
+    //   }
+    // }
+    // if (!findPossibleMove) {
+    //   throw new Error("Invalid move!");
+    // }
 
     // if the move is legal, define variables
 
