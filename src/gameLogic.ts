@@ -96,6 +96,9 @@ module gameLogic {
     if(turnIndexBeforeMove === 0){
       round ++;
     }
+    if(round >=30){
+      console.log("Game round has exceeded 3 rounds, so tired ,then tie!");
+    }
     return round >= 30;  //to-do: this to be considered
   }
 
@@ -178,16 +181,17 @@ module gameLogic {
       winner = boardAfterMove[row][col].substring(0, 1);
     }
 
-    //is current move makes opponent can't make any move, then the winner is current player.
+    //if current move makes opponent can't make any move, then the winner is current player.
     let nextTurnIndex = 1 - turnIndexBeforeMove;
     let opponentHasMoveChoice = HasMoveChoice(nextTurnIndex, boardAfterMove);
     if(!opponentHasMoveChoice){
       winner = boardAfterMove[row][col].substring(0, 1);
     }
 
-    // whether the game ends or not
-    if (winner !== '' || isTie(nextTurnIndex)) {
+    // whether the game ends or not  //|| isTie(nextTurnIndex
+    if (winner !== '' ) {
       // Gameover
+      console.log("here turnIndex is set to -1"); //used for debug
       turnIndex = -1;
       endMatchScores = winner === 'B' ? [1, 0] : winner === 'R' ? [0, 1] : [0, 0];
     } else {
@@ -263,7 +267,7 @@ module gameLogic {
       }
     }
 
-    function possibleMove(board: Board, pre_row: number, pre_col: number, turnIndex: number): BoardDelta[]{    
+  export function possibleMove(board: Board, pre_row: number, pre_col: number, turnIndex: number): BoardDelta[]{    
         var fourMove: BoardDelta[] = [];
         var up: BoardDelta = {row: pre_row - 1, col: pre_col};
         var down: BoardDelta = {row: pre_row + 1, col: pre_col};
