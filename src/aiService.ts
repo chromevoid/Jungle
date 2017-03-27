@@ -3,7 +3,7 @@ module aiService {
   export function findComputerMove(move: IMove): IMove {
     return createComputerMove(move,
         // at most 1 second for the AI to choose a move (but might be much quicker)
-        {millisecondsLimit: 1000});
+        {millisecondsLimit: 2000});
   }
 
   /**
@@ -18,7 +18,7 @@ module aiService {
         try {
           let pair : BoardDelta = {row: i, col: j};
           let currentColor = turnIndexBeforeMove== 0 ? 'B' : 'R';
-          if(state.board[i][j].substring(0,1) == currentColor){
+          if(state.board[i][j].substring(0,1) == currentColor &&  state.board[i][j].substring(1) !== 'H' && state.board[i][j].substring(1) !== 'T'){
             let possibleNext : BoardDelta[] = gameLogic.possibleMove(state.board, i, j, turnIndexBeforeMove);
             for(let eachMove of possibleNext){
                 possibleMoves.push(gameLogic.createMove(state, eachMove.row, eachMove.col, i, j, turnIndexBeforeMove));
