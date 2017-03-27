@@ -110,7 +110,7 @@ describe("In Jungle", function () {
             ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], R_TURN, NO_ONE_WINS);
     });
     //5. test expected exception when land animal move into the water. 
-    it("5. try to move Bcheetah from[5,6] to [5,5] left into the water", function () {
+    it("5. try to move Bcheetah from[5,6] to [5,5] left into the water, invalid move", function () {
         expectException(B_TURN, [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
@@ -121,8 +121,8 @@ describe("In Jungle", function () {
             ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
             ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 5, col: 6 }, { row: 5, col: 5 });
     });
-    //6. test tiger could jump accous the water and land on the grass
-    it("6. move Btiger from[6,4] to [2,4] (move left into the water)", function () {
+    //6. test tiger could jump across the water and land on the grass
+    it("6. move Btiger from[6,1] to [2,1] (jump across the water and land on the grass)", function () {
         expectMove(B_TURN, [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
@@ -142,7 +142,7 @@ describe("In Jungle", function () {
             ['G', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], R_TURN, NO_ONE_WINS);
     });
     //7. test lion could jump across the water and land on the grass
-    it("7. move Blion from[6,5] to [2,5] (move left into the water)", function () {
+    it("7. move Blion from[6,5] to [2,5] (jump across the water and land on the grass)", function () {
         expectMove(B_TURN, [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
@@ -235,7 +235,7 @@ describe("In Jungle", function () {
             ['G', 'G', 'BT', 'BH', 'BT', 'G', 'G']], B_TURN, NO_ONE_WINS);
     });
     //12. test both animals on grass, elephant can't eat mouse.
-    it("12. try to move Relephant from[2,7] to [2,6] to eat Bmouse, invalid move", function () {
+    it("12. try to move Relephant from[2,6] to [2,5] to eat Bmouse, invalid move", function () {
         expectException(R_TURN, [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['G', 'G', 'Rcheetah', 'G', 'Rwolf', 'Bmouse', 'Relephant'],
@@ -244,7 +244,7 @@ describe("In Jungle", function () {
             ['G', 'W', 'W', 'G', 'W', 'W', 'Bcheetah'],
             ['Belephant', 'G', 'Bwolf', 'G', 'G', 'Blion', 'Rmouse'],
             ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
-            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'G']], { row: 2, col: 7 }, { row: 2, col: 6 });
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'G']], { row: 2, col: 6 }, { row: 2, col: 5 });
     });
     //13. test both animals in the water, mouse could eat mouse.
     it("13. move Rmouse from [5,5] to [5,4] to eat the Bmouse", function () {
@@ -267,7 +267,7 @@ describe("In Jungle", function () {
             ['G', 'G', 'BT', 'BH', 'BT', 'G', 'G']], B_TURN, NO_ONE_WINS);
     });
     //14. test mouse is in the water, elephant is on the grass, mouse can't eat elephant. 
-    it("14. try to move Bmouse from [4,5] to [4,6] to eat the Relephant, invalid mmove", function () {
+    it("14. try to move Bmouse from [4,5] to [4,6] to eat the Relephant, invalid move", function () {
         expectException(B_TURN, [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['G', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'G'],
@@ -465,7 +465,7 @@ describe("In Jungle", function () {
     });
     //27. animal can't go into its own color home.
     it("27. try to move Rlion from [0,2] to [0,3] to enter RH, invalid move", function () {
-        expectException(R_TURN, [['Rlion', 'G', 'Rlion', 'RH', 'RT', 'G', 'Rtiger'],
+        expectException(R_TURN, [['G', 'G', 'Rlion', 'RH', 'RT', 'G', 'Rtiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
             ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
@@ -477,7 +477,7 @@ describe("In Jungle", function () {
     });
     //28. test only animal could create a move.(trap , home, grass and water can't create a move.)
     it("28. try to move RH from [0,3] to [0,4]  invalid move", function () {
-        expectException(R_TURN, [['Rlion', 'G', 'Rlion', 'RH', 'RT', 'G', 'Rtiger'],
+        expectException(R_TURN, [['G', 'G', 'Rlion', 'RH', 'RT', 'G', 'Rtiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
             ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
@@ -487,9 +487,9 @@ describe("In Jungle", function () {
             ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
             ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 0, col: 3 }, { row: 0, col: 4 });
     });
-    //29. test only animal could create a move.(trap , home, grass and water can't create a move.)
-    it("29. try to move Grass from [3,0] to [2,0]  invalid move", function () {
-        expectException(R_TURN, [['Rlion', 'G', 'Rlion', 'RH', 'RT', 'G', 'Rtiger'],
+    //29. test only animal could create a move.(trap, home, grass and water can't create a move.)
+    it("29. try to move Grass from [3,0] to [4,0]  invalid move", function () {
+        expectException(R_TURN, [['G', 'G', 'Rlion', 'RH', 'RT', 'G', 'Rtiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
             ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
@@ -497,11 +497,11 @@ describe("In Jungle", function () {
             ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
             ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
             ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
-            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 3, col: 0 }, { row: 2, col: 0 });
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 3, col: 0 }, { row: 4, col: 0 });
     });
     /* test win condition.*/
     //30. test win condition: when red animal is in blue animal's home.
-    it("30. move Rlion from[8,2] to [8,3] to enter BH, win)", function () {
+    it("30. move Rlion from[8,2] to [8,3] to enter BH, red animals win)", function () {
         expectMove(R_TURN, [['G', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
             ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
             ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
@@ -560,69 +560,50 @@ describe("In Jungle", function () {
             ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
             ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], NO_ONE_TURN, B_WIN_SCORES);
     });
+    //33. test win condition: if current move makes the next player: opponent can't move, current player wins.
+    it("33. move Belephant from[5,3] to [4,3], the only red animal- Rdog left)", function () {
+        expectMove(B_TURN, [['G', 'G', 'RT', 'RH', 'RT', 'G', 'G'],
+            ['G', 'G', 'G', 'RT', 'G', 'G', 'G'],
+            ['G', 'G', 'G', 'Bwolf', 'G', 'G', 'G'],
+            ['G', 'W', 'W', 'Rdog', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'Belephant', 'W', 'W', 'G'],
+            ['G', 'G', 'G', 'G', 'Bcheetah', 'G', 'Bmouse'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 5, col: 3 }, { row: 4, col: 3 }, [['G', 'G', 'RT', 'RH', 'RT', 'G', 'G'],
+            ['G', 'G', 'G', 'RT', 'G', 'G', 'G'],
+            ['G', 'G', 'G', 'Bwolf', 'G', 'G', 'G'],
+            ['G', 'W', 'W', 'Rdog', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'Belephant', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'G', 'G', 'G', 'Bcheetah', 'G', 'Bmouse'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], NO_ONE_TURN, B_WIN_SCORES);
+    });
+    //34. test move animal out of the bound, invalid move.
+    it("34. try to move Rtiger from [0,6] to [0,7], invalid move", function () {
+        expectException(R_TURN, [['G', 'G', 'Rlion', 'RH', 'RT', 'G', 'Rtiger'],
+            ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+            ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 0, col: 6 }, { row: 0, col: 7 });
+    });
+    //35. test can't move after the game is over. (Bcheetah is in RH)
+    it("35. when game is over, try to move Rtiger from [0,6] to [0,5], invalid move", function () {
+        expectException(NO_ONE_TURN, [['G', 'G', 'Rlion', 'Bcheetah', 'RT', 'G', 'Rtiger'],
+            ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+            ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['Belephant', 'G', 'Bwolf', 'G', 'G', 'G', 'Bmouse'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 0, col: 6 }, { row: 0, col: 5 });
+    });
     //to-do: tie condition test. 
 });
-//   it("placing O in 0x1 after X placed X in 0x0", function() {
-//     expectMove(O_TURN,
-//       [['X', '', ''],
-//        ['', '', ''],
-//        ['', '', '']], 0, 1,
-//       [['X', 'O', ''],
-//        ['', '', ''],
-//        ['', '', '']], X_TURN, NO_ONE_WINS);
-//   });
-//   it("placing an O in a non-empty position is illegal", function() {
-//     expectException(O_TURN,
-//       [['X', '', ''],
-//        ['', '', ''],
-//        ['', '', '']], 0, 0);
-//   });
-//   it("cannot move after the game is over", function() {
-//     expectException(O_TURN,
-//       [['X', 'O', ''],
-//        ['X', 'O', ''],
-//        ['X', '', '']], 2, 1);
-//   });
-//   it("placing O in 2x1", function() {
-//     expectMove(O_TURN,
-//       [['O', 'X', ''],
-//        ['X', 'O', ''],
-//        ['X', '', '']], 2, 1,
-//       [['O', 'X', ''],
-//        ['X', 'O', ''],
-//        ['X', 'O', '']], X_TURN, NO_ONE_WINS);
-//   });
-//   it("X wins by placing X in 2x0", function() {
-//     expectMove(X_TURN,
-//       [['X', 'O', ''],
-//        ['X', 'O', ''],
-//        ['', '', '']], 2, 0,
-//       [['X', 'O', ''],
-//        ['X', 'O', ''],
-//        ['X', '', '']], NO_ONE_TURN, X_WIN_SCORES);
-//   });
-//   it("O wins by placing O in 1x1", function() {
-//     expectMove(O_TURN,
-//       [['X', 'X', 'O'],
-//        ['X', '', ''],
-//        ['O', '', '']], 1, 1,
-//       [['X', 'X', 'O'],
-//        ['X', 'O', ''],
-//        ['O', '', '']], NO_ONE_TURN, O_WIN_SCORES);
-//   });
-//   it("the game ties when there are no more empty cells", function() {
-//     expectMove(X_TURN,
-//       [['X', 'O', 'X'],
-//        ['X', 'O', 'O'],
-//        ['O', 'X', '']], 2, 2,
-//       [['X', 'O', 'X'],
-//        ['X', 'O', 'O'],
-//        ['O', 'X', 'X']], NO_ONE_TURN, TIE_SCORES);
-//   });
-//   it("placing X outside the board (in 0x3) is illegal", function() {
-//     expectException(X_TURN,
-//       [['', '', ''],
-//        ['', '', ''],
-//        ['', '', '']], 0, 3);
-//   });
 //# sourceMappingURL=gameLogic_test.js.map

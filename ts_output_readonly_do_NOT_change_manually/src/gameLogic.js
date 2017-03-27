@@ -8,6 +8,8 @@ var gameLogic;
 (function (gameLogic) {
     gameLogic.ROWS = 9;
     gameLogic.COLS = 7;
+    //declare global variable to record round
+    var round = 0;
     // special cells in the game board
     gameLogic.BlueTrap = [{ row: 8, col: 2 }, { row: 7, col: 3 }, { row: 8, col: 4 }];
     gameLogic.RedTrap = [{ row: 0, col: 2 }, { row: 1, col: 3 }, { row: 0, col: 4 }];
@@ -37,11 +39,12 @@ var gameLogic;
         return { board: getInitialBoard(), delta: null };
     }
     gameLogic.getInitialState = getInitialState;
-    /**
-     * Returns true if the game ended in a tie. To do.
-     */
-    function isTie(board) {
-        return false;
+    //Returns true if the game ended in a tie. 
+    function isTie(turnIndexBeforeMove) {
+        if (turnIndexBeforeMove === 0) {
+            round++;
+        }
+        return round >= 30; //to-do: this to be considered
     }
     /**
      * Returns the move that should be performed when player
@@ -62,16 +65,13 @@ var gameLogic;
         var winner = '';
         var endMatchScores;
         var turnIndex;
+        //if game has already ended, can't move.
+        if (turnIndexBeforeMove === -1) {
+            throw new Error("Game has ended, can't move!");
+        }
         // if the move is illegal, then throw an error
         // let pair: BoardDelta = canMove(board, row, col, pre_row, pre_col, turnIndexBeforeMove);
         var fourPairs = possibleMove(board, pre_row, pre_col, turnIndexBeforeMove);
-        // while (fourPairs !== []) {
-        //   let pair: BoardDelta = fourPairs.pop();
-        //   if (pair.row === row && pair.col === col) {
-        //     foundPossibleMove = true;
-        //     break;
-        //   }
-        // }
         var foundPossibleMove = false;
         for (var _i = 0, fourPairs_1 = fourPairs; _i < fourPairs_1.length; _i++) {
             var pair = fourPairs_1[_i];
@@ -114,12 +114,17 @@ var gameLogic;
                 }
             }
         }
-        // if it is true, then win
         if (pieceCount === 0) {
             winner = boardAfterMove[row][col].substring(0, 1);
         }
+        //is current move makes opponent can't make any move, then the winner is current player.
+        var nextTurnIndex = 1 - turnIndexBeforeMove;
+        var opponentHasMoveChoice = HasMoveChoice(nextTurnIndex, boardAfterMove);
+        if (!opponentHasMoveChoice) {
+            winner = boardAfterMove[row][col].substring(0, 1);
+        }
         // whether the game ends or not
-        if (winner !== '' || isTie(boardAfterMove)) {
+        if (winner !== '' || isTie(nextTurnIndex)) {
             // Gameover
             turnIndex = -1;
             endMatchScores = winner === 'B' ? [1, 0] : winner === 'R' ? [0, 1] : [0, 0];
@@ -146,18 +151,31 @@ var gameLogic;
         log.log("move=", move);
     }
     gameLogic.forSimpleTestHtml = forSimpleTestHtml;
-    /**
-    * judge of next move is out of the gameboard
-    */
+    //to see if next player could find move steps.
+    function HasMoveChoice(turnIndex, board) {
+        var currentColor = getTurn(turnIndex);
+        var foundMoveChoice = false;
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                if (board[i][j].substring(0, 1) === currentColor && board[i][j].substring(1) !== 'H' && board[i][j].substring(1) !== 'T') {
+                    var possibleMoves = possibleMove(board, i, j, turnIndex);
+                    if (possibleMoves.length > 0) {
+                        foundMoveChoice = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return foundMoveChoice;
+    }
+    //judge of next move is out of the gameboard
     function isOutOfBound(boardDelta) {
         if (boardDelta.row < 0 || boardDelta.row >= gameLogic.ROWS || boardDelta.col < 0 || boardDelta.col >= gameLogic.COLS) {
             return true;
         }
         return false;
     }
-    /**
-    * get the rank of animals
-    */
+    //get the rank of animals
     function getRank(animal) {
         switch (animal) {
             case 'mouse': return 0;
