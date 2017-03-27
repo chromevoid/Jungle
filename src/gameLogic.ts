@@ -171,13 +171,19 @@ module gameLogic {
         }
       }
     }
-    // if it is true, then win
     if (pieceCount === 0) {
       winner = boardAfterMove[row][col].substring(0, 1);
     }
 
+    //is current move makes opponent can't make any move, then the winner is current player.
+    let nextTurnIndex = 1 - turnIndexBeforeMove;
+    let opponentHasMoveChoice = HasMoveChoice(nextTurnIndex, boardAfterMove);
+    if(!opponentHasMoveChoice){
+      winner = boardAfterMove[row][col].substring(0, 1);
+    }
+
     // whether the game ends or not
-    if (winner !== '' || isTie(boardAfterMove)) {
+    if (winner !== '' || isTie(board)) {
       // Gameover
       turnIndex = -1;
       endMatchScores = winner === 'B' ? [1, 0] : winner === 'R' ? [0, 1] : [0, 0];
@@ -203,9 +209,26 @@ module gameLogic {
     log.log("move=", move);
   }
 
-  /**
-  * judge of next move is out of the gameboard
-  */
+//to see if next player could find move steps.
+  function HasMoveChoice(turnIndex: number, board: Board): boolean{
+    let currentColor : string = getTurn(turnIndex);
+    let foundMoveChoice : boolean= false;
+    for(let i = 0; i < ROWS; i++){
+      for(let j = 0; j < COLS; j++){
+        if(board[i][j].substring(0,1) === currentColor && board[i][j].substring(1) !== 'H' && board[i][j].substring(1) !== 'T'){
+          let possibleMoves : BoardDelta[] = possibleMove(board, i, j, turnIndex);
+          if (possibleMoves.length > 0){
+            foundMoveChoice = true;
+            break;
+          }
+        }
+      }
+    }
+    return foundMoveChoice;
+  }
+
+
+  //judge of next move is out of the gameboard
   function isOutOfBound(boardDelta: BoardDelta): boolean {
     if (boardDelta.row < 0 || boardDelta.row >= ROWS || boardDelta.col < 0 || boardDelta.col >= COLS) {
       return true;
@@ -213,9 +236,8 @@ module gameLogic {
     return false;
   }
 
-  /**
-  * get the rank of animals
-  */
+  
+  //get the rank of animals
   function getRank(animal: string): number {
     switch (animal) {
       case 'mouse': return 0;
@@ -488,7 +510,6 @@ module gameLogic {
          return destination;
        }
      }
- 
 }
 
 
