@@ -115,6 +115,11 @@ a:active {
   box-shadow:inset 0px 0px 0px 4px #FCFAF2;
 }
 
+.disabled {
+  filter:grayscale(50%);
+  width: 75%;
+  height: 75%;
+}
 .possible {
   /*border: 4px solid #326f4e;*/
   box-shadow:inset 0px 0px 0px 4px #326f4e;

@@ -351,6 +351,15 @@ module game {
     }
   }
 
+  export function isOpponent(row: number, col: number) : boolean {
+    let curColor = gameLogic.getTurn(currentUpdateUI.turnIndex);
+    let curAnimal = state.board[row][col];
+    if (curAnimal.substring(0,1) === curColor) {
+      return false;
+    }
+    return true;
+  }
+
   export function checkAnimal(row: number, col: number) : string {
     return gameLogic.checkAnimal(state, row, col);
   }

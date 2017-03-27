@@ -332,6 +332,15 @@ var game;
         }
     }
     game.isRHome = isRHome;
+    function isOpponent(row, col) {
+        var curColor = gameLogic.getTurn(game.currentUpdateUI.turnIndex);
+        var curAnimal = game.state.board[row][col];
+        if (curAnimal.substring(0, 1) === curColor) {
+            return false;
+        }
+        return true;
+    }
+    game.isOpponent = isOpponent;
     function checkAnimal(row, col) {
         return gameLogic.checkAnimal(game.state, row, col);
     }

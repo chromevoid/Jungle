@@ -37,7 +37,7 @@
           ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col), possible: game.isPossibleMove(row, col)}"
           ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col)">
-        <img ng-if="game.checkAnimal(row, col)" ng-class="{selected: game.changeSelectCSS(row, col)}" ng-src="{{ game.checkAnimal(row, col) }}" alt="{{ game.checkAnimal(row, col) }}" width="90%" height="90%"> 
+        <img ng-if="game.checkAnimal(row, col)" ng-class="{selected: game.changeSelectCSS(row, col), disabled: game.isOpponent(row, col)}" ng-src="{{ game.checkAnimal(row, col) }}" alt="{{ game.checkAnimal(row, col) }}" width="90%" height="90%"> 
       </div>
     </div>
   </div>
