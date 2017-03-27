@@ -135,21 +135,9 @@ module gameLogic {
         break;
       }
     }
-
     if (!foundPossibleMove) {
       throw new Error("Invalid move!");
     }
-    // while (fourPairs !== []) {
-    //   let pair: BoardDelta = fourPairs.pop();
-    //   if (pair.row === row && pair.col === col) {
-    //     findPossibleMove = true;
-    //     break;
-    //   }
-    // }
-    // if (!findPossibleMove) {
-    //   throw new Error("Invalid move!");
-    // }
-
     // if the move is legal, define variables
 
     // deal with the move
@@ -301,14 +289,20 @@ module gameLogic {
 
       //if currentChosen piece is not the turnIndex's color. 
       let currentColor = getTurn(turnIndex);
-
       if(board[pre_row][pre_col].substring(0,1) !== currentColor){
         return destination;
       }
 
+      //if currentChosen piece is not animal (trap, home, water, grass, invalid)
+        if(board[pre_row][pre_col].substring(1) === 'T' || board[pre_row][pre_col].substring(1) === 'H' || board[pre_row][pre_col] === 'G' || board[pre_row][pre_col] === 'W') {
+          return destination;
+      }
+      
+
       //if the destination is out of bound
       if(isOutOfBound({row: row, col: col})) return destination;
   
+
       //if the destination is river cell
       let possibleMove: BoardDelta = {row: row, col: col};
       
@@ -329,27 +323,27 @@ module gameLogic {
           //if there is mouse in the river, can't move (any mouse in the horizental line or vertical line)
           // if move up and there is a mouse in between 
           if(pre_row - row === 1){
-            if(board[row][col].substring(1) === 'mouse' || board[row+1][col].substring(1) === 'mouse' ||  board[row+2][col].substring(1) === 'mouse'){
+            if(board[pre_row-1][col].substring(1) === 'mouse' || board[pre_row-2][col].substring(1) === 'mouse' ||  board[pre_row-3][col].substring(1) === 'mouse'){
             return destination;
            }
           }
 
           //if move down and there is a mouse in between 
            if(row - pre_row === 1){
-            if(board[row][col].substring(1) === 'mouse' || board[row-1][col].substring(1) === 'mouse' ||  board[row-2][col].substring(1) === 'mouse'){
+            if(board[pre_row+1][col].substring(1) === 'mouse' || board[pre_row+2][col].substring(1) === 'mouse' ||  board[pre_row+3][col].substring(1) === 'mouse'){
             return destination;
            }
           }
            // if move right and there is a mouse in between 
            if(col - pre_col === 1){
-            if(board[row][col].substring(1) === 'mouse' || board[row][col+1].substring(1) === 'mouse'){
+            if(board[row][pre_col+1].substring(1) === 'mouse' || board[row][pre_col+2].substring(1) === 'mouse'){
             return destination;
             }
            }
 
            // if move left and there is a mouse in between 
            if(pre_col - col === 1){
-            if(board[row][col].substring(1) === 'mouse' || board[row][col-1].substring(1) === 'mouse'){
+            if(board[row][pre_col-1].substring(1) === 'mouse' || board[row][pre_col-2].substring(1) === 'mouse'){
             return destination;
             }
            }
@@ -430,7 +424,7 @@ module gameLogic {
       if(isHome({row,col})){
         let curColor = getTurn(turnIndex);
        //if it's own home
-        if(board[row][col].substring(0) === curColor){
+        if(board[row][col].substring(0,1) === curColor){
           return destination;
         }
         // if it's opponent's home
@@ -469,8 +463,8 @@ module gameLogic {
     let curColor = getTurn(turnIndex);
     let curAnimal = board[pre_row][pre_col];
     
-    // if two animals are on the different kinds of place, they can't eat the other.  ( but when current animal is mouse, can eat with regular rule)
-    if(isWater(destination) !== isWater(currentPosition) && board[pre_row][pre_col].substring(1) !== 'mouse'){
+    // if two animals are on the different kinds of place, they can't eat the other.  
+    if( isWater(destination) !== isWater(currentPosition) ){
       return destination;
     }
     
