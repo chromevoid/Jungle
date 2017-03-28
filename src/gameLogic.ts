@@ -56,6 +56,8 @@ module gameLogic {
   
   //declare global variable to record round
   var round = 0;
+  var aliveAnimal = 16;
+  export var tieRule : number = 30;
 
   // special cells in the game board
   export const BlueTrap: BoardDelta[] =
@@ -92,14 +94,27 @@ module gameLogic {
 
   
   //Returns true if the game ended in a tie. 
-  function isTie(turnIndexBeforeMove: number): boolean {
-    if(turnIndexBeforeMove === 0){
-      round ++;
-    }
-    if(round >=30){
-      console.log("Game round has exceeded 3 rounds, so tired ,then tie!");
-    }
-    return round >= 30;  //to-do: this to be considered
+  function isTie(turnIndexAfterMove: number, boardAfterMove: Board): boolean {
+      let currentAliveAnimal = 0;
+      if(turnIndexAfterMove === 0){
+        for (let i = 0; i < ROWS; i++) {
+          for (let j = 0; j < COLS; j++) {
+            if (boardAfterMove[i][j].length >= 2 && boardAfterMove[i][j].substring(1) !== 'H' && boardAfterMove[i][j].substring(1) !== 'T') {
+              currentAliveAnimal++;
+            }
+          }
+        }
+        if(currentAliveAnimal === aliveAnimal){
+          round ++;
+        }
+        else{
+          round = 0; //reset the recorded round to 0.
+        }
+      }
+      if(round >= tieRule){
+        console.log("Game round has exceeded " + tieRule + " rounds, so tired ,then tie!");
+      }
+      return round >= tieRule;  //to-do: this to be considered.
   }
 
   /**
@@ -189,7 +204,10 @@ module gameLogic {
     }
 
     // whether the game ends or not  //|| isTie(nextTurnIndex
-    if (winner !== '' ) {
+    let isTieBoolean = false;
+     isTieBoolean =  isTie(nextTurnIndex,boardAfterMove);
+  
+    if (winner !== ''  || isTieBoolean) {
       // Gameover
       console.log("here turnIndex is set to -1"); //used for debug
       turnIndex = -1;

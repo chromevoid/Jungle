@@ -127,6 +127,9 @@ module game {
     clearAnimationTimeout();
     state = params.state;
     shouldRoateBoard = params.playMode === 1;
+    if(params.playMode === 'playAgainstTheComputer' || params.playMode === 'onlyAIs'){
+      gameLogic.tieRule =10000000;
+    }
 
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
