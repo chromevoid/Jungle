@@ -118,7 +118,7 @@ function isOutOfBound( row: number, col: number) : boolean {
         let y = col + dy[j];
         if(!isOutOfBound(x,y)){
           if(board[x][y] === opponentColor + 'T'){
-            sum = sum + 10;
+            sum = sum + 5 + Math.floor(Math.random() * 5);
           }
         }
       }
@@ -136,10 +136,10 @@ function isOutOfBound( row: number, col: number) : boolean {
         let y = col + dy[j];
         if(!isOutOfBound(x,y)){
           if(board[x][y] === opponentColor && board[x][y].substring(1) !== 'H' && board[x][y].substring(1) !== 'T'){
-            if(gameLogic.getRank(board[row][col].substring(1)) > gameLogic.getRank(board[x][y].substring(1))){
-              sum = sum + 50; //can eat.
+            if(gameLogic.getRank(board[row][col].substring(1)) > gameLogic.getRank(board[x][y].substring(1)) || (board[row][col].substring(1) === 'mouse' && board[x][y].substring(1) === 'elephant')){
+              sum = sum + Math.floor(Math.random() * 10) + 40; //can eat.
             }
-            if(gameLogic.getRank(board[row][col].substring(1)) <= gameLogic.getRank(board[x][y].substring(1))){
+            if(gameLogic.getRank(board[row][col].substring(1)) <= gameLogic.getRank(board[x][y].substring(1)) || (board[row][col].substring(1) === 'elephat' && board[x][y].substring(1) === 'mouse')){
               sum = sum + 5; //might be eaten.
             }
           }
@@ -160,7 +160,7 @@ function isOutOfBound( row: number, col: number) : boolean {
           let y = col + dy[j];
           if(!isOutOfBound(x,y)){
             if(board[x][y] === 'W'){
-              sum = sum + 5;
+              sum = sum + Math.floor(Math.random() * 5) + 1  
             }
           }
         }
@@ -169,7 +169,7 @@ function isOutOfBound( row: number, col: number) : boolean {
     return sum;
   }
   
-  //give this 30 points who could get into Water or jump across the water
+  //give this 40 points who could get into Water or jump across the water
   function waterAnimalCloseToWater(board: Board, row: number, col: number, playerIndex: number): number {
     let currentAnimalType = board[row][col].substring(1);
     let sum = 0;
@@ -180,7 +180,7 @@ function isOutOfBound( row: number, col: number) : boolean {
           let y = col + dy[j];
           if(!isOutOfBound(x,y)){
             if(board[x][y] === 'W'){
-              sum = sum + 30;
+              sum = sum + Math.floor(Math.random() * 10) + 30  ;
             }
           }
         }
@@ -201,10 +201,10 @@ function isOutOfBound( row: number, col: number) : boolean {
         let y = col + dy[j];
         if(!isOutOfBound(x,y)){
           if(board[x][y] === currentColor + 'H'){
-              sum = sum + 5; //probably could protect own home.
+              sum = sum + Math.floor(Math.random() * 5) + 1  ; //probably could protect own home.
           }
           if(board[x][y] === 'G'){
-              sum = sum + 30; //normal move
+              sum = sum + Math.floor(Math.random() * 5) + 20; //normal move
           }
         }
       }
@@ -215,7 +215,6 @@ function isOutOfBound( row: number, col: number) : boolean {
   function getNextStates(move: IMove, playerIndex: number): IMove[] {
     return getPossibleMoves(move.state, playerIndex);
   }
-
 
 
 }
