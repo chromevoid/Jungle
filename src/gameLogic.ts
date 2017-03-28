@@ -244,7 +244,7 @@ module gameLogic {
 
   
   //get the rank of animals
-  function getRank(animal: string): number {
+  export function getRank(animal: string): number {
     switch (animal) {
       case 'mouse': return 0;
       case 'cat': return 1;
