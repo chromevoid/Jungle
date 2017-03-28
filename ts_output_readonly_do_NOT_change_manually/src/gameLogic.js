@@ -10,6 +10,8 @@ var gameLogic;
     gameLogic.COLS = 7;
     //declare global variable to record round
     var round = 0;
+    var aliveAnimal = 16;
+    gameLogic.tieRule = 15;
     // special cells in the game board
     gameLogic.BlueTrap = [{ row: 8, col: 2 }, { row: 7, col: 3 }, { row: 8, col: 4 }];
     gameLogic.RedTrap = [{ row: 0, col: 2 }, { row: 1, col: 3 }, { row: 0, col: 4 }];
@@ -40,14 +42,27 @@ var gameLogic;
     }
     gameLogic.getInitialState = getInitialState;
     //Returns true if the game ended in a tie. 
-    function isTie(turnIndexBeforeMove) {
-        if (turnIndexBeforeMove === 0) {
-            round++;
+    function isTie(turnIndexAfterMove, boardAfterMove) {
+        var currentAliveAnimal = 0;
+        if (turnIndexAfterMove === 0) {
+            for (var i = 0; i < gameLogic.ROWS; i++) {
+                for (var j = 0; j < gameLogic.COLS; j++) {
+                    if (boardAfterMove[i][j].length >= 2 && boardAfterMove[i][j].substring(1) !== 'H' && boardAfterMove[i][j].substring(1) !== 'T') {
+                        currentAliveAnimal++;
+                    }
+                }
+            }
+            if (currentAliveAnimal === aliveAnimal) {
+                round++;
+            }
+            else {
+                round = 0; //reset the recorded round to 0.
+            }
         }
-        if (round >= 30) {
-            console.log("Game round has exceeded 3 rounds, so tired ,then tie!");
+        if (round >= gameLogic.tieRule) {
+            console.log("Game round has exceeded " + gameLogic.tieRule + " rounds, so tired ,then tie!");
         }
-        return round >= 30; //to-do: this to be considered
+        return round >= gameLogic.tieRule; //to-do: this to be considered.
     }
     /**
      * Returns the move that should be performed when player
@@ -127,7 +142,9 @@ var gameLogic;
             winner = boardAfterMove[row][col].substring(0, 1);
         }
         // whether the game ends or not  //|| isTie(nextTurnIndex
-        if (winner !== '') {
+        var isTieBoolean = false;
+        isTieBoolean = isTie(nextTurnIndex, boardAfterMove);
+        if (winner !== '' || isTieBoolean) {
             // Gameover
             console.log("here turnIndex is set to -1"); //used for debug
             turnIndex = -1;

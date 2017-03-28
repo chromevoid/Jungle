@@ -115,6 +115,9 @@ var game;
         clearAnimationTimeout();
         game.state = params.state;
         game.shouldRoateBoard = params.playMode === 1;
+        if (params.playMode === 'playAgainstTheComputer' || params.playMode === 'onlyAIs') {
+            gameLogic.tieRule = 10000000;
+        }
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
