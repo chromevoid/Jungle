@@ -45,14 +45,157 @@ var aiService;
         return alphaBetaService.alphaBetaDecision(move, move.turnIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
     }
     aiService.createComputerMove = createComputerMove;
+    //gibberish: playIndex is machine's turn
     function getStateScoreForIndex0(move, playerIndex) {
-        var endMatchScores = move.endMatchScores;
+        var endMatchScores = move.endMatchScores; //gibberish: endMatchScore is after machine's move,
+        //if one is going to win.
         if (endMatchScores) {
             return endMatchScores[0] > endMatchScores[1] ? Number.POSITIVE_INFINITY
                 : endMatchScores[0] < endMatchScores[1] ? Number.NEGATIVE_INFINITY
                     : 0;
         }
-        return 0;
+        var valueSum = 0;
+        //first calculate current state.
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                var state = move.state;
+                var board = state.board;
+                var currentColor = gameLogic.getTurn(playerIndex);
+                if (board[i][j].substring(0, 1) === currentColor && board[i][j].substring(1) !== 'H' && board[i][j].substring(1) !== 'T') {
+                    valueSum = calculateScoreSum(board, i, j, playerIndex) + valueSum;
+                }
+            }
+        }
+        return valueSum;
+    }
+    function calculateScoreSum(board, row, col, playIndex) {
+        var sum = closeToOpponentHome(board, row, col, playIndex) +
+            closeToOpponentAnimal(board, row, col, playIndex) + waterAnimalCloseToWater(board, row, col, playIndex) +
+            landAnimalCloseToGrassOrHome(board, row, col, playIndex);
+        return sum;
+    }
+    var dx = [0, 0, 1, -1];
+    var dy = [1, -1, 0, 0];
+    function isOutOfBound(row, col) {
+        if (row < 0 || row >= gameLogic.ROWS || col < 0 || col >= gameLogic.COLS) {
+            return true;
+        }
+        return false;
+    }
+    //give 200 points to get close to opponent's home.
+    function closeToOpponentHome(board, row, col, playerIndex) {
+        var sum = 0;
+        var opponentColor = gameLogic.getTurn(1 - playerIndex);
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
+                var x = row + dx[i];
+                var y = col + dy[j];
+                if (!isOutOfBound(x, y)) {
+                    if (board[x][y] === opponentColor + 'H') {
+                        sum = sum + 200;
+                    }
+                }
+            }
+        }
+        return sum;
+    }
+    //give this 10 points to get close to opponent's trap
+    function closeToOpponentTrap(board, row, col, playerIndex) {
+        var sum = 0;
+        var opponentColor = gameLogic.getTurn(1 - playerIndex);
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
+                var x = row + dx[i];
+                var y = col + dy[j];
+                if (!isOutOfBound(x, y)) {
+                    if (board[x][y] === opponentColor + 'T') {
+                        sum = sum + 10;
+                    }
+                }
+            }
+        }
+        return sum;
+    }
+    //give this 100 points (might eat animal) and 5 points (might be eaten)
+    function closeToOpponentAnimal(board, row, col, playerIndex) {
+        var sum = 0;
+        var opponentColor = gameLogic.getTurn(1 - playerIndex);
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
+                var x = row + dx[i];
+                var y = col + dy[j];
+                if (!isOutOfBound(x, y)) {
+                    if (board[x][y] === opponentColor && board[x][y].substring(1) !== 'H' && board[x][y].substring(1) !== 'T') {
+                        if (gameLogic.getRank(board[row][col].substring(1)) > gameLogic.getRank(board[x][y].substring(1))) {
+                            sum = sum + 50; //can eat.
+                        }
+                        if (gameLogic.getRank(board[row][col].substring(1)) <= gameLogic.getRank(board[x][y].substring(1))) {
+                            sum = sum + 5; //might be eaten.
+                        }
+                    }
+                }
+            }
+        }
+        return sum;
+    }
+    //give this 5 points
+    function landAnimalCloseToWater(board, row, col, playerIndex) {
+        var currentAnimalType = board[row][col].substring(1);
+        var sum = 0;
+        if (currentAnimalType !== 'mouse' && currentAnimalType !== 'tiger' && currentAnimalType !== 'lion') {
+            for (var i = 0; i < 4; i++) {
+                for (var j = 0; j < 4; j++) {
+                    var x = row + dx[i];
+                    var y = col + dy[j];
+                    if (!isOutOfBound(x, y)) {
+                        if (board[x][y] === 'W') {
+                            sum = sum + 5;
+                        }
+                    }
+                }
+            }
+        }
+        return sum;
+    }
+    //give this 30 points who could get into Water or jump across the water
+    function waterAnimalCloseToWater(board, row, col, playerIndex) {
+        var currentAnimalType = board[row][col].substring(1);
+        var sum = 0;
+        if (currentAnimalType === 'mouse' || currentAnimalType === 'tiger' || currentAnimalType === 'lion') {
+            for (var i = 0; i < 4; i++) {
+                for (var j = 0; j < 4; j++) {
+                    var x = row + dx[i];
+                    var y = col + dy[j];
+                    if (!isOutOfBound(x, y)) {
+                        if (board[x][y] === 'W') {
+                            sum = sum + 30;
+                        }
+                    }
+                }
+            }
+        }
+        return sum;
+    }
+    //give this 5 points (close to home and could protect home), give 30 points to normal grass
+    function landAnimalCloseToGrassOrHome(board, row, col, playerIndex) {
+        var sum = 0;
+        var currentColor = gameLogic.getTurn(playerIndex);
+        var opponentColor = gameLogic.getTurn(1 - playerIndex);
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
+                var x = row + dx[i];
+                var y = col + dy[j];
+                if (!isOutOfBound(x, y)) {
+                    if (board[x][y] === currentColor + 'H') {
+                        sum = sum + 5; //probably could protect own home.
+                    }
+                    if (board[x][y] === 'G') {
+                        sum = sum + 30; //normal move
+                    }
+                }
+            }
+        }
+        return sum;
     }
     function getNextStates(move, playerIndex) {
         return getPossibleMoves(move.state, playerIndex);
