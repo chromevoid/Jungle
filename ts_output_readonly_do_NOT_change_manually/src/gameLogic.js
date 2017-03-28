@@ -192,6 +192,7 @@ var gameLogic;
             case 'elephant': return 7;
         }
     }
+    gameLogic.getRank = getRank;
     function isTrap(coordinate) {
         return isBlueTrap(coordinate) || isRedTrap(coordinate);
     }
