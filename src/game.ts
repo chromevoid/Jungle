@@ -234,9 +234,10 @@ module game {
     
       click_row = row;
       click_col = col;
+      log.info("cellCilckedOnw info: a new piece is chosen")
     }
     else {
-      log.info("cellCilckedOne info: Has already chosen a piece, now should make move");
+      log.info("cellCilckedOne info: Has already chosen a piece, now should make move or choose another own piece");
     }
   }
 
@@ -255,13 +256,22 @@ module game {
       cellClickedOneDone = false;
       return;
     }
+    if (isOwn(row, col)) { // if the player select another own piece
+        log.info("cellClickedTwo info: select another own piece");
+        firstClicked = false; // clear previous selection
+        pre_row = null; // clear previous selection
+        pre_col = null; // clear previous selection
+        cellClickedOne(row, col); // call the cellClickedOne to choose this piece
+        cellClickedOneDone = false; // next click will skip cellClickedOne and execute cellClickedTwo
+        return;
+    }
     if (firstClicked) {
       let nextMove: IMove = null;
       try {
            nextMove = gameLogic.createMove(
             state, row, col, pre_row, pre_col, currentUpdateUI.turnIndex);
       } catch (e) {
-        log.info(["Invalid move:", row, col]);
+        log.info(["cellClickedTwo info: Invalid move:", row, col]);
         cellClickedOneDone = false; // the move is invalid, the player should choose another piece to move
         firstClicked = false; // the move is invalid, the player should choose another piece to move
         pre_row = null; // the move is invalid, the player should choose another piece to move
@@ -273,9 +283,10 @@ module game {
       firstClicked = false;
       pre_row = null;
       pre_col = null;
+      log.info("cellClickedTwo info: success");
     }
     else {
-      log.info("Has not chosen a piece, now should choose a picec first");
+      log.info("cellClickedTwo info: Has not chosen a piece, now should choose a picec first");
     }
   }
 
@@ -285,7 +296,7 @@ module game {
         col = gameLogic.COLS - col -1;
       }
 
-    if (firstClicked && click_row === row && click_col === col && !isOpponent(row, col)) {
+    if (firstClicked && click_row === row && click_col === col && isOwn(row, col)) {
       return true;
     }
     else {
@@ -433,10 +444,23 @@ module game {
       }
     let curColor = gameLogic.getTurn(currentUpdateUI.turnIndex);
     let curAnimal = state.board[row][col];
-    if (curAnimal.substring(0,1) === curColor) {
+    if (curAnimal.substring(0,1) === curColor || curAnimal.substring(1,2) === 'T' || curAnimal.substring(1,2) === 'H') {
       return false;
     }
     return true;
+  }
+
+  export function isOwn(row: number, col: number) : boolean {
+    if(currentUpdateUI.turnIndex === 1 && shouldRoateBoard){
+        row = gameLogic.ROWS - row -1;
+        col = gameLogic.COLS - col -1;
+      }
+    let curColor = gameLogic.getTurn(currentUpdateUI.turnIndex);
+    let curAnimal = state.board[row][col];
+    if (curAnimal.substring(0,1) === curColor && curAnimal.substring(1,2) !== 'T' && curAnimal.substring(1,2) !== 'H') {
+      return true;
+    }
+    return false;
   }
 
   export function checkAnimal(row: number, col: number) : string {

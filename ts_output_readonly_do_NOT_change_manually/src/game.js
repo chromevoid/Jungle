@@ -211,9 +211,10 @@ var game;
             game.cellClickedOneDone = true;
             game.click_row = row;
             game.click_col = col;
+            log.info("cellCilckedOnw info: a new piece is chosen");
         }
         else {
-            log.info("cellCilckedOne info: Has already chosen a piece, now should make move");
+            log.info("cellCilckedOne info: Has already chosen a piece, now should make move or choose another own piece");
         }
     }
     game.cellClickedOne = cellClickedOne;
@@ -231,13 +232,22 @@ var game;
             game.cellClickedOneDone = false;
             return;
         }
+        if (isOwn(row, col)) {
+            log.info("cellClickedTwo info: select another own piece");
+            game.firstClicked = false; // clear previous selection
+            game.pre_row = null; // clear previous selection
+            game.pre_col = null; // clear previous selection
+            cellClickedOne(row, col); // call the cellClickedOne to choose this piece
+            game.cellClickedOneDone = false; // next click will skip cellClickedOne and execute cellClickedTwo
+            return;
+        }
         if (game.firstClicked) {
             var nextMove = null;
             try {
                 nextMove = gameLogic.createMove(game.state, row, col, game.pre_row, game.pre_col, game.currentUpdateUI.turnIndex);
             }
             catch (e) {
-                log.info(["Invalid move:", row, col]);
+                log.info(["cellClickedTwo info: Invalid move:", row, col]);
                 game.cellClickedOneDone = false; // the move is invalid, the player should choose another piece to move
                 game.firstClicked = false; // the move is invalid, the player should choose another piece to move
                 game.pre_row = null; // the move is invalid, the player should choose another piece to move
@@ -249,9 +259,10 @@ var game;
             game.firstClicked = false;
             game.pre_row = null;
             game.pre_col = null;
+            log.info("cellClickedTwo info: success");
         }
         else {
-            log.info("Has not chosen a piece, now should choose a picec first");
+            log.info("cellClickedTwo info: Has not chosen a piece, now should choose a picec first");
         }
     }
     game.cellClickedTwo = cellClickedTwo;
@@ -260,7 +271,7 @@ var game;
             row = gameLogic.ROWS - row - 1;
             col = gameLogic.COLS - col - 1;
         }
-        if (game.firstClicked && game.click_row === row && game.click_col === col && !isOpponent(row, col)) {
+        if (game.firstClicked && game.click_row === row && game.click_col === col && isOwn(row, col)) {
             return true;
         }
         else {
@@ -401,12 +412,25 @@ var game;
         }
         var curColor = gameLogic.getTurn(game.currentUpdateUI.turnIndex);
         var curAnimal = game.state.board[row][col];
-        if (curAnimal.substring(0, 1) === curColor) {
+        if (curAnimal.substring(0, 1) === curColor || curAnimal.substring(1, 2) === 'T' || curAnimal.substring(1, 2) === 'H') {
             return false;
         }
         return true;
     }
     game.isOpponent = isOpponent;
+    function isOwn(row, col) {
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRoateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
+        var curColor = gameLogic.getTurn(game.currentUpdateUI.turnIndex);
+        var curAnimal = game.state.board[row][col];
+        if (curAnimal.substring(0, 1) === curColor && curAnimal.substring(1, 2) !== 'T' && curAnimal.substring(1, 2) !== 'H') {
+            return true;
+        }
+        return false;
+    }
+    game.isOwn = isOwn;
     function checkAnimal(row, col) {
         if (game.currentUpdateUI.turnIndex === 1 && game.shouldRoateBoard) {
             row = gameLogic.ROWS - row - 1;
