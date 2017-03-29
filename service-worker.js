@@ -2,11 +2,34 @@
 
 // The files we want to cache
 var urlsToCache = [
-  '//yoav-zibin.github.io/TicTacToe/dist/index.min.html',
+  // '//yoav-zibin.github.io/TicTacToe/dist/index.min.html',
 
   // Same list as in Gruntfile.js (for AppCache)
-  '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
-  '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
+  // '//yoav-zibin.github.io/TicTacToe/dist/js/everything.min.js',
+  // '//yoav-zibin.github.io/TicTacToe/dist/css/everything.min.css',
+            '//chromevoid.github.io/dist/index.min.html',
+            '//chromevoid.github.io/dist/js/everything.min.js',
+            '//chromevoid.github.io/dist/css/everything.min.css',
+            '//chromevoid.github.io/Jungle/img/Bcat.png',
+            '//chromevoid.github.io/Jungle/img/Bcheetah.png',
+            '//chromevoid.github.io/Jungle/img/Bdog.png',
+            '//chromevoid.github.io/Jungle/img/Belephant.png',
+            '//chromevoid.github.io/Jungle/img/Blion.png',
+            '//chromevoid.github.io/Jungle/img/Bmouse.png',
+            '//chromevoid.github.io/Jungle/img/Btiger.png',
+            '//chromevoid.github.io/Jungle/img/Bwolf.png',
+            '//chromevoid.github.io/Jungle/img/go.png',
+            '//chromevoid.github.io/Jungle/img/Home.png',
+            '//chromevoid.github.io/Jungle/img/Rcat.png',
+            '//chromevoid.github.io/Jungle/img/Rcheetah.png',
+            '//chromevoid.github.io/Jungle/img/Rdog.png',
+            '//chromevoid.github.io/Jungle/img/Relephant.png',
+            '//chromevoid.github.io/Jungle/img/Rlion.png',
+            '//chromevoid.github.io/Jungle/img/Rmouse.png',
+            '//chromevoid.github.io/Jungle/img/Rtiger.png',
+            '//chromevoid.github.io/Jungle/img/Rwolf.png',
+            '//chromevoid.github.io/Jungle/img/texture.png',
+            '//chromevoid.github.io/Jungle/img/Trap.png'
 ];
 var CACHE_NAME = 'cache-v<REPLACE_WITH_DATE_IN_GRUNT>';
 
