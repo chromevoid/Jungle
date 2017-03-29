@@ -258,7 +258,7 @@ var game;
             row = gameLogic.ROWS - row - 1;
             col = gameLogic.COLS - col - 1;
         }
-        if (game.firstClicked && game.click_row === row && game.click_col === col) {
+        if (game.firstClicked && game.click_row === row && game.click_col === col && !isOpponent(row, col)) {
             return true;
         }
         else {

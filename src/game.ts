@@ -279,13 +279,12 @@ module game {
   }
 
   export function changeSelectCSS(row: number, col: number): boolean {
-   if(currentUpdateUI.turnIndex === 1 && shouldRoateBoard){
+    if(currentUpdateUI.turnIndex === 1 && shouldRoateBoard){
         row = gameLogic.ROWS - row -1;
         col = gameLogic.COLS - col -1;
-
       }
 
-    if (firstClicked && click_row === row && click_col === col) {
+    if (firstClicked && click_row === row && click_col === col && !isOpponent(row, col)) {
       return true;
     }
     else {
