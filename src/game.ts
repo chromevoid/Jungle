@@ -222,6 +222,7 @@ module game {
           
       }  
     log.info("Clicked on cell (one):", row, col);
+    if (!checkAnimal(row, col) || isOpponent(row, col)) return; // the player selects a wrong piece.
     if (!isHumanTurn()) return;
     // log.info(firstClicked);
    

@@ -199,6 +199,8 @@ var game;
             col = gameLogic.COLS - col - 1;
         }
         log.info("Clicked on cell (one):", row, col);
+        if (!checkAnimal(row, col) || isOpponent(row, col))
+            return; // the player selects a wrong piece.
         if (!isHumanTurn())
             return;
         // log.info(firstClicked);
