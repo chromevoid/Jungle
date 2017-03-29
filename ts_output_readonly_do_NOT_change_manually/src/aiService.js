@@ -28,7 +28,6 @@ var aiService;
                     }
                 }
                 catch (e) {
-                    // The cell in that position was full.
                 }
             }
         }
