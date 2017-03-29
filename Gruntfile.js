@@ -207,7 +207,7 @@ module.exports = function(grunt) {
             'img/Rtiger.png',
             'img/Rwolf.png',
             'img/texture.png',
-            'img/Trap.png',
+            'img/Trap.png'
           ],
           network: [
             'service-worker.js',
