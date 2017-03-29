@@ -186,6 +186,7 @@ module.exports = function(grunt) {
           basePath: '.',
           cache: [
             // Use the same list in service-worker.js !
+            
             'js/everything.min.js',
             'css/everything.min.css',
             'img/Bcat.png',
