@@ -31,7 +31,7 @@ module game {
   export let yourPlayerInfo: IPlayerInfo = null;
 
   //should rotate of it's a multiplayer game.
-  export let shouldRoateBoard: boolean = false;
+  export let shouldRotateBoard: boolean = false;
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -126,7 +126,7 @@ module game {
     currentUpdateUI = params;
     clearAnimationTimeout();
     state = params.state;
-    shouldRoateBoard = params.playMode === 1;
+    shouldRotateBoard = params.playMode === 1;
     if (params.playMode === 'playAgainstTheComputer' || params.playMode === 'onlyAIs') {
       gameLogic.tieRule = 10000000;
     }

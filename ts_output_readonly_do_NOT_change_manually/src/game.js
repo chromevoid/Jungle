@@ -24,7 +24,7 @@ var game;
     game.proposals = null;
     game.yourPlayerInfo = null;
     //should rotate of it's a multiplayer game.
-    game.shouldRoateBoard = false;
+    game.shouldRotateBoard = false;
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
@@ -114,7 +114,7 @@ var game;
         game.currentUpdateUI = params;
         clearAnimationTimeout();
         game.state = params.state;
-        game.shouldRoateBoard = params.playMode === 1;
+        game.shouldRotateBoard = params.playMode === 1;
         if (params.playMode === 'playAgainstTheComputer' || params.playMode === 'onlyAIs') {
             gameLogic.tieRule = 10000000;
         }
