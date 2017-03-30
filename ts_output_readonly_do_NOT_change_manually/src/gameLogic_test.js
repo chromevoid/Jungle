@@ -36,7 +36,8 @@ describe("In Jungle", function () {
         var expectedMove = {
             turnIndex: B_TURN,
             endMatchScores: NO_ONE_WINS,
-            state: { board: [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
+            state: {
+                board: [['Rlion', 'G', 'RT', 'RH', 'RT', 'G', 'Rtiger'],
                     ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
                     ['Rmouse', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
                     ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
@@ -44,7 +45,8 @@ describe("In Jungle", function () {
                     ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
                     ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
                     ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
-                    ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], delta: null }
+                    ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], delta: null
+            }
         };
         expect(angular.equals(move, expectedMove)).toBe(true);
     });
