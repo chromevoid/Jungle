@@ -60,10 +60,10 @@ var game;
     }
     game.isProposal = isProposal;
     function getCellStyle(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         if (!isProposal(row, col))
             return {};
         // proposals[row][col] is > 0
@@ -194,13 +194,26 @@ var game;
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
     function cellClickedOne(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
+        var rowUsedForOpponent = row;
+        var colUsedForOpponent = col;
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            rowUsedForOpponent = gameLogic.ROWS - rowUsedForOpponent - 1;
+            colUsedForOpponent = gameLogic.COLS - colUsedForOpponent - 1;
+        }
         log.info("Clicked on cell (one):", row, col);
-        if (!checkAnimal(row, col) || isOpponent(row, col))
+        var rowUsedForcheckAnimal = row;
+        var colUsedForcheckAnimal = col;
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            rowUsedForcheckAnimal = gameLogic.ROWS - rowUsedForcheckAnimal - 1;
+            colUsedForcheckAnimal = gameLogic.COLS - colUsedForcheckAnimal - 1;
+        }
+        if (!checkAnimal(rowUsedForcheckAnimal, colUsedForcheckAnimal) || isOpponent(rowUsedForOpponent, colUsedForOpponent)) {
             return; // the player selects a wrong piece.
+        }
         if (!isHumanTurn())
             return;
         // log.info(firstClicked);
@@ -209,6 +222,7 @@ var game;
             game.pre_col = col;
             game.firstClicked = true;
             game.cellClickedOneDone = true;
+            log.info("cell clicked One done is" + game.cellClickedOneDone);
             game.click_row = row;
             game.click_col = col;
             log.info("cellCilckedOnw info: a new piece is chosen");
@@ -219,14 +233,15 @@ var game;
     }
     game.cellClickedOne = cellClickedOne;
     function cellClickedTwo(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         log.info("Clicked on cell (two):", row, col);
         if (!isHumanTurn())
             return;
         // log.info(firstClicked);
+        log.info("cell clicked One done is" + game.cellClickedOneDone);
         if (game.cellClickedOneDone) {
             log.info("cellClickedTwo info: cellClickedOne is done in this round, can't execute the Two function");
             game.cellClickedOneDone = false;
@@ -237,8 +252,15 @@ var game;
             game.firstClicked = false; // clear previous selection
             game.pre_row = null; // clear previous selection
             game.pre_col = null; // clear previous selection
-            cellClickedOne(row, col); // call the cellClickedOne to choose this piece
             game.cellClickedOneDone = false; // next click will skip cellClickedOne and execute cellClickedTwo
+            var rowUsedForClickOne = row;
+            var colUsedForClickOne = col;
+            if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+                rowUsedForClickOne = gameLogic.ROWS - rowUsedForClickOne - 1;
+                colUsedForClickOne = gameLogic.COLS - colUsedForClickOne - 1;
+            }
+            cellClickedOne(rowUsedForClickOne, colUsedForClickOne); // call the cellClickedOne to choose this piece
+            // cellClickedOneDone = false; // next click will skip cellClickedOne and execute cellClickedTwo
             return;
         }
         if (game.firstClicked) {
@@ -267,10 +289,10 @@ var game;
     }
     game.cellClickedTwo = cellClickedTwo;
     function changeSelectCSS(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         if (game.firstClicked && game.click_row === row && game.click_col === col && isOwn(row, col)) {
             return true;
         }
@@ -280,10 +302,10 @@ var game;
     }
     game.changeSelectCSS = changeSelectCSS;
     function isPossibleMove(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         if (game.firstClicked) {
             var row_dif = Math.abs(game.click_row - row);
             var col_dif = Math.abs(game.click_col - col);
@@ -302,18 +324,18 @@ var game;
     }
     game.isPossibleMove = isPossibleMove;
     function shouldShowImage(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         return game.state.board[row][col] !== "" || isProposal(row, col);
     }
     game.shouldShowImage = shouldShowImage;
     function isPiece(row, col, turnIndex, pieceKind) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
     }
     // export function isPieceX(row: number, col: number): boolean {
@@ -323,28 +345,28 @@ var game;
     //   return isPiece(row, col, 1, 'O');
     // }
     function shouldSlowlyAppear(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         return game.state.delta &&
             game.state.delta.row === row && game.state.delta.col === col;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
     //add functions isPiece
     function isGrass(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         return !isWater(row, col);
     }
     game.isGrass = isGrass;
     function isWater(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         if ((row >= 3 && row <= 5 && col >= 1 && col <= 2) || (row >= 3 && row <= 5 && col >= 4 && col <= 5)) {
             return true;
         }
@@ -354,10 +376,10 @@ var game;
     }
     game.isWater = isWater;
     function isBTrap(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         if ((row === 8 && col === 2) || (row === 7 && col === 3) || (row === 8 && col === 4)) {
             return true;
         }
@@ -367,10 +389,10 @@ var game;
     }
     game.isBTrap = isBTrap;
     function isRTrap(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         if ((row === 0 && col === 2) || (row === 1 && col === 3) || (row === 0 && col === 4)) {
             return true;
         }
@@ -380,10 +402,10 @@ var game;
     }
     game.isRTrap = isRTrap;
     function isBHome(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         if (row === 8 && col === 3) {
             return true;
         }
@@ -393,10 +415,10 @@ var game;
     }
     game.isBHome = isBHome;
     function isRHome(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         if (row === 0 && col === 3) {
             return true;
         }
@@ -406,20 +428,20 @@ var game;
     }
     game.isRHome = isRHome;
     function isOpponent(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
-        var curColor = gameLogic.getTurn(game.currentUpdateUI.turnIndex);
-        var curAnimal = game.state.board[row][col];
-        if (curAnimal.substring(0, 1) === curColor || curAnimal.substring(1, 2) === 'T' || curAnimal.substring(1, 2) === 'H') {
-            return false;
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
         }
-        return true;
+        var opponentColor = gameLogic.getTurn(1 - game.currentUpdateUI.turnIndex);
+        var curAnimal = game.state.board[row][col];
+        if (curAnimal.substring(0, 1) === opponentColor && curAnimal.substring(1, 2) !== 'T' && curAnimal.substring(1, 2) !== 'H') {
+            return true;
+        }
+        return false;
     }
     game.isOpponent = isOpponent;
     function isOwn(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+        // if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
         //   row = gameLogic.ROWS - row - 1;
         //   col = gameLogic.COLS - col - 1;
         // }
@@ -432,10 +454,10 @@ var game;
     }
     game.isOwn = isOwn;
     function checkAnimal(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.currentUpdateUI.turnIndex === 1 && game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         return gameLogic.checkAnimal(game.state, row, col);
     }
     game.checkAnimal = checkAnimal;
