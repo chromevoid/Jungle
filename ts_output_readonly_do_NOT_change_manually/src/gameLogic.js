@@ -285,8 +285,14 @@ var gameLogic;
             // }
             //if the animal is mouse, could move one step.
             if (board[pre_row][pre_col].substring(1) === 'mouse') {
-                destination.row = row;
-                destination.col = col;
+                if (board[row][col].substring(1) === 'mouse' && isWater({ row: pre_row, col: pre_col }) || board[row][col] === 'W') {
+                    destination.row = row;
+                    destination.col = col;
+                }
+                else {
+                    destination.row = -1;
+                    destination.col = -1;
+                }
                 return destination;
             }
             else if (board[pre_row][pre_col].substring(1) === 'tiger' || board[pre_row][pre_col].substring(1) === 'lion') {

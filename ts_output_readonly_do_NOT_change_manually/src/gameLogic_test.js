@@ -606,6 +606,30 @@ describe("In Jungle", function () {
             ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
             ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 0, col: 6 }, { row: 0, col: 5 });
     });
+    //36. add test that mouse on land can't eat mouse in water
+    it("36.try to move Bmouse from [3,3] to [3,2] to eat Rmouse, invalid move", function () {
+        expectException(B_TURN, [['G', 'G', 'Rlion', 'Bcheetah', 'RT', 'G', 'Rtiger'],
+            ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+            ['G', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+            ['G', 'W', 'Rmouse', 'Bmouse', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['Belephant', 'G', 'Bwolf', 'G', 'G', 'G', 'G'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 3, col: 3 }, { row: 3, col: 2 });
+    });
+    //37. add test that mouse on land can't eat mouse in water
+    it("37.try to move Rmouse from [3,2] to [3,3] to eat Bmouse, invalid move", function () {
+        expectException(R_TURN, [['G', 'G', 'Rlion', 'Bcheetah', 'RT', 'G', 'Rtiger'],
+            ['G', 'Rdog', 'G', 'RT', 'G', 'Rcat', 'G'],
+            ['G', 'G', 'Rcheetah', 'G', 'Rwolf', 'G', 'Relephant'],
+            ['G', 'W', 'Rmouse', 'Bmouse', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
+            ['Belephant', 'G', 'Bwolf', 'G', 'G', 'G', 'G'],
+            ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
+            ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 3, col: 2 }, { row: 3, col: 3 });
+    });
     //to-do: tie condition test. 
 });
 //# sourceMappingURL=gameLogic_test.js.map
