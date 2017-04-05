@@ -31,7 +31,7 @@ module game {
   export let yourPlayerInfo: IPlayerInfo = null;
 
   //should rotate of it's a multiplayer game.
-  export var shouldRotateBoard: boolean = false;
+  export let shouldRotateBoard: boolean = false;
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -71,10 +71,10 @@ module game {
 
   export function getCellStyle(row: number, col: number): Object {
 
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
 
     if (!isProposal(row, col)) return {};
     // proposals[row][col] is > 0
@@ -216,30 +216,12 @@ module game {
   }
 
   export function cellClickedOne(row: number, col: number): void {
-    
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
-    let rowUsedForOpponent = row;
-    let colUsedForOpponent = col;
-    if(currentUpdateUI.turnIndex === 1 && shouldRotateBoard){
-      rowUsedForOpponent = gameLogic.ROWS - rowUsedForOpponent - 1;
-      colUsedForOpponent = gameLogic.COLS - colUsedForOpponent - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     log.info("Clicked on cell (one):", row, col);
-
-    let rowUsedForcheckAnimal = row;
-    let colUsedForcheckAnimal = col;
-    if(currentUpdateUI.turnIndex === 1 && shouldRotateBoard){
-      rowUsedForcheckAnimal = gameLogic.ROWS - rowUsedForcheckAnimal - 1;
-      colUsedForcheckAnimal = gameLogic.COLS - colUsedForcheckAnimal - 1;
-    }
-
-    if (!checkAnimal(rowUsedForcheckAnimal, colUsedForcheckAnimal) || isOpponent(rowUsedForOpponent, colUsedForOpponent)){ 
-        return; // the player selects a wrong piece.
-    }
-    
+    if (!checkAnimal(row, col) || isOpponent(row, col)) return; // the player selects a wrong piece.
     if (!isHumanTurn()) return;
     // log.info(firstClicked);
 
@@ -248,7 +230,6 @@ module game {
       pre_col = col;
       firstClicked = true;
       cellClickedOneDone = true;
-      log.info("cell clicked One done is" +cellClickedOneDone );
 
       click_row = row;
       click_col = col;
@@ -261,18 +242,15 @@ module game {
 
   export function cellClickedTwo(row: number, col: number): void {
 
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
 
     log.info("Clicked on cell (two):", row, col);
     if (!isHumanTurn()) return;
     // log.info(firstClicked);
-
-    log.info("cell clicked One done is" +cellClickedOneDone );
     if (cellClickedOneDone) {
-      
       log.info("cellClickedTwo info: cellClickedOne is done in this round, can't execute the Two function");
       cellClickedOneDone = false;
       return;
@@ -282,15 +260,8 @@ module game {
       firstClicked = false; // clear previous selection
       pre_row = null; // clear previous selection
       pre_col = null; // clear previous selection
+      cellClickedOne(row, col); // call the cellClickedOne to choose this piece
       cellClickedOneDone = false; // next click will skip cellClickedOne and execute cellClickedTwo
-      let rowUsedForClickOne = row;
-      let colUsedForClickOne = col;
-      if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      rowUsedForClickOne = gameLogic.ROWS - rowUsedForClickOne - 1;
-      colUsedForClickOne = gameLogic.COLS - colUsedForClickOne - 1;
-    }
-      cellClickedOne(rowUsedForClickOne, colUsedForClickOne); // call the cellClickedOne to choose this piece
-      // cellClickedOneDone = false; // next click will skip cellClickedOne and execute cellClickedTwo
       return;
     }
     if (firstClicked) {
@@ -319,10 +290,10 @@ module game {
   }
 
   export function changeSelectCSS(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
 
     if (firstClicked && click_row === row && click_col === col && isOwn(row, col)) {
       return true;
@@ -333,10 +304,10 @@ module game {
   }
 
   export function isPossibleMove(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
 
     if (firstClicked) {
       let row_dif: number = Math.abs(click_row - row);
@@ -356,19 +327,19 @@ module game {
   }
 
   export function shouldShowImage(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
 
     return state.board[row][col] !== "" || isProposal(row, col);
   }
 
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
   }
 
@@ -381,10 +352,10 @@ module game {
   // }
 
   export function shouldSlowlyAppear(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     return state.delta &&
       state.delta.row === row && state.delta.col === col;
   }
@@ -392,18 +363,18 @@ module game {
 
   //add functions isPiece
   export function isGrass(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     return !isWater(row, col);
   }
 
   export function isWater(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     if ((row >= 3 && row <= 5 && col >= 1 && col <= 2) || (row >= 3 && row <= 5 && col >= 4 && col <= 5)) {
       return true;
     }
@@ -413,10 +384,10 @@ module game {
   }
 
   export function isBTrap(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     if ((row === 8 && col === 2) || (row === 7 && col === 3) || (row === 8 && col === 4)) {
       return true;
     }
@@ -426,10 +397,10 @@ module game {
   }
 
   export function isRTrap(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     if ((row === 0 && col === 2) || (row === 1 && col === 3) || (row === 0 && col === 4)) {
       return true;
     }
@@ -439,10 +410,10 @@ module game {
   }
 
   export function isBHome(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     if (row === 8 && col === 3) {
       return true;
     }
@@ -452,10 +423,10 @@ module game {
   }
 
   export function isRHome(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     if (row === 0 && col === 3) {
       return true;
     }
@@ -465,20 +436,20 @@ module game {
   }
 
   export function isOpponent(row: number, col: number): boolean {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
-    let opponentColor = gameLogic.getTurn(1 - currentUpdateUI.turnIndex);
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
+    let curColor = gameLogic.getTurn(currentUpdateUI.turnIndex);
     let curAnimal = state.board[row][col];
-    if (curAnimal.substring(0, 1) === opponentColor && curAnimal.substring(1, 2) !== 'T' && curAnimal.substring(1, 2) !== 'H' ) {
-      return true;
+    if (curAnimal.substring(0, 1) === curColor || curAnimal.substring(1, 2) === 'T' || curAnimal.substring(1, 2) === 'H') {
+      return false;
     }
-    return false;
+    return true;
   }
 
   export function isOwn(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
     //   row = gameLogic.ROWS - row - 1;
     //   col = gameLogic.COLS - col - 1;
     // }
@@ -491,10 +462,10 @@ module game {
   }
 
   export function checkAnimal(row: number, col: number): string {
-    if (currentUpdateUI.turnIndex === 1 && shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
+    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
+    //   row = gameLogic.ROWS - row - 1;
+    //   col = gameLogic.COLS - col - 1;
+    // }
     return gameLogic.checkAnimal(state, row, col);
   }
 
