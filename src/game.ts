@@ -126,7 +126,11 @@ module game {
     currentUpdateUI = params;
     clearAnimationTimeout();
     state = params.state;
+
+    //Rotate the board 180 degrees, hence in the point of current
+    //player's view, the board always face towards him/her;
     shouldRotateBoard = params.playMode === 1;
+
     if (params.playMode === 'playAgainstTheComputer' || params.playMode === 'onlyAIs') {
       gameLogic.tieRule = 10000000;
     }
@@ -216,12 +220,17 @@ module game {
   }
 
   export function cellClickedOne(row: number, col: number): void {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
     log.info("Clicked on cell (one):", row, col);
-    if (!checkAnimal(row, col) || isOpponent(row, col)) return; // the player selects a wrong piece.
+    if (shouldRotateBoard) {
+      if (!checkAnimal(gameLogic.ROWS - row - 1, gameLogic.COLS - col - 1) || isOpponent(gameLogic.ROWS - row - 1, gameLogic.COLS - col - 1)) return; // the player selects a wrong piece.
+    }
+    else {
+      if (!checkAnimal(row, col) || isOpponent(row, col)) return; // the player selects a wrong piece.
+    }
     if (!isHumanTurn()) return;
     // log.info(firstClicked);
 
@@ -241,59 +250,99 @@ module game {
   }
 
   export function cellClickedTwo(row: number, col: number): void {
-
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
-
-    log.info("Clicked on cell (two):", row, col);
-    if (!isHumanTurn()) return;
-    // log.info(firstClicked);
-    if (cellClickedOneDone) {
-      log.info("cellClickedTwo info: cellClickedOne is done in this round, can't execute the Two function");
-      cellClickedOneDone = false;
-      return;
-    }
-    if (isOwn(row, col)) { // if the player select another own piece
-      log.info("cellClickedTwo info: select another own piece");
-      firstClicked = false; // clear previous selection
-      pre_row = null; // clear previous selection
-      pre_col = null; // clear previous selection
-      cellClickedOne(row, col); // call the cellClickedOne to choose this piece
-      cellClickedOneDone = false; // next click will skip cellClickedOne and execute cellClickedTwo
-      return;
-    }
-    if (firstClicked) {
-      let nextMove: IMove = null;
-      try {
-        nextMove = gameLogic.createMove(
-          state, row, col, pre_row, pre_col, currentUpdateUI.turnIndex);
-      } catch (e) {
-        log.info(["cellClickedTwo info: Invalid move:", row, col]);
-        cellClickedOneDone = false; // the move is invalid, the player should choose another piece to move
-        firstClicked = false; // the move is invalid, the player should choose another piece to move
-        pre_row = null; // the move is invalid, the player should choose another piece to move
-        pre_col = null; // the move is invalid, the player should choose another piece to move
+    if (shouldRotateBoard) {
+      var rotate_row: number = gameLogic.ROWS - row - 1;
+      var rotate_col = gameLogic.COLS - col - 1;
+      log.info("Clicked on cell (two):", rotate_row, rotate_col);
+      if (!isHumanTurn()) return;
+      // log.info(firstClicked);
+      if (cellClickedOneDone) {
+        log.info("cellClickedTwo info: cellClickedOne is done in this round, can't execute the Two function");
+        cellClickedOneDone = false;
         return;
       }
-      // Move is legal, make it!
-      makeMove(nextMove);
-      firstClicked = false;
-      pre_row = null;
-      pre_col = null;
-      log.info("cellClickedTwo info: success");
+      if (isOwn(rotate_row, rotate_col)) { // if the player select another own piece
+        log.info("cellClickedTwo info: select another own piece");
+        firstClicked = false; // clear previous selection
+        pre_row = null; // clear previous selection
+        pre_col = null; // clear previous selection
+        cellClickedOne(row, col); // call the cellClickedOne to choose this piece
+        cellClickedOneDone = false; // next click will skip cellClickedOne and execute cellClickedTwo
+        return;
+      }
+      if (firstClicked) {
+        let nextMove: IMove = null;
+        try {
+          nextMove = gameLogic.createMove(
+            state, rotate_row, rotate_col, pre_row, pre_col, currentUpdateUI.turnIndex);
+        } catch (e) {
+          log.info(["cellClickedTwo info: Invalid move:", row, col]);
+          cellClickedOneDone = false; // the move is invalid, the player should choose another piece to move
+          firstClicked = false; // the move is invalid, the player should choose another piece to move
+          pre_row = null; // the move is invalid, the player should choose another piece to move
+          pre_col = null; // the move is invalid, the player should choose another piece to move
+          return;
+        }
+        // Move is legal, make it!
+        makeMove(nextMove);
+        firstClicked = false;
+        pre_row = null;
+        pre_col = null;
+        log.info("cellClickedTwo info: success");
+      }
+      else {
+        log.info("cellClickedTwo info: Has not chosen a piece, now should choose a picec first");
+      }
     }
     else {
-      log.info("cellClickedTwo info: Has not chosen a piece, now should choose a picec first");
+      log.info("Clicked on cell (two):", row, col);
+      if (!isHumanTurn()) return;
+      // log.info(firstClicked);
+      if (cellClickedOneDone) {
+        log.info("cellClickedTwo info: cellClickedOne is done in this round, can't execute the Two function");
+        cellClickedOneDone = false;
+        return;
+      }
+      if (isOwn(row, col)) { // if the player select another own piece
+        log.info("cellClickedTwo info: select another own piece");
+        firstClicked = false; // clear previous selection
+        pre_row = null; // clear previous selection
+        pre_col = null; // clear previous selection
+        cellClickedOne(row, col); // call the cellClickedOne to choose this piece
+        cellClickedOneDone = false; // next click will skip cellClickedOne and execute cellClickedTwo
+        return;
+      }
+      if (firstClicked) {
+        let nextMove: IMove = null;
+        try {
+          nextMove = gameLogic.createMove(
+            state, row, col, pre_row, pre_col, currentUpdateUI.turnIndex);
+        } catch (e) {
+          log.info(["cellClickedTwo info: Invalid move:", row, col]);
+          cellClickedOneDone = false; // the move is invalid, the player should choose another piece to move
+          firstClicked = false; // the move is invalid, the player should choose another piece to move
+          pre_row = null; // the move is invalid, the player should choose another piece to move
+          pre_col = null; // the move is invalid, the player should choose another piece to move
+          return;
+        }
+        // Move is legal, make it!
+        makeMove(nextMove);
+        firstClicked = false;
+        pre_row = null;
+        pre_col = null;
+        log.info("cellClickedTwo info: success");
+      }
+      else {
+        log.info("cellClickedTwo info: Has not chosen a piece, now should choose a picec first");
+      }
     }
   }
 
   export function changeSelectCSS(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
 
     if (firstClicked && click_row === row && click_col === col && isOwn(row, col)) {
       return true;
@@ -304,10 +353,10 @@ module game {
   }
 
   export function isPossibleMove(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
 
     if (firstClicked) {
       let row_dif: number = Math.abs(click_row - row);
@@ -343,14 +392,6 @@ module game {
     return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
   }
 
-  // export function isPieceX(row: number, col: number): boolean {
-  //   return isPiece(row, col, 0, 'X');
-  // }
-
-  // export function isPieceO(row: number, col: number): boolean {
-  //   return isPiece(row, col, 1, 'O');
-  // }
-
   export function shouldSlowlyAppear(row: number, col: number): boolean {
     // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
     //   row = gameLogic.ROWS - row - 1;
@@ -363,18 +404,10 @@ module game {
 
   //add functions isPiece
   export function isGrass(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
     return !isWater(row, col);
   }
 
   export function isWater(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
     if ((row >= 3 && row <= 5 && col >= 1 && col <= 2) || (row >= 3 && row <= 5 && col >= 4 && col <= 5)) {
       return true;
     }
@@ -384,10 +417,10 @@ module game {
   }
 
   export function isBTrap(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
     if ((row === 8 && col === 2) || (row === 7 && col === 3) || (row === 8 && col === 4)) {
       return true;
     }
@@ -397,10 +430,10 @@ module game {
   }
 
   export function isRTrap(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
     if ((row === 0 && col === 2) || (row === 1 && col === 3) || (row === 0 && col === 4)) {
       return true;
     }
@@ -410,10 +443,10 @@ module game {
   }
 
   export function isBHome(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
     if (row === 8 && col === 3) {
       return true;
     }
@@ -423,10 +456,10 @@ module game {
   }
 
   export function isRHome(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
     if (row === 0 && col === 3) {
       return true;
     }
@@ -436,10 +469,10 @@ module game {
   }
 
   export function isOpponent(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
     let curColor = gameLogic.getTurn(currentUpdateUI.turnIndex);
     let curAnimal = state.board[row][col];
     if (curAnimal.substring(0, 1) === curColor || curAnimal.substring(1, 2) === 'T' || curAnimal.substring(1, 2) === 'H') {
@@ -449,10 +482,6 @@ module game {
   }
 
   export function isOwn(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
     let curColor = gameLogic.getTurn(currentUpdateUI.turnIndex);
     let curAnimal = state.board[row][col];
     if (curAnimal.substring(0, 1) === curColor && curAnimal.substring(1, 2) !== 'T' && curAnimal.substring(1, 2) !== 'H') {
@@ -462,10 +491,10 @@ module game {
   }
 
   export function checkAnimal(row: number, col: number): string {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
     return gameLogic.checkAnimal(state, row, col);
   }
 
