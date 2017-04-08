@@ -20,6 +20,8 @@ var game;
     // for changeSelectCSS
     game.click_row = null;
     game.click_col = null;
+    // for move a piece animation
+    game.movePiece = "";
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -317,6 +319,34 @@ var game;
         }
     }
     game.cellClickedTwo = cellClickedTwo;
+    function movePieceAnimationClass(row, col) {
+        if ((row - game.pre_row) === 1 && game.pre_col === col) {
+            game.movePiece = "move_down";
+        }
+        else if (game.pre_row === row && (col - game.pre_col) === 1) {
+            game.movePiece = "move_right";
+        }
+        else if ((game.pre_row - row) === 1 && game.pre_col === col) {
+            game.movePiece = "move_up";
+        }
+        else if (game.pre_row === row && (game.pre_col - col) === 1) {
+            game.movePiece = "move_left";
+        }
+        else if ((row - game.pre_row) === 4 && game.pre_col === col) {
+            game.movePiece = "jump_down";
+        }
+        else if (game.pre_row === row && (col - game.pre_col) === 3) {
+            game.movePiece = "jump_right";
+        }
+        else if ((game.pre_row - row) === 4 && game.pre_col === col) {
+            game.movePiece = "jump_up";
+        }
+        else if (game.pre_row === row && (game.pre_col - col) === 3) {
+            game.movePiece = "jump_left";
+        }
+        return game.movePiece;
+    }
+    game.movePieceAnimationClass = movePieceAnimationClass;
     function changeSelectCSS(row, col) {
         if (game.shouldRotateBoard) {
             row = gameLogic.ROWS - row - 1;
@@ -368,10 +398,10 @@ var game;
         return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
     }
     function shouldSlowlyAppear(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
+        if (game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
         return game.state.delta &&
             game.state.delta.row === row && game.state.delta.col === col;
     }

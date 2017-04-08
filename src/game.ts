@@ -26,6 +26,8 @@ module game {
   // for changeSelectCSS
   export let click_row: number = null;
   export let click_col: number = null;
+  // for move a piece animation
+  export let movePiece: string = "";
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
@@ -338,6 +340,34 @@ module game {
     }
   }
 
+  export function movePieceAnimationClass(row: number, col: number) {
+    if ((row - pre_row) === 1 && pre_col === col) {
+      movePiece = "move_down";
+    }
+    else if (pre_row === row && (col - pre_col) === 1) {
+      movePiece = "move_right"
+    }
+    else if ((pre_row - row) === 1 && pre_col === col) {
+      movePiece = "move_up";
+    }
+    else if (pre_row === row && (pre_col - col) === 1) {
+      movePiece = "move_left"
+    }
+    else if ((row - pre_row) === 4 && pre_col === col) {
+      movePiece = "jump_down";
+    }
+    else if (pre_row === row && (col - pre_col) === 3) {
+      movePiece = "jump_right"
+    }
+    else if ((pre_row - row) === 4 && pre_col === col) {
+      movePiece = "jump_up";
+    }
+    else if (pre_row === row && (pre_col - col) === 3) {
+      movePiece = "jump_left"
+    }
+    return movePiece;
+  }
+
   export function changeSelectCSS(row: number, col: number): boolean {
     if (shouldRotateBoard) {
       row = gameLogic.ROWS - row - 1;
@@ -393,14 +423,13 @@ module game {
   }
 
   export function shouldSlowlyAppear(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
     return state.delta &&
       state.delta.row === row && state.delta.col === col;
   }
-
 
   //add functions isPiece
   export function isGrass(row: number, col: number): boolean {
