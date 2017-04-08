@@ -344,7 +344,6 @@ var game;
         else if (game.pre_row === row && (game.pre_col - col) === 3) {
             game.movePiece = "jump_left";
         }
-        return game.movePiece;
     }
     game.movePieceAnimationClass = movePieceAnimationClass;
     function changeSelectCSS(row, col) {

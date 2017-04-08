@@ -365,7 +365,6 @@ module game {
     else if (pre_row === row && (pre_col - col) === 3) {
       movePiece = "jump_left"
     }
-    return movePiece;
   }
 
   export function changeSelectCSS(row: number, col: number): boolean {
