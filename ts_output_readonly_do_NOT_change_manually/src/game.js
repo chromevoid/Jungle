@@ -22,6 +22,16 @@ var game;
     game.click_col = null;
     // for move a piece animation
     game.movePiece = "";
+    game.moveup = getEmpty79Arrays();
+    function getEmpty79Arrays() {
+        var res = [];
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 7; j++) {
+                res.push([false]);
+            }
+        }
+        return res;
+    }
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -266,8 +276,8 @@ var game;
                 // Move is legal, make it!
                 makeMove(nextMove);
                 game.firstClicked = false;
-                game.pre_row = null;
-                game.pre_col = null;
+                // pre_row = null;
+                // pre_col = null;
                 log.info("cellClickedTwo info: success");
             }
             else {
@@ -309,8 +319,8 @@ var game;
                 // Move is legal, make it!
                 makeMove(nextMove);
                 game.firstClicked = false;
-                game.pre_row = null;
-                game.pre_col = null;
+                // pre_row = null;
+                // pre_col = null;
                 log.info("cellClickedTwo info: success");
             }
             else {
@@ -396,15 +406,17 @@ var game;
         // }
         return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
     }
-    function shouldSlowlyAppear(row, col) {
+    function shouldMovePiece(row, col) {
         if (game.shouldRotateBoard) {
             row = gameLogic.ROWS - row - 1;
             col = gameLogic.COLS - col - 1;
         }
-        return game.state.delta &&
-            game.state.delta.row === row && game.state.delta.col === col;
+        if (game.state.delta && game.state.delta.row === row && game.state.delta.col === col) {
+            movePieceAnimationClass(row, col);
+            return game.movePiece;
+        }
     }
-    game.shouldSlowlyAppear = shouldSlowlyAppear;
+    game.shouldMovePiece = shouldMovePiece;
     //add functions isPiece
     function isGrass(row, col) {
         return !isWater(row, col);
