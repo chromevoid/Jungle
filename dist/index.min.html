@@ -23,7 +23,7 @@
                    btrap: game.isBTrap(row, col), rtrap: game.isRTrap(row, col),
                    bhome: game.isBHome(row, col), rhome: game.isRHome(row, col)}" ng-click="game.cellClickedOne(row, col); game.cellClickedTwo(row, col);"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
-        <div class="cell" ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col), possible: game.isPossibleMove(row, col)}" ng-style="game.getCellStyle(row, col)"
+        <div class="cell" ng-class="{possible: game.isPossibleMove(row, col)}" ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col)">
           <img ng-if="game.checkAnimal(row, col)" ng-class="{selected: game.changeSelectCSS(row, col), disabled: game.isOpponent(row, col)}"
             ng-src="{{ game.checkAnimal(row, col) }}" alt="{{ game.checkAnimal(row, col) }}" width="90%" height="90%">
@@ -32,7 +32,10 @@
     </div>
   </div>
   <!--<div style="text-align: center; color: gray">Claim: Icon made by <a href="http://www.flaticon.com/authors/pixel-perfect">Pixel perfect</a> and <a href="http://www.flaticon.com/authors/freepik">Freepik</a> from <a href="http://www.flaticon.com/">Flaticon</a> with minor modifications. </div>-->
-
+  <!--move_up: game.moveup[row][col], move_left: game.moveleft[row][col],
+                                                             move_down: game.movedown[row][col], move_right: game.moveright[row][col],
+                                                             jump_up: game.jumpup[row][col], jump_left: game.jumpleft[row][col],
+                                                             jump_down: game.jumpdown[row][col], jump_right: game.jumpright[row][col]}-->
 </body>
 
 </html>
