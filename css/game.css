@@ -134,7 +134,7 @@ a:active {
 }
 
 /* Animations used before updateUI */
-/*.move_up {
+.move_up {
   animation: move_up 1s linear forwards;
 }
 
@@ -276,7 +276,7 @@ a:active {
     width: 100%; height: 100%;
     left: -600%;
   }
-}*/
+}
 
 /* Animations used after updateUI */
 /*

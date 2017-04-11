@@ -28,16 +28,6 @@ module game {
   export let click_col: number = null;
   // for move a piece animation
   export let movePiece: string = "";
-  export let moveup: boolean[][] = getEmpty79Arrays();
-  function getEmpty79Arrays(): boolean[][] {
-    let res: boolean[][] = [];
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 7; j++) {
-        res.push([false]);
-      }
-    }
-    return res;
-  }
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
@@ -298,8 +288,8 @@ module game {
         // Move is legal, make it!
         makeMove(nextMove);
         firstClicked = false;
-        // pre_row = null;
-        // pre_col = null;
+        pre_row = null;
+        pre_col = null;
         log.info("cellClickedTwo info: success");
       }
       else {
@@ -340,8 +330,8 @@ module game {
         // Move is legal, make it!
         makeMove(nextMove);
         firstClicked = false;
-        // pre_row = null;
-        // pre_col = null;
+        pre_row = null;
+        pre_col = null;
         log.info("cellClickedTwo info: success");
       }
       else {
@@ -431,15 +421,13 @@ module game {
     return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
   }
 
-  export function shouldMovePiece(row: number, col: number): string {
+  export function shouldSlowlyAppear(row: number, col: number): boolean {
     if (shouldRotateBoard) {
       row = gameLogic.ROWS - row - 1;
       col = gameLogic.COLS - col - 1;
     }
-    if (state.delta && state.delta.row === row && state.delta.col === col) {
-        movePieceAnimationClass(row, col);
-        return movePiece;
-      }
+    return state.delta &&
+      state.delta.row === row && state.delta.col === col;
   }
 
   //add functions isPiece
