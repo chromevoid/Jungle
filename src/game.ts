@@ -72,12 +72,6 @@ module game {
   }
 
   export function getCellStyle(row: number, col: number): Object {
-
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
-
     if (!isProposal(row, col)) return {};
     // proposals[row][col] is > 0
     let countZeroBased = proposals[row][col] - 1;
@@ -179,7 +173,7 @@ module game {
     if (!proposals) {
       gameService.makeMove(move, null);
     } else {
-      let delta = move.state.delta;
+      let delta = move.state.toDelta;
       let myProposal: IProposal = {
         data: delta,
         chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
@@ -340,32 +334,47 @@ module game {
     }
   }
 
-  export function movePieceAnimationClass(row: number, col: number) {
-    if ((row - pre_row) === 1 && pre_col === col) {
-      movePiece = "move_down";
+  export function shouldApplyMovePieceAnimation(row: number, col: number) {
+    if (shouldRotateBoard) {
+      var row: number = gameLogic.ROWS - row - 1;
+      var col = gameLogic.COLS - col - 1;
     }
-    else if (pre_row === row && (col - pre_col) === 1) {
-      movePiece = "move_right"
+    if (!(state.toDelta && state.toDelta.row === row && state.toDelta.col === col))
+      return "";
+    let fromRow = state.fromDelta.row;
+    let fromCol = state.fromDelta.col;
+    if ((row - fromRow) === 1 && fromCol === col) {
+      return shouldRotateBoard ? "move_up" : "move_down";
     }
-    else if ((pre_row - row) === 1 && pre_col === col) {
-      movePiece = "move_up";
+    else if (fromRow === row && (col - fromCol) === 1) {
+      return shouldRotateBoard ? "move_left" : "move_right";
     }
-    else if (pre_row === row && (pre_col - col) === 1) {
-      movePiece = "move_left"
+    else if ((fromRow - row) === 1 && fromCol === col) {
+      return shouldRotateBoard ? "move_down" : "move_up";
     }
-    else if ((row - pre_row) === 4 && pre_col === col) {
-      movePiece = "jump_down";
+    else if (fromRow === row && (fromCol - col) === 1) {
+      return shouldRotateBoard ? "move_right" : "move_left";
     }
-    else if (pre_row === row && (col - pre_col) === 3) {
-      movePiece = "jump_right"
+    else if ((row - fromRow) === 4 && fromCol === col) {
+      return shouldRotateBoard ? "jump_up" : "jump_down";
     }
-    else if ((pre_row - row) === 4 && pre_col === col) {
-      movePiece = "jump_up";
+    else if (fromRow === row && (col - fromCol) === 3) {
+      return shouldRotateBoard ? "jump_left" : "jump_right";
     }
-    else if (pre_row === row && (pre_col - col) === 3) {
-      movePiece = "jump_left"
+    else if ((fromRow - row) === 4 && fromCol === col) {
+      return shouldRotateBoard ? "jump_down" : "jump_up";
+    }
+    else if (fromRow === row && (fromCol - col) === 3) {
+      return shouldRotateBoard ? "jump_rgiht" : "jump_left";
     }
   }
+
+  export function getAnimalClasses(row: number, col: number) {
+	let classesObj: any = {selected: game.changeSelectCSS(row, col), disabled: game.isOpponent(row, col)};
+	let additionalClass = game.shouldApplyMovePieceAnimation(row, col);
+	classesObj[additionalClass] = true;
+	return classesObj;
+}
 
   export function changeSelectCSS(row: number, col: number): boolean {
     if (shouldRotateBoard) {
@@ -405,32 +414,14 @@ module game {
   }
 
   export function shouldShowImage(row: number, col: number): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
-
     return state.board[row][col] !== "" || isProposal(row, col);
   }
 
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
-    // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-    //   row = gameLogic.ROWS - row - 1;
-    //   col = gameLogic.COLS - col - 1;
-    // }
     return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
   }
 
-  export function shouldSlowlyAppear(row: number, col: number): boolean {
-    if (shouldRotateBoard) {
-      row = gameLogic.ROWS - row - 1;
-      col = gameLogic.COLS - col - 1;
-    }
-    return state.delta &&
-      state.delta.row === row && state.delta.col === col;
-  }
-
-  //add functions isPiece
+  //add functions
   export function isGrass(row: number, col: number): boolean {
     return !isWater(row, col);
   }

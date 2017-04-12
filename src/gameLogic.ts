@@ -40,7 +40,8 @@ interface BoardDelta {
 type IProposalData = BoardDelta;
 interface IState {
   board: Board;
-  delta: BoardDelta;
+  fromDelta: BoardDelta;
+  toDelta: BoardDelta;
 }
 
 import gameService = gamingPlatform.gameService;
@@ -89,7 +90,7 @@ module gameLogic {
   }
 
   export function getInitialState(): IState {
-    return { board: getInitialBoard(), delta: null };
+    return { board: getInitialBoard(), fromDelta: null, toDelta: null };
   }
 
 
@@ -217,8 +218,9 @@ module gameLogic {
       turnIndex = 1 - turnIndexBeforeMove;
       endMatchScores = null;
     }
-    let delta: BoardDelta = { row: row, col: col };
-    let state: IState = { delta: delta, board: boardAfterMove };
+    let fromDelta: BoardDelta = { row: pre_row, col: pre_col };
+    let toDelta: BoardDelta = { row: row, col: col };
+    let state: IState = { fromDelta: fromDelta, toDelta: toDelta, board: boardAfterMove };
     return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
   }
 
@@ -359,15 +361,15 @@ module gameLogic {
       // }
       //if the animal is mouse, could move one step.
       if (board[pre_row][pre_col].substring(1) === 'mouse') {
-        if(board[row][col].substring(1) === 'mouse' && isWater({row: pre_row, col: pre_col}) || board[row][col] === 'W'){
-              destination.row = row;
-              destination.col = col;
+        if (board[row][col].substring(1) === 'mouse' && isWater({ row: pre_row, col: pre_col }) || board[row][col] === 'W') {
+          destination.row = row;
+          destination.col = col;
         }
-        else{
+        else {
           destination.row = -1;
           destination.col = -1;
         }
-   
+
         return destination;
       }
       //if the animal is tiger or lion. They could jump through the river, calculate the newRow and newCol=

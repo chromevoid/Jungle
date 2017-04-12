@@ -14,7 +14,7 @@ describe("In Jungle", function () {
     boardBeforeMove: Board,
     deltaFrom: BoardDelta,
     deltaTo: BoardDelta): void {
-    let stateBeforeMove: IState = boardBeforeMove ? { board: boardBeforeMove, delta: null } : null;
+    let stateBeforeMove: IState = boardBeforeMove ? { board: boardBeforeMove, fromDelta:null, toDelta: null } : null;
     // We expect an exception to be thrown :)
     let didThrowException = false;
     try {
@@ -41,9 +41,9 @@ describe("In Jungle", function () {
     let expectedMove: IMove = {
       turnIndex: turnIndexAfterMove,
       endMatchScores: endMatchScores,
-      state: { board: boardAfterMove, delta: { row: deltaTo.row, col: deltaTo.col } }
+      state: { board: boardAfterMove, fromDelta: null, toDelta: { row: deltaTo.row, col: deltaTo.col } }
     };
-    let stateBeforeMove: IState = boardBeforeMove ? { board: boardBeforeMove, delta: null } : null;
+    let stateBeforeMove: IState = boardBeforeMove ? { board: boardBeforeMove, fromDelta: null, toDelta: null } : null;
     let move: IMove = gameLogic.createMove(stateBeforeMove, deltaTo.row, deltaTo.col, deltaFrom.row, deltaFrom.col, turnIndexBeforeMove);
     expect(angular.equals(move, expectedMove)).toBe(true);
   }
@@ -65,7 +65,7 @@ describe("In Jungle", function () {
         ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
         ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
         ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
-        ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], delta: null
+        ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], fromDelta: null, toDelta: null
       }
     };
     expect(angular.equals(move, expectedMove)).toBe(true);
@@ -772,16 +772,6 @@ describe("In Jungle", function () {
       ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
       ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], { row: 3, col: 2 }, { row: 3, col: 3 });
   });
-
-
-
-
-
-
-
-
-
-
 
 
 

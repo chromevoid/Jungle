@@ -7,7 +7,7 @@ describe("In Jungle", function () {
     var R_WIN_SCORES = [0, 1];
     var TIE_SCORES = [0, 0];
     function expectException(turnIndexBeforeMove, boardBeforeMove, deltaFrom, deltaTo) {
-        var stateBeforeMove = boardBeforeMove ? { board: boardBeforeMove, delta: null } : null;
+        var stateBeforeMove = boardBeforeMove ? { board: boardBeforeMove, fromDelta: null, toDelta: null } : null;
         // We expect an exception to be thrown :)
         var didThrowException = false;
         try {
@@ -24,9 +24,9 @@ describe("In Jungle", function () {
         var expectedMove = {
             turnIndex: turnIndexAfterMove,
             endMatchScores: endMatchScores,
-            state: { board: boardAfterMove, delta: { row: deltaTo.row, col: deltaTo.col } }
+            state: { board: boardAfterMove, fromDelta: null, toDelta: { row: deltaTo.row, col: deltaTo.col } }
         };
-        var stateBeforeMove = boardBeforeMove ? { board: boardBeforeMove, delta: null } : null;
+        var stateBeforeMove = boardBeforeMove ? { board: boardBeforeMove, fromDelta: null, toDelta: null } : null;
         var move = gameLogic.createMove(stateBeforeMove, deltaTo.row, deltaTo.col, deltaFrom.row, deltaFrom.col, turnIndexBeforeMove);
         expect(angular.equals(move, expectedMove)).toBe(true);
     }
@@ -45,7 +45,7 @@ describe("In Jungle", function () {
                     ['G', 'W', 'W', 'G', 'W', 'W', 'G'],
                     ['Belephant', 'G', 'Bwolf', 'G', 'Bcheetah', 'G', 'Bmouse'],
                     ['G', 'Bcat', 'G', 'BT', 'G', 'Bdog', 'G'],
-                    ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], delta: null
+                    ['Btiger', 'G', 'BT', 'BH', 'BT', 'G', 'Blion']], fromDelta: null, toDelta: null
             }
         };
         expect(angular.equals(move, expectedMove)).toBe(true);

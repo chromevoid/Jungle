@@ -38,7 +38,7 @@ var gameLogic;
     }
     gameLogic.getInitialBoard = getInitialBoard;
     function getInitialState() {
-        return { board: getInitialBoard(), delta: null };
+        return { board: getInitialBoard(), fromDelta: null, toDelta: null };
     }
     gameLogic.getInitialState = getInitialState;
     //Returns true if the game ended in a tie. 
@@ -155,8 +155,9 @@ var gameLogic;
             turnIndex = 1 - turnIndexBeforeMove;
             endMatchScores = null;
         }
-        var delta = { row: row, col: col };
-        var state = { delta: delta, board: boardAfterMove };
+        var fromDelta = { row: pre_row, col: pre_col };
+        var toDelta = { row: row, col: col };
+        var state = { fromDelta: fromDelta, toDelta: toDelta, board: boardAfterMove };
         return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
     }
     gameLogic.createMove = createMove;
