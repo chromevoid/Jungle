@@ -164,7 +164,6 @@ a:active {
   }
   100% {
     width: 70%; height: 70%;
-    filter:grayscale(0%);
     top: 0;
   }
 }
@@ -179,7 +178,6 @@ a:active {
   }
   100% {
     width: 70%; height: 70%;
-    filter:grayscale(0%);
     left: 0;
   }
 }
@@ -194,7 +192,6 @@ a:active {
   }
   100% {
     width: 70%; height: 70%;
-    filter:grayscale(0%);
     top: 0;
   }
 }
@@ -209,7 +206,6 @@ a:active {
   }
   100% {
     width: 70%; height: 70%;
-    filter:grayscale(0%);
     right: 0;
   }
 }
@@ -240,7 +236,6 @@ a:active {
   }
   100% {
     width: 70%; height: 70%;
-    filter:grayscale(0%);
     top: 0;
   }
 }
@@ -255,7 +250,6 @@ a:active {
   }
   100% {
     width: 70%; height: 70%;
-    filter:grayscale(0%);
     left: 0;
   }
 }
@@ -270,7 +264,6 @@ a:active {
   }
   100% {
     width: 70%; height: 70%;
-    filter:grayscale(0%);
     top: 0;
   }
 }
@@ -285,7 +278,6 @@ a:active {
   }
   100% {
     width: 70%; height: 70%;
-    filter:grayscale(0%);
     right: 0;
   }
 }
