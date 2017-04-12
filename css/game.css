@@ -96,8 +96,9 @@ a:active {
   background-size: contain;
 }
 
+/* not used */
 .abled {
-  /*background-color: #ffe650;*/
+  background-color: #ffe650;
 }
 
 .selected {

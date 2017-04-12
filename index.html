@@ -31,8 +31,7 @@
       <div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6]" style="position:absolute; top:0; left:{{col * 14}}%; width:14%; height:100%;"
         ng-class="{grass: game.isGrass(row, col), water: game.isWater(row, col),
                    btrap: game.isBTrap(row, col), rtrap: game.isRTrap(row, col),
-                   bhome: game.isBHome(row, col), rhome: game.isRHome(row, col),
-                   abled: game.isOwn(row, col)}" ng-click="game.cellClickedOne(row, col); game.cellClickedTwo(row, col);"
+                   bhome: game.isBHome(row, col), rhome: game.isRHome(row, col)}" ng-click="game.cellClickedOne(row, col); game.cellClickedTwo(row, col);"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
         <div class="cell" ng-class="{possible: game.isPossibleMove(row, col)}" ng-style="game.getCellStyle(row, col)"
           ng-if="game.shouldShowImage(row, col)">
