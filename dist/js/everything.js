@@ -31925,7 +31925,7 @@ var gameLogic;
     }
     gameLogic.getInitialBoard = getInitialBoard;
     function getInitialState() {
-        return { board: getInitialBoard(), delta: null };
+        return { board: getInitialBoard(), fromDelta: null, toDelta: null };
     }
     gameLogic.getInitialState = getInitialState;
     //Returns true if the game ended in a tie. 
@@ -32042,8 +32042,9 @@ var gameLogic;
             turnIndex = 1 - turnIndexBeforeMove;
             endMatchScores = null;
         }
-        var delta = { row: row, col: col };
-        var state = { delta: delta, board: boardAfterMove };
+        var fromDelta = { row: pre_row, col: pre_col };
+        var toDelta = { row: row, col: col };
+        var state = { fromDelta: fromDelta, toDelta: toDelta, board: boardAfterMove };
         return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
     }
     gameLogic.createMove = createMove;
@@ -32463,16 +32464,6 @@ var game;
     game.click_col = null;
     // for move a piece animation
     game.movePiece = "";
-    game.moveup = getEmpty79Arrays();
-    function getEmpty79Arrays() {
-        var res = [];
-        for (var i = 0; i < 9; i++) {
-            for (var j = 0; j < 7; j++) {
-                res.push([false]);
-            }
-        }
-        return res;
-    }
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -32513,10 +32504,6 @@ var game;
     }
     game.isProposal = isProposal;
     function getCellStyle(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
         if (!isProposal(row, col))
             return {};
         // proposals[row][col] is > 0
@@ -32613,7 +32600,7 @@ var game;
             gameService.makeMove(move, null);
         }
         else {
-            var delta = move.state.delta;
+            var delta = move.state.toDelta;
             var myProposal = {
                 data: delta,
                 chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
@@ -32717,8 +32704,8 @@ var game;
                 // Move is legal, make it!
                 makeMove(nextMove);
                 game.firstClicked = false;
-                // pre_row = null;
-                // pre_col = null;
+                game.pre_row = null;
+                game.pre_col = null;
                 log.info("cellClickedTwo info: success");
             }
             else {
@@ -32760,8 +32747,8 @@ var game;
                 // Move is legal, make it!
                 makeMove(nextMove);
                 game.firstClicked = false;
-                // pre_row = null;
-                // pre_col = null;
+                game.pre_row = null;
+                game.pre_col = null;
                 log.info("cellClickedTwo info: success");
             }
             else {
@@ -32770,33 +32757,48 @@ var game;
         }
     }
     game.cellClickedTwo = cellClickedTwo;
-    function movePieceAnimationClass(row, col) {
-        if ((row - game.pre_row) === 1 && game.pre_col === col) {
-            game.movePiece = "move_down";
+    function shouldApplyMovePieceAnimation(row, col) {
+        if (game.shouldRotateBoard) {
+            var row = gameLogic.ROWS - row - 1;
+            var col = gameLogic.COLS - col - 1;
         }
-        else if (game.pre_row === row && (col - game.pre_col) === 1) {
-            game.movePiece = "move_right";
+        if (!(game.state.toDelta && game.state.toDelta.row === row && game.state.toDelta.col === col))
+            return "";
+        var fromRow = game.state.fromDelta.row;
+        var fromCol = game.state.fromDelta.col;
+        if ((row - fromRow) === 1 && fromCol === col) {
+            return game.shouldRotateBoard ? "move_up" : "move_down";
         }
-        else if ((game.pre_row - row) === 1 && game.pre_col === col) {
-            game.movePiece = "move_up";
+        else if (fromRow === row && (col - fromCol) === 1) {
+            return game.shouldRotateBoard ? "move_left" : "move_right";
         }
-        else if (game.pre_row === row && (game.pre_col - col) === 1) {
-            game.movePiece = "move_left";
+        else if ((fromRow - row) === 1 && fromCol === col) {
+            return game.shouldRotateBoard ? "move_down" : "move_up";
         }
-        else if ((row - game.pre_row) === 4 && game.pre_col === col) {
-            game.movePiece = "jump_down";
+        else if (fromRow === row && (fromCol - col) === 1) {
+            return game.shouldRotateBoard ? "move_right" : "move_left";
         }
-        else if (game.pre_row === row && (col - game.pre_col) === 3) {
-            game.movePiece = "jump_right";
+        else if ((row - fromRow) === 4 && fromCol === col) {
+            return game.shouldRotateBoard ? "jump_up" : "jump_down";
         }
-        else if ((game.pre_row - row) === 4 && game.pre_col === col) {
-            game.movePiece = "jump_up";
+        else if (fromRow === row && (col - fromCol) === 3) {
+            return game.shouldRotateBoard ? "jump_left" : "jump_right";
         }
-        else if (game.pre_row === row && (game.pre_col - col) === 3) {
-            game.movePiece = "jump_left";
+        else if ((fromRow - row) === 4 && fromCol === col) {
+            return game.shouldRotateBoard ? "jump_down" : "jump_up";
+        }
+        else if (fromRow === row && (fromCol - col) === 3) {
+            return game.shouldRotateBoard ? "jump_rgiht" : "jump_left";
         }
     }
-    game.movePieceAnimationClass = movePieceAnimationClass;
+    game.shouldApplyMovePieceAnimation = shouldApplyMovePieceAnimation;
+    function getAnimalClasses(row, col) {
+        var classesObj = { selected: game.changeSelectCSS(row, col), disabled: game.isOpponent(row, col) };
+        var additionalClass = game.shouldApplyMovePieceAnimation(row, col);
+        classesObj[additionalClass] = true;
+        return classesObj;
+    }
+    game.getAnimalClasses = getAnimalClasses;
     function changeSelectCSS(row, col) {
         if (game.shouldRotateBoard) {
             row = gameLogic.ROWS - row - 1;
@@ -32833,32 +32835,13 @@ var game;
     }
     game.isPossibleMove = isPossibleMove;
     function shouldShowImage(row, col) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
         return game.state.board[row][col] !== "" || isProposal(row, col);
     }
     game.shouldShowImage = shouldShowImage;
     function isPiece(row, col, turnIndex, pieceKind) {
-        // if (currentUpdateUI.turnIndex === 1 && shouldRoateBoard) {
-        //   row = gameLogic.ROWS - row - 1;
-        //   col = gameLogic.COLS - col - 1;
-        // }
         return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
     }
-    function shouldMovePiece(row, col) {
-        if (game.shouldRotateBoard) {
-            row = gameLogic.ROWS - row - 1;
-            col = gameLogic.COLS - col - 1;
-        }
-        if (game.state.delta && game.state.delta.row === row && game.state.delta.col === col) {
-            movePieceAnimationClass(row, col);
-            return game.movePiece;
-        }
-    }
-    game.shouldMovePiece = shouldMovePiece;
-    //add functions isPiece
+    //add functions
     function isGrass(row, col) {
         return !isWater(row, col);
     }
@@ -32993,6 +32976,7 @@ var aiService;
                     }
                 }
                 catch (e) {
+                    // The cell in that position was full.
                 }
             }
         }

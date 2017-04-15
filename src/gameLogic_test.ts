@@ -41,7 +41,7 @@ describe("In Jungle", function () {
     let expectedMove: IMove = {
       turnIndex: turnIndexAfterMove,
       endMatchScores: endMatchScores,
-      state: { board: boardAfterMove, fromDelta: null, toDelta: { row: deltaTo.row, col: deltaTo.col } }
+      state: {fromDelta: {row: deltaFrom.row, col: deltaFrom.col}, toDelta: {row: deltaTo.row, col: deltaTo.col}, board: boardAfterMove }
     };
     let stateBeforeMove: IState = boardBeforeMove ? { board: boardBeforeMove, fromDelta: null, toDelta: null } : null;
     let move: IMove = gameLogic.createMove(stateBeforeMove, deltaTo.row, deltaTo.col, deltaFrom.row, deltaFrom.col, turnIndexBeforeMove);

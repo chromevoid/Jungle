@@ -31,7 +31,7 @@ var urlsToCache = [
             '//chromevoid.github.io/Jungle/dist/img/texture.png',
             '//chromevoid.github.io/Jungle/dist/img/Trap.png'
 ];
-var CACHE_NAME = 'cache-v2017-04-11T04:43:51.508Z';
+var CACHE_NAME = 'cache-v2017-04-15T01:54:56.774Z';
 
 self.addEventListener('activate', function(event) {
   event.waitUntil(
