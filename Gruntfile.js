@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   // I use 'sips' command line to resize and pad images,
   // which only work on MAC OSx.
   var src_img = "src.png";
-  var src_img_width_to_height_ratio = 1024/1024;
+  var src_img_width_to_height_ratio = 7/9;
   var directory = "auto_resize_images";
   var output_directory = directory + "/output";
   var padColor = "FFFFFF"; // white in HEX
