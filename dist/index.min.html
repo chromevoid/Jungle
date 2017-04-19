@@ -23,8 +23,25 @@
                    btrap: game.isBTrap(row, col), rtrap: game.isRTrap(row, col),
                    bhome: game.isBHome(row, col), rhome: game.isRHome(row, col)}" ng-click="game.cellClickedOne(row, col); game.cellClickedTwo(row, col);"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
-        <div class="cell" ng-class="{possible: game.isPossibleMove(row, col)}" ng-style="game.getCellStyle(row, col)"
-          ng-if="game.shouldShowImage(row, col)">
+        <div class="cell" ng-class="{possible: game.isPossibleMove(row, col)}" ng-style="game.getCellStyle(row, col)">
+          <div ng-if="game.shouldExplode(row, col)" class="explode">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 
+            viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+            <path style="fill:#E6563A;" d="M256,475.991c-3.891,0-7.782-1.353-10.923-4.065c-13.598-11.766-26.565-22.636-38.728-32.831
+              c-12.13-10.18-23.479-19.69-33.88-28.767c-24.946-21.799-49.978-45.511-64.283-71.25c-9.425-16.673-14.022-33.597-14.022-51.635
+              c0-9.826,1.272-19.207,3.772-27.886c11.044-40.766,44.631-67.277,85.5-67.277c36.489,0,59.25,21.222,72.565,41.092
+              c13.315-19.87,36.076-41.092,72.565-41.092c40.87,0,74.457,26.51,85.576,67.538c2.424,8.418,3.695,17.799,3.695,27.625
+              c0,18.038-4.598,34.962-14.066,51.729c-14.261,25.647-39.294,49.359-64.217,71.147c-10.424,9.087-21.772,18.598-33.902,28.777
+              c-12.163,10.195-25.13,21.065-38.728,32.831C263.782,474.638,259.891,475.991,256,475.991z"/>
+            <path style="fill:#FFC033;" d="M256,169.573c-66.63,0-116.87-28.712-116.87-66.783S189.37,36.008,256,36.008
+              S372.87,64.72,372.87,102.79S322.63,169.573,256,169.573z M256,69.399c-50.956,0-83.478,19.778-83.478,33.391
+              s32.522,33.391,83.478,33.391s83.478-19.778,83.478-33.391S306.956,69.399,256,69.399z"/>
+            <path style="fill:#D9472B;" d="M266.923,471.927c13.598-11.766,26.565-22.636,38.728-32.831c12.13-10.18,23.479-19.69,33.902-28.777
+              c24.924-21.788,49.957-45.5,64.217-71.147c9.468-16.766,14.066-33.691,14.066-51.729c0-9.826-1.272-19.207-3.695-27.625
+              c-11.119-41.027-44.706-67.538-85.576-67.538c-36.489,0-59.25,21.222-72.565,41.092v242.62
+              C259.891,475.991,263.782,474.638,266.923,471.927z"/>
+            </svg>
+          </div>
           <img ng-if="game.checkAnimal(row, col)" ng-class="game.getAnimalClasses(row, col)"
             ng-src="{{ game.checkAnimal(row, col) }}" alt="{{ game.checkAnimal(row, col) }}" width="90%" height="90%">
         </div>

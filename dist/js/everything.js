@@ -31670,7 +31670,7 @@ var gameLogic;
     }
     gameLogic.getInitialBoard = getInitialBoard;
     function getInitialState() {
-        return { board: getInitialBoard(), fromDelta: null, toDelta: null };
+        return { board: getInitialBoard(), boardBefore: null, fromDelta: null, toDelta: null };
     }
     gameLogic.getInitialState = getInitialState;
     //Returns true if the game ended in a tie. 
@@ -31789,7 +31789,7 @@ var gameLogic;
         }
         var fromDelta = { row: pre_row, col: pre_col };
         var toDelta = { row: row, col: col };
-        var state = { fromDelta: fromDelta, toDelta: toDelta, board: boardAfterMove };
+        var state = { fromDelta: fromDelta, toDelta: toDelta, board: boardAfterMove, boardBefore: board };
         return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
     }
     gameLogic.createMove = createMove;
@@ -32155,11 +32155,7 @@ var gameLogic;
         }
         return false;
     }
-    function checkAnimal(stateBeforeMove, row, col) {
-        if (!stateBeforeMove) {
-            stateBeforeMove = getInitialState();
-        }
-        var board = stateBeforeMove.board;
+    function checkAnimal(board, row, col) {
         var cell = board[row][col];
         switch (cell) {
             case "Relephant": return 'img/Relephant.png';
@@ -32579,10 +32575,12 @@ var game;
         }
     }
     game.isPossibleMove = isPossibleMove;
-    function shouldShowImage(row, col) {
-        return game.state.board[row][col] !== "" || isProposal(row, col);
+    function shouldExplode(row, col) {
+        var checkOne = checkAnimalBeforeThisMove(row, col); // the previous animal at (row, col)
+        var checkTwo = checkAnimal(row, col); // the current animal at (row, col)
+        return checkOne && checkTwo && (checkOne != checkTwo);
     }
-    game.shouldShowImage = shouldShowImage;
+    game.shouldExplode = shouldExplode;
     function isPiece(row, col, turnIndex, pieceKind) {
         return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
     }
@@ -32675,13 +32673,30 @@ var game;
     }
     game.isOwn = isOwn;
     function checkAnimal(row, col) {
+        if (!game.state) {
+            game.state = gameLogic.getInitialState();
+        }
         if (game.shouldRotateBoard) {
             row = gameLogic.ROWS - row - 1;
             col = gameLogic.COLS - col - 1;
         }
-        return gameLogic.checkAnimal(game.state, row, col);
+        return gameLogic.checkAnimal(game.state.board, row, col);
     }
     game.checkAnimal = checkAnimal;
+    function checkAnimalBeforeThisMove(row, col) {
+        if (!game.state) {
+            game.state = gameLogic.getInitialState();
+        }
+        if (!game.state.boardBefore) {
+            return null;
+        }
+        if (game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
+        return gameLogic.checkAnimal(game.state.boardBefore, row, col);
+    }
+    game.checkAnimalBeforeThisMove = checkAnimalBeforeThisMove;
 })(game || (game = {}));
 angular.module('myApp', ['gameServices'])
     .run(['$rootScope', '$timeout',
@@ -32721,7 +32736,6 @@ var aiService;
                     }
                 }
                 catch (e) {
-                    // The cell in that position was full.
                 }
             }
         }

@@ -42,7 +42,7 @@ img {
   margin: auto; 
   transition: width 0.2s, height 0.2s;
   transition-timing-function: linear;
-  z-index: 2;
+  z-index: 1;
 }
 
 a {
