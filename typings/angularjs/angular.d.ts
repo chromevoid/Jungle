@@ -638,6 +638,10 @@ declare module angular {
 
     interface IScope extends IRootScopeService { }
 
+    interface IMyScope extends IScope {
+        hideAfterAnimation: boolean;
+    }
+
     /**
      * $scope for ngRepeat directive.
      * see https://docs.angularjs.org/api/ng/directive/ngRepeat

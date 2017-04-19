@@ -6,7 +6,7 @@ interface SupportedLanguages {
 };
 
 module game {
-  export let $rootScope: angular.IScope = null;
+  export let $rootScope: angular.IMyScope = null;
   export let $timeout: angular.ITimeoutService = null;
 
   // Global variables are cleared when getting updateUI.
@@ -35,7 +35,7 @@ module game {
   //should rotate of it's a multiplayer game.
   export let shouldRotateBoard: boolean = false;
 
-  export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
+  export function init($rootScope_: angular.IMyScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
     $timeout = $timeout_;
     registerServiceWorker();
@@ -216,6 +216,7 @@ module game {
   }
 
   export function cellClickedOne(row: number, col: number): void {
+    $rootScope.hideAfterAnimation = true;
     if (shouldRotateBoard) {
       row = gameLogic.ROWS - row - 1;
       col = gameLogic.COLS - col - 1;
@@ -280,6 +281,7 @@ module game {
           return;
         }
         // Move is legal, make it!
+        $rootScope.hideAfterAnimation = false;
         makeMove(nextMove);
         firstClicked = false;
         pre_row = null;
@@ -322,6 +324,7 @@ module game {
           return;
         }
         // Move is legal, make it!
+        $rootScope.hideAfterAnimation = false;
         makeMove(nextMove);
         firstClicked = false;
         pre_row = null;
@@ -540,7 +543,7 @@ module game {
 
 angular.module('myApp', ['gameServices'])
   .run(['$rootScope', '$timeout',
-    function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
+    function ($rootScope: angular.IMyScope, $timeout: angular.ITimeoutService) {
       $rootScope['game'] = game;
       game.init($rootScope, $timeout);
     }]);

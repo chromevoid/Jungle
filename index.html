@@ -34,7 +34,7 @@
                    bhome: game.isBHome(row, col), rhome: game.isRHome(row, col)}" ng-click="game.cellClickedOne(row, col); game.cellClickedTwo(row, col);"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
         <div class="cell" ng-class="{possible: game.isPossibleMove(row, col)}" ng-style="game.getCellStyle(row, col)">
-          <div ng-if="game.shouldExplode(row, col)" class="explode">
+          <div ng-if="game.shouldExplode(row, col)" ng-hide="hideAfterAnimation" class="explode">
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 
             viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
             <path style="fill:#E6563A;" d="M256,475.991c-3.891,0-7.782-1.353-10.923-4.065c-13.598-11.766-26.565-22.636-38.728-32.831

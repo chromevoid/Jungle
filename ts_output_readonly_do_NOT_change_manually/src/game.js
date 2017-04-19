@@ -194,6 +194,7 @@ var game;
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
     function cellClickedOne(row, col) {
+        game.$rootScope.hideAfterAnimation = true;
         if (game.shouldRotateBoard) {
             row = gameLogic.ROWS - row - 1;
             col = gameLogic.COLS - col - 1;
@@ -260,6 +261,7 @@ var game;
                     return;
                 }
                 // Move is legal, make it!
+                game.$rootScope.hideAfterAnimation = false;
                 makeMove(nextMove);
                 game.firstClicked = false;
                 game.pre_row = null;
@@ -303,6 +305,7 @@ var game;
                     return;
                 }
                 // Move is legal, make it!
+                game.$rootScope.hideAfterAnimation = false;
                 makeMove(nextMove);
                 game.firstClicked = false;
                 game.pre_row = null;

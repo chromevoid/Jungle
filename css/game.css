@@ -98,18 +98,20 @@ a:active {
 
 .explode {
   animation: explodePiece 0.5s cubic-bezier(0.420, 0.000, 1.000, 0.830) forwards;
+  /*animation-iteration-count: infinite;*/
 }
 @keyframes explodePiece {
   0% {
     opacity: 1;
+    transform: scale(0.5, 0.5)
   }
   95% {
     opacity: 0;
-    transform: scale(2, 2)
+    transform: scale(1, 1);
   }
   100% {
     opacity: 0;
-    transform: scale(1, 1)
+    transform: scale(0.5, 0.5)
   }
 }
 
