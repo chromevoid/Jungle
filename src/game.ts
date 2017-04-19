@@ -413,13 +413,9 @@ module game {
     }
   }
 
-  export function shouldShowImage(row: number, col: number): boolean {
-    return state.board[row][col] !== "" || isProposal(row, col);
-  }
-
   export function shouldExplode(row: number, col: number) {
-    let checkOne: string = checkAnimalBeforeThisMove(row, col);
-    let checkTwo: string = checkAnimal(row, col);
+    let checkOne: string = checkAnimalBeforeThisMove(row, col);  // the previous animal at (row, col)
+    let checkTwo: string = checkAnimal(row, col);  // the current animal at (row, col)
     return checkOne && checkTwo && (checkOne != checkTwo);
   }
 

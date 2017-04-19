@@ -392,13 +392,9 @@ var game;
         }
     }
     game.isPossibleMove = isPossibleMove;
-    function shouldShowImage(row, col) {
-        return game.state.board[row][col] !== "" || isProposal(row, col);
-    }
-    game.shouldShowImage = shouldShowImage;
     function shouldExplode(row, col) {
-        var checkOne = checkAnimalBeforeThisMove(row, col);
-        var checkTwo = checkAnimal(row, col);
+        var checkOne = checkAnimalBeforeThisMove(row, col); // the previous animal at (row, col)
+        var checkTwo = checkAnimal(row, col); // the current animal at (row, col)
         return checkOne && checkTwo && (checkOne != checkTwo);
     }
     game.shouldExplode = shouldExplode;

@@ -33,8 +33,7 @@
                    btrap: game.isBTrap(row, col), rtrap: game.isRTrap(row, col),
                    bhome: game.isBHome(row, col), rhome: game.isRHome(row, col)}" ng-click="game.cellClickedOne(row, col); game.cellClickedTwo(row, col);"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
-        <div class="cell" ng-class="{possible: game.isPossibleMove(row, col)}" ng-style="game.getCellStyle(row, col)"
-          ng-if="game.shouldShowImage(row, col)">
+        <div class="cell" ng-class="{possible: game.isPossibleMove(row, col)}" ng-style="game.getCellStyle(row, col)">
           <div ng-if="game.shouldExplode(row, col)" class="explode">
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 
             viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
