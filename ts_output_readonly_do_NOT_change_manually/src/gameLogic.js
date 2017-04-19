@@ -38,7 +38,7 @@ var gameLogic;
     }
     gameLogic.getInitialBoard = getInitialBoard;
     function getInitialState() {
-        return { board: getInitialBoard(), fromDelta: null, toDelta: null };
+        return { board: getInitialBoard(), boardBefore: null, fromDelta: null, toDelta: null };
     }
     gameLogic.getInitialState = getInitialState;
     //Returns true if the game ended in a tie. 
@@ -157,7 +157,7 @@ var gameLogic;
         }
         var fromDelta = { row: pre_row, col: pre_col };
         var toDelta = { row: row, col: col };
-        var state = { fromDelta: fromDelta, toDelta: toDelta, board: boardAfterMove };
+        var state = { fromDelta: fromDelta, toDelta: toDelta, board: boardAfterMove, boardBefore: board };
         return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
     }
     gameLogic.createMove = createMove;
@@ -523,11 +523,7 @@ var gameLogic;
         }
         return false;
     }
-    function checkAnimal(stateBeforeMove, row, col) {
-        if (!stateBeforeMove) {
-            stateBeforeMove = getInitialState();
-        }
-        var board = stateBeforeMove.board;
+    function checkAnimal(board, row, col) {
         var cell = board[row][col];
         switch (cell) {
             case "Relephant": return 'img/Relephant.png';

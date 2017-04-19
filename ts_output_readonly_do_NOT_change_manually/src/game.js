@@ -396,6 +396,12 @@ var game;
         return game.state.board[row][col] !== "" || isProposal(row, col);
     }
     game.shouldShowImage = shouldShowImage;
+    function shouldExplode(row, col) {
+        var checkOne = checkAnimalBeforeThisMove(row, col);
+        var checkTwo = checkAnimal(row, col);
+        return checkOne && checkTwo && (checkOne != checkTwo);
+    }
+    game.shouldExplode = shouldExplode;
     function isPiece(row, col, turnIndex, pieceKind) {
         return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
     }
@@ -488,13 +494,30 @@ var game;
     }
     game.isOwn = isOwn;
     function checkAnimal(row, col) {
+        if (!game.state) {
+            game.state = gameLogic.getInitialState();
+        }
         if (game.shouldRotateBoard) {
             row = gameLogic.ROWS - row - 1;
             col = gameLogic.COLS - col - 1;
         }
-        return gameLogic.checkAnimal(game.state, row, col);
+        return gameLogic.checkAnimal(game.state.board, row, col);
     }
     game.checkAnimal = checkAnimal;
+    function checkAnimalBeforeThisMove(row, col) {
+        if (!game.state) {
+            game.state = gameLogic.getInitialState();
+        }
+        if (!game.state.boardBefore) {
+            return null;
+        }
+        if (game.shouldRotateBoard) {
+            row = gameLogic.ROWS - row - 1;
+            col = gameLogic.COLS - col - 1;
+        }
+        return gameLogic.checkAnimal(game.state.boardBefore, row, col);
+    }
+    game.checkAnimalBeforeThisMove = checkAnimalBeforeThisMove;
 })(game || (game = {}));
 angular.module('myApp', ['gameServices'])
     .run(['$rootScope', '$timeout',

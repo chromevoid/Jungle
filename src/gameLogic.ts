@@ -40,6 +40,7 @@ interface BoardDelta {
 type IProposalData = BoardDelta;
 interface IState {
   board: Board;
+  boardBefore: Board;
   fromDelta: BoardDelta;
   toDelta: BoardDelta;
 }
@@ -90,7 +91,7 @@ module gameLogic {
   }
 
   export function getInitialState(): IState {
-    return { board: getInitialBoard(), fromDelta: null, toDelta: null };
+    return { board: getInitialBoard(), boardBefore: null, fromDelta: null, toDelta: null };
   }
 
 
@@ -220,7 +221,7 @@ module gameLogic {
     }
     let fromDelta: BoardDelta = { row: pre_row, col: pre_col };
     let toDelta: BoardDelta = { row: row, col: col };
-    let state: IState = { fromDelta: fromDelta, toDelta: toDelta, board: boardAfterMove };
+    let state: IState = { fromDelta: fromDelta, toDelta: toDelta, board: boardAfterMove, boardBefore: board };
     return { endMatchScores: endMatchScores, turnIndex: turnIndex, state: state };
   }
 
@@ -624,11 +625,7 @@ module gameLogic {
   }
 
 
-  export function checkAnimal(stateBeforeMove: IState, row: number, col: number): string {
-    if (!stateBeforeMove) {
-      stateBeforeMove = getInitialState();
-    }
-    let board: Board = stateBeforeMove.board;
+  export function checkAnimal(board: Board, row: number, col: number): string {
     let cell: string = board[row][col];
     switch (cell) {
       case "Relephant": return 'img/Relephant.png';

@@ -370,11 +370,11 @@ module game {
   }
 
   export function getAnimalClasses(row: number, col: number) {
-	let classesObj: any = {selected: game.changeSelectCSS(row, col), disabled: game.isOpponent(row, col)};
-	let additionalClass = game.shouldApplyMovePieceAnimation(row, col);
-	classesObj[additionalClass] = true;
-	return classesObj;
-}
+    let classesObj: any = {selected: game.changeSelectCSS(row, col), disabled: game.isOpponent(row, col)};
+    let additionalClass = game.shouldApplyMovePieceAnimation(row, col);
+    classesObj[additionalClass] = true;
+    return classesObj;
+  }
 
   export function changeSelectCSS(row: number, col: number): boolean {
     if (shouldRotateBoard) {
@@ -415,6 +415,12 @@ module game {
 
   export function shouldShowImage(row: number, col: number): boolean {
     return state.board[row][col] !== "" || isProposal(row, col);
+  }
+
+  export function shouldExplode(row: number, col: number) {
+    let checkOne: string = checkAnimalBeforeThisMove(row, col);
+    let checkTwo: string = checkAnimal(row, col);
+    return checkOne && checkTwo && (checkOne != checkTwo);
   }
 
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
@@ -510,11 +516,28 @@ module game {
   }
 
   export function checkAnimal(row: number, col: number): string {
+    if (!state) {
+      state = gameLogic.getInitialState();
+    }
     if (shouldRotateBoard) {
       row = gameLogic.ROWS - row - 1;
       col = gameLogic.COLS - col - 1;
     }
-    return gameLogic.checkAnimal(state, row, col);
+    return gameLogic.checkAnimal(state.board, row, col);
+  }
+
+  export function checkAnimalBeforeThisMove(row: number, col: number): string {
+    if (!state) {
+      state = gameLogic.getInitialState();
+    }
+    if (!state.boardBefore) {
+      return null;
+    }
+    if (shouldRotateBoard) {
+      row = gameLogic.ROWS - row - 1;
+      col = gameLogic.COLS - col - 1;
+    }
+    return gameLogic.checkAnimal(state.boardBefore, row, col);
   }
 
 }

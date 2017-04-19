@@ -42,7 +42,7 @@ img {
   margin: auto; 
   transition: width 0.2s, height 0.2s;
   transition-timing-function: linear;
-  z-index: 1;
+  z-index: 2;
 }
 
 a {
@@ -94,6 +94,23 @@ a:active {
   background-color: #e49172;
   background-image: url(../img/Home.png);
   background-size: contain;
+}
+
+.explode {
+  animation: explodePiece 0.5s cubic-bezier(0.420, 0.000, 1.000, 0.830) forwards;
+}
+@keyframes explodePiece {
+  0% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0;
+    transform: scale(2, 2)
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1, 1)
+  }
 }
 
 /* not used */
