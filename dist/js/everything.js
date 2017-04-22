@@ -31643,7 +31643,7 @@ var gameLogic;
     //declare global variable to record round
     var round = 0;
     var aliveAnimal = 16;
-    gameLogic.tieRule = 15;
+    gameLogic.tieRule = 100;
     // special cells in the game board
     gameLogic.BlueTrap = [{ row: 8, col: 2 }, { row: 7, col: 3 }, { row: 8, col: 4 }];
     gameLogic.RedTrap = [{ row: 0, col: 2 }, { row: 1, col: 3 }, { row: 0, col: 4 }];
@@ -32739,6 +32739,7 @@ var aiService;
                     }
                 }
                 catch (e) {
+                    // The cell in that position was full.
                 }
             }
         }

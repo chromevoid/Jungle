@@ -59,7 +59,7 @@ module gameLogic {
   //declare global variable to record round
   var round = 0;
   var aliveAnimal = 16;
-  export var tieRule: number = 50;
+  export var tieRule: number = 100;
 
   // special cells in the game board
   export const BlueTrap: BoardDelta[] =
