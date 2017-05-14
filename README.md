@@ -1,5 +1,5 @@
 # Social Multiplayer Game -Jungle
-=========
+
 ### 1. Game Instruction
 ##### Objective (Win condition)
 - One of your pieces enter the opponent's den which is marked by the star.
@@ -13,19 +13,18 @@
 ##### Movement
 More detailed rules in the game.
 ### 2. Game Development
-- Play Modes: 
--- Pass and play
--- Play against computer
--- only AIs
--- ping-pong multiplayer
--- community play
-- Karma and Jasmine for unit test and code coverage
-- AI Mode
--- predict moves using score evaluation based on the min-max algorithm
-- Phone applicaion
--- Built phoneGap project
--- Lauched application in [google playStore](https://play.google.com/store/apps/details?id=com.gamingplatform.cutejungle) and [apple app store](https://itunes.apple.com/app/id1227869315?mt=8) with push notifications 
+##### 2.1 Play Modes: 
+- Pass and play
+- Play against computer
+- only AIs
+- ping-pong multiplayer
+- community play
+##### 2.2 Karma and Jasmine for unit test and code coverage
+##### 2.3 AI Mode
+- predict moves using score evaluation based on the min-max algorithm
+##### 2.4 Phone applicaion
+- Built phoneGap project
+- Lauched application in [google playStore](https://play.google.com/store/apps/details?id=com.gamingplatform.cutejungle) and [apple app store](https://itunes.apple.com/app/id1227869315?mt=8) with push notifications 
 ### 3. Author
-Mona & Lisa
-pictures are credited to [free favicon](http://www.flaticon.com/authors/pixel-perfect)
-
+- Mona & Lisa
+- pictures are credited to [free favicon](http://www.flaticon.com/authors/pixel-perfect)
